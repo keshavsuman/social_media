@@ -1,0 +1,9 @@
+{
+    "development": {
+        "host": "localhost",
+        "port": 27017,
+        "user": "root",
+        "password": "admin",
+        "database": "social-media"
+    }
+}

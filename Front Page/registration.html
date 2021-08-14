@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+
+    <!-- Bootstrap Style Sheet -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custome Style sheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="bgBanner">
+        <div class="centerBox">
+            <div class="formWrapper">
+                <div class="logo">
+                    <img src="image/Younity Logo.png" alt="logo" class="img-fluid">
+                    <p>BE ONE OF US!</p>
+                </div>
+                <form action="question1.html">
+                    <div class="inputWrapper">
+                        <div class="inputFields">
+                            <div class="inputBox">
+                                <input type="text" name="First_name" required>
+                                <label>First Name</label>
+                            </div>
+                            <div class="inputBox">
+                                <input type="text" name="last_name" required>
+                                <label>Last Name</label>
+                            </div>
+                        </div>
+                        <div class="inputFields">
+                            <div class="inputBox">
+                                <input type="text" name="email" required>
+                                <label>Email</label>
+                            </div>
+                            <div class="inputBox">
+                                <input type="text" name="last_name" required maxlength="10">
+                                <label>Mobile No.</label>
+                            </div>
+                        </div>
+                        <div class="inputFields">
+                            <div class="inputBox">
+                                <input type="radio" name="Gender" id="Male"><img src="image/male.svg" alt="male"
+                                    class="img-fluid genImg">
+                                <input type="radio" name="Gender" id="Female"><img src="image/female.svg" alt="Female"
+                                    class="img-fluid genImg">
+                                <input type="radio" name="Gender" id="Female"><p>Other</p>
+                            </div>
+                            <div class="inputBox">
+                                <input type="date" name="last_name">
+                                <label>D.O.B.</label>
+                            </div>
+                        </div>
+                        <div class="inputFields">
+                            <div class="inputBox">
+                                <select class="floating-select" value="" required>
+                                    <option value=""></option>
+                                    <option value="">Gujrat</option>
+                                    <option value="">Rajasthan</option>
+                                  </select> 
+                                  <label>State</label>
+                            </div>
+                            <div class="inputBox">
+                                <select class="floating-select" value="" required>
+                                    <option value=""></option>
+                                    <option value="">Anand</option>
+                                    <option value="">Jaipur</option>
+                                  </select> 
+                                <label>Hometown</label>
+                            </div>
+                        </div>
+                        <div class="inputFields">
+                            <div class="inputBox">
+                                <input type="password" name="Create Password" required>
+                                <label>Create Password</label>
+                            </div>
+                            <div class="inputBox">
+                                <input type="password" name="Confirm Password" required>
+                                <label>Confirm Password</label>
+                            </div>
+                        </div>
+                        <div class="signupBtnWrapper">
+                            <div class="signBtn">
+                                <input type="submit" value="Sign Up">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <p class="or">Or</p>
+                <div class="socialLoginWrapper">
+                    <div class="socialLoginBtn">
+                        <button id="Facebook">
+                            <img src="image/facebook.png" alt="facebook" class="img-fluid">
+                            Continue with Facebook
+                        </button>
+                        <button id="LinkedIn">
+                            <img src="image/linkedin.png" alt="LinkedIn" class="img-fluid">
+                            Continue with LinkedIn
+                        </button>
+                    </div>
+                </div>
+                <p class="already">Already have an account ? <span> <a href="login.html">Sign in</a></span></p>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+    <!-- Bootstrap JS File -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

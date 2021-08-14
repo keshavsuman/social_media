@@ -1,0 +1,7 @@
+{
+    "port": "3001",
+    "secretKey":"SXYUASDSDETLVFRPDSEA",
+    "emailUser":"",
+    "emailPassword":"",
+    "environment":"development"
+}
