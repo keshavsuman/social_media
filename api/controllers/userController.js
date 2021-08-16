@@ -56,13 +56,14 @@ module.exports.socialLogin = async (req, res) => {
             var req_ip = req.connection.remoteAddress.split(":")[3] || '';
             await UserToken.create({ user_id: user._id, token, req_ip, user_agent: req.headers['user-agent'] });
             const user_data = {
-                _id: user._id,
+                id: user._id,
                 name: user.first_name + ' ' + user.last_name,
                 email: user.email,
                 mobile: user.mobile,
-                profile_setup: user.profile_setup
+                profile_setup: user.profile_setup,
+                token:token
             };
-            responseManagement.sendResponse(res, httpStatus.OK, global.logged_in_successful, { token: token, user_data })
+            responseManagement.sendResponse(res, httpStatus.OK, global.logged_in_successful,user_data)
         } else {
             const uuser = await User.findOne({ email });
             const nuser = await User.create({ provider_type, provider_id, first_name, last_name, email, profile_pic });

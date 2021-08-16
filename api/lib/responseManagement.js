@@ -2,9 +2,9 @@
 
 module.exports.sendResponse = async (res, statusCode, msg, data) => {
     return res.send({
-        "statusCode": statusCode,
+        "status": statusCode,
         "message": msg,
-        "data":data
+        "description":data
     });
 }
 

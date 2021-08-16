@@ -6,7 +6,5 @@ module.exports.createPost = celebrate({
         media_type: Joi.string().required(),
         visibility: Joi.string().required(),
         media_url: Joi.string().required(),
-        media_type: Joi.string().required(),
-
     })
 });
