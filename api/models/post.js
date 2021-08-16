@@ -10,5 +10,4 @@ var Schema = new mongoose.Schema({
 }, { timestamps: true });
 
 
-
 module.exports = mongoose.model('post', Schema);
