@@ -67,7 +67,7 @@ module.exports.getCourses = async (req, res) => {
 		const courses = await Course.find({ $and: [query1] }, {}, { sort: sort_q, skip: start, limit: length });
 		const total = await Course.countDocuments({});
 		const stotal = await Course.countDocuments({ $and: [query1] });
-		res.send({ statusCode: httpStatus.OK, courses: courses, draw: draw, recordsTotal: total, recordsFiltered: stotal })
+		res.send({ status: httpStatus.OK, courses: courses, draw: draw, recordsTotal: total, recordsFiltered: stotal })
 	} catch (error) {
 		console.log(error)
 		responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);

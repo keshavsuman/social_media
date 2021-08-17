@@ -15,7 +15,7 @@ const auth = async (req, res, next) => {
         }
     } catch (error) {
         console.log(error);
-        res.status(401).send({ statusCode: 401, message: 'Not authorized to access this resource' })
+        res.status(401).send({ status: 401, message: 'Not authorized to access this resource' })
     }
 }
 module.exports = auth

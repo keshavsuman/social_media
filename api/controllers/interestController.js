@@ -67,7 +67,7 @@ module.exports.getInterests = async(req,res)=>{
         const interests = await Interest.find({ $and: [query1] }, {}, { sort: sort_q, skip: start, limit: length });
         const total = await Interest.countDocuments({});
         const stotal = await Interest.countDocuments({ });
-        res.send({ statusCode: httpStatus.OK, interests: interests, draw: draw, recordsTotal: total, recordsFiltered: stotal })
+        res.send({ status: httpStatus.OK, interests: interests, draw: draw, recordsTotal: total, recordsFiltered: stotal })
     } catch (error) {
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);

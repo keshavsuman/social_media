@@ -180,7 +180,7 @@ module.exports.users = async (req, res) => {
         const users = await User.find({ $and: [query1, filter1, filter2, filter3] }, {}, { sort: sort_q, skip: start, limit: length });
         const total = await User.countDocuments();
         const stotal = await User.countDocuments({ $and: [query1, filter1, filter2, filter3] });
-        res.send({ statusCode: httpStatus.OK, users: users, draw: draw, recordsTotal: total, recordsFiltered: stotal })
+        res.send({ status: httpStatus.OK, users: users, draw: draw, recordsTotal: total, recordsFiltered: stotal })
     } catch (error) {
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);

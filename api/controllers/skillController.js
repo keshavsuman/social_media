@@ -66,7 +66,7 @@ module.exports.getSkills = async (req, res) => {
 		const skills = await Skill.find({ $and: [query1] }, {}, { sort: sort_q, skip: start, limit: length });
 		const total = await Skill.countDocuments({});
 		const stotal = await Skill.countDocuments({ $and: [query1] });
-		res.send({ statusCode: httpStatus.OK, skills: skills, draw: draw, recordsTotal: total, recordsFiltered: stotal })
+		res.send({ status: httpStatus.OK, skills: skills, draw: draw, recordsTotal: total, recordsFiltered: stotal })
 	} catch (error) {
 		console.log(error)
 		responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);

@@ -157,7 +157,7 @@ module.exports.getRoles = async (req, res) => {
         const roles = await Role.find({ $and: [query1] }, {}, { sort: sort_q, skip: start, limit: length });
         const total = await Role.countDocuments({});
         const stotal = await Role.countDocuments({ $and: [query1] });
-        res.send({ statusCode: httpStatus.OK, roles: roles, draw: draw, recordsTotal: total, recordsFiltered: stotal })
+        res.send({ status: httpStatus.OK, roles: roles, draw: draw, recordsTotal: total, recordsFiltered: stotal })
     } catch (error) {
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
@@ -218,7 +218,7 @@ module.exports.editRole = async (req, res) => {
 module.exports.roles = async (req, res) => {
     try {
         const roles = await Role.find({status:true});
-        res.send({ statusCode: httpStatus.OK, roles: roles })
+        res.send({ status: httpStatus.OK, roles: roles })
     } catch (error) {
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
@@ -229,7 +229,7 @@ module.exports.roles = async (req, res) => {
 module.exports.permissionList = async (req,res) => {
     try{
         const permission = await Permission.find();
-        res.send({ statusCode: httpStatus.OK, permission: permission })
+        res.send({ status: httpStatus.OK, permission: permission })
     }catch(error){
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
@@ -301,7 +301,7 @@ module.exports.admins = async (req, res) => {
         const admins = await Admin.find({ $and: [{ role_id: { $ne: null } },{ _id:{ $ne: req.user._id }}, query1] }, {}, { sort: sort_q, skip: start, limit: length }).populate({ path: 'role_id', select: ['name'], model: 'role' });
         const total = await Admin.countDocuments({$and:[{ role_id: { $ne: null } },{ _id:{ $ne: req.user._id } },]});
         const stotal = await Admin.countDocuments({ $and: [{ role_id: { $ne: null } },{ _id:{ $ne: req.user._id } }, query1] });
-        res.send({ statusCode: httpStatus.OK, admins: admins, draw: draw, recordsTotal: total, recordsFiltered: stotal })
+        res.send({ status: httpStatus.OK, admins: admins, draw: draw, recordsTotal: total, recordsFiltered: stotal })
     } catch (error) {
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
