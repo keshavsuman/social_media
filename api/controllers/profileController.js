@@ -41,7 +41,7 @@ module.exports.setProfile = async (req, res) => {
 
         const user = await User.findOneAndUpdate({ _id: req.user._id }, bodyContent);
         const user_data = {
-                _id: user._id,
+                id: user._id,
                 name: user.first_name + ' ' + user.last_name,
                 email: user.email,
                 mobile: user.mobile,

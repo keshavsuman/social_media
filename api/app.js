@@ -63,9 +63,10 @@ app.use(mongoSanitize({
   },
 }));
 app.use(express.urlencoded({ extended: 'false' }));
-
+app.use(express.json());
 app.use(require('./routes'));
 app.use(errors());
+
 app.use(/^((?!(api)).)*/, (req, res) => {
   if (req.method === 'GET') {
     res.sendFile(path.join(__dirname, '../users/build/index.html'))
