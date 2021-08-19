@@ -12,7 +12,7 @@ router.use(auth);
  * Authorization:'Bearer ${authentication Token}'
  * 
  */
-router.post('/getSkills', UserSkillController.getSkills);
+router.get('/getSkills', UserSkillController.getSkills);
 /**
  * Header with authorization in required like 
  * Authorization:'Bearer ${authentication Token}'

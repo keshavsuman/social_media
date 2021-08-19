@@ -6,11 +6,9 @@ const SKILL =require('../../models/skill');
 async function getSkills(req,res){
     try {
         var data=[];
-        var skills = await USER.findById(req.data._id,{skills:1,_id:0}).populate({path:'skills',select:{"name":1,_id:0}});
-        skills.skills.forEach(s=>{
-            data.push(s['name']);
-        });
-        responseManagement.sendResponse(res,httpStatus.OK,"",data);
+        var skills = await USER.findById(req.data._id,{skills:1,_id:0}).populate({path:'skills',select:{"name":1,_id:1}});
+        console.log(skills);
+        responseManagement.sendResponse(res,httpStatus.OK,"",skills);
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});

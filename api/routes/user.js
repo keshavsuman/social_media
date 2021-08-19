@@ -20,6 +20,7 @@ router.use('/skill',skillRoutes);
 router.post('/login', userValidator.login, user.login);
 router.post('/signup', userValidator.registerUser, user.createUser);
 router.post('/socialLogin',userValidator.socialLogin, user.socialLogin);
+router.post('/',);
 
 // router.get('/logout', auth, user.logout);
 // router.post('/forgotPassword', userValidator.forgotPassword, user.forgotPassword);
