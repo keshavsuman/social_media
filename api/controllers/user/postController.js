@@ -30,7 +30,7 @@ async function deletePost(req,res){
 
 async function updatePost(req,res){
     try {
-        await post.findByIdAndUpdate(req.findByIdAndUpdate._id,res.body);
+        await post.findByIdAndUpdate(req.body.postId,req.body);
         responseManagement.sendResponse(res,httpStatus.OK,'Post updated successfully',{});
 
     } catch (error) {
@@ -41,7 +41,7 @@ async function updatePost(req,res){
 
 async function getPosts(req,res){
     try {
-        var userPosts = await post.find({userId:req.findByIdAndUpdate._id});
+        var userPosts = await post.find({userId:req.findByIdAndUpdate._id}).sort({_id:-1}).limit(50);
         responseManagement.sendResponse(res,httpStatus.OK,'',userPosts);
     } catch (error) {
         console.log(error);
@@ -51,7 +51,7 @@ async function getPosts(req,res){
 
 async function uploadMedia(req,res){
     try {
-        
+        console.log(req.file);
     } catch (error) {
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
@@ -62,7 +62,8 @@ async function likePost(req,res){
     try {
         
     } catch (error) {
-        
+        console.log(error);
+        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
     }
 }
 
@@ -70,7 +71,8 @@ async function comment(req,res){
     try {
         
     } catch (error) {
-        
+        console.log(error);
+        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
     }
 }
 
@@ -78,7 +80,8 @@ async function reply(req,res){
     try{
 
     }catch(error){
-
+        console.log(error);
+        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
     }
 }
 

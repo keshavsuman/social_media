@@ -2,6 +2,7 @@ const express = require('express');
 const InterestController = require('../../controllers/user/intrestController');
 const router = express.Router();
 const interestValidator = require('../../validators/interestValidators');
+const auth =require('../../middleware/userAuth');
 
 router.use(auth);
 

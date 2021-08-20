@@ -10,23 +10,27 @@ const skill = require('../controllers/skillController');
 const course = require('../controllers/courseController');
 const college = require('../controllers/collegeController');
 const post = require('../controllers/postController');
-
-const skillRoutes = require('./userRoutes/skillRoutes');
-
 const interest = require('../controllers/interestController');
 const university = require('../controllers/universityController');
 
+const skillRoutes = require('./userRoutes/skillRoutes');
+const interestRoutes = require('../routes/userRoutes/interestRoutes');
+const postRoutes = require('./userRoutes/postRoutes');
+
 router.use('/skill',skillRoutes);
+router.use('/interest',interestRoutes);
+router.use('/post',postRoutes);
+
 router.post('/login', userValidator.login, user.login);
 router.post('/signup', userValidator.registerUser, user.createUser);
 router.post('/socialLogin',userValidator.socialLogin, user.socialLogin);
-router.post('/',);
+router.post('/updateUser',auth,user.updateUser);
 
 // router.get('/logout', auth, user.logout);
 // router.post('/forgotPassword', userValidator.forgotPassword, user.forgotPassword);
 router.post('/resetPassword', user.resetPassword);
 
-
+router.get('/searchSkills/:skill',auth,skill.searchSkills);    
 router.get('/getSkillsList', auth, skill.getSkillsList);
 router.get('/getUniversitiesList', auth, university.getUniversitiesList);
 router.get('/getCoursesList',  course.getCoursesList);

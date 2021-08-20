@@ -18,7 +18,8 @@ var uri ;
 // const uri = `mongodb://${db[config.environment].host}:${db[config.environment].port}/${db[config.environment].database}?authSource=admin&w=1`
 if(config.environment=='development')
 {
-   uri = `mongodb://${db[config.environment].host}/${db[config.environment].database}`;
+   uri="mongodb://younity:younity123@13.127.215.198:27017/social-media?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false";
+  //  uri = `mongodb://${db[config.environment].host}/${db[config.environment].database}`;
 }else{
    uri = `mongodb+srv://${db[config.environment].user}:${db[config.environment].password}@${db[config.environment].host}/${db[config.environment].database}?retryWrites=true&w=majority`
 }

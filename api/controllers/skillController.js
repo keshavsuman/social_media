@@ -73,6 +73,16 @@ module.exports.getSkills = async (req, res) => {
 	}
 };
 
+module.exports.searchSkills = async (req,res)=>{
+	try {
+		var skills  = await Skill.find({'name': {'$regex': req.params.skill, '$options': 'i'}});
+		responseManagement.sendResponse(res,httpStatus.OK,"",skills);
+	} catch (error) {
+		console.log(error);
+		responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
+	}
+}
+
 /**** send Skill according to the id ****/
 module.exports.editSkill = async (req, res) => {
 	try {

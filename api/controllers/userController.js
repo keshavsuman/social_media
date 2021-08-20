@@ -215,7 +215,7 @@ module.exports.editUser = async (req, res) => {
 /****** Update User ****/
 module.exports.updateUser = async (req, res) => {
     try {
-        const user = await User.findOne({ _id: req.body._id });
+        const user = await User.findOne({ _id: req.data._id });
         if (user) {
             const result = await User.updateOne({ _id: req.body._id }, req.body);
             responseManagement.sendResponse(res, httpStatus.OK, global.user_update_successful);
