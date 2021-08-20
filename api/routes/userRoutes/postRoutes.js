@@ -17,10 +17,10 @@ router.put('/generateMediaUploadUrl',upload.single('file'),postController.upload
 
 module.exports = router;
 
-db.createUser(
-  {
-    user: "younity",
-    pwd: "younity123", // or cleartext password
-    roles: [ { role: "userAdminAnyDatabase", db: "admin" }, "readWriteAnyDatabase" ]
-  }
-)
+// db.createUser(
+//   {
+//     user: "younity",
+//     pwd: "younity123", // or cleartext password
+//     roles: [ { role: "userAdminAnyDatabase", db: "admin" }, "readWriteAnyDatabase" ]
+//   }
+// )
