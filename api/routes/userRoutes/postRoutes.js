@@ -16,11 +16,3 @@ router.delete('/deletePost',postValidator.deletePost,postController.deletePost);
 router.put('/generateMediaUploadUrl',upload.single('file'),postController.uploadMedia);
 
 module.exports = router;
-
-// db.createUser(
-//   {
-//     user: "younity",
-//     pwd: "younity123", // or cleartext password
-//     roles: [ { role: "userAdminAnyDatabase", db: "admin" }, "readWriteAnyDatabase" ]
-//   }
-// )

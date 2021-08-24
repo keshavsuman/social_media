@@ -16,21 +16,35 @@ const university = require('../controllers/universityController');
 const skillRoutes = require('./userRoutes/skillRoutes');
 const interestRoutes = require('../routes/userRoutes/interestRoutes');
 const postRoutes = require('./userRoutes/postRoutes');
+const universityRoutes = require('./userRoutes/universityRoutes');
+const collegeRoutes = require('./userRoutes/collegeRoutes');
+const batchRoutes = require('./userRoutes/batchRoutes');
 
 router.use('/skill',skillRoutes);
 router.use('/interest',interestRoutes);
 router.use('/post',postRoutes);
+router.use('/university',universityRoutes);
+router.use('/college',collegeRoutes);
+router.use('/batch',batchRoutes);
 
 router.post('/login', userValidator.login, user.login);
 router.post('/signup', userValidator.registerUser, user.createUser);
 router.post('/socialLogin',userValidator.socialLogin, user.socialLogin);
 router.post('/updateUser',auth,user.updateUser);
 
+
+
 // router.get('/logout', auth, user.logout);
 // router.post('/forgotPassword', userValidator.forgotPassword, user.forgotPassword);
 router.post('/resetPassword', user.resetPassword);
 
+// Search Api
 router.get('/searchSkills/:skill',auth,skill.searchSkills);    
+router.get('/searchInterests/:interest',auth,interest.searchInterests);
+router.get('/searchCollege/:college',auth,college.searchCollege);
+router.get('/searchUniversity/:university',auth,university.searchUniversities);
+
+
 router.get('/getSkillsList', auth, skill.getSkillsList);
 router.get('/getUniversitiesList', auth, university.getUniversitiesList);
 router.get('/getCoursesList',  course.getCoursesList);

@@ -136,3 +136,13 @@ module.exports.updateInterestStatus = async (req, res) => {
 		responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
 	}
 };
+
+module.exports.searchInterests = async (req,res)=>{
+    try {
+		var interests  = await Interest.find({'name': {'$regex': req.params.interest, '$options': 'i'}});
+		responseManagement.sendResponse(res,httpStatus.OK,"",interests);
+	} catch (error) {
+		console.log(error);
+		responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
+	}
+}

@@ -143,3 +143,13 @@ module.exports.updateCollegeStatus = async (req, res) => {
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
     }
 };
+
+module.exports.searchCollege = async (req,res)=>{
+    try {
+		var colleges  = await College.find({'name': {'$regex': req.params.college, '$options': 'i'}});
+		responseManagement.sendResponse(res,httpStatus.OK,"",colleges);
+	} catch (error) {
+		console.log(error);
+		responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
+	}
+}

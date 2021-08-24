@@ -76,6 +76,7 @@ module.exports.getSkills = async (req, res) => {
 module.exports.searchSkills = async (req,res)=>{
 	try {
 		var skills  = await Skill.find({'name': {'$regex': req.params.skill, '$options': 'i'}});
+		console.log(skills)
 		responseManagement.sendResponse(res,httpStatus.OK,"",skills);
 	} catch (error) {
 		console.log(error);

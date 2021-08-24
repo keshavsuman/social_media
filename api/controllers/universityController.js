@@ -162,3 +162,13 @@ module.exports.getUniversitiesListAdmin = async (req, res) => {
 		responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
 	}
 };
+
+module.exports.searchUniversities = async (req,res)=>{
+	try {
+		var universities  = await University.find({'name': {'$regex': req.params.university, '$options': 'i'}});
+		responseManagement.sendResponse(res,httpStatus.OK,"",universities);
+	} catch (error) {
+		console.log(error);
+		responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
+	}
+}
