@@ -57,16 +57,16 @@ module.exports.setProfile = async (req, res) => {
 };
 
 /**** Current user profile ****/
-module.exports.myProfile = async (req, res) => {
-    try {
-        let user = await User.findOne(req.user).select(['-hash', '-salt']).lean();
-        let post = await Post.find({ posted_by: req.user._id });
-        responseManagement.sendResponse(res, httpStatus.OK, "", { user, post });
-    } catch (error) {
-        console.log(error)
-        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
-    }
-};
+// module.exports.myProfile = async (req, res) => {
+//     try {
+//         let user = await User.findOne(req.data._id).select(['-hash', '-salt']).lean();
+//         let post = await Post.find({ posted_by: req.data._id });
+//         responseManagement.sendResponse(res, httpStatus.OK, "", { user, post });
+//     } catch (error) {
+//         console.log(error)
+//         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
+//     }
+// };
 
 
 /**** other user profile ****/
@@ -96,12 +96,12 @@ module.exports.userProfile = async (req, res) => {
 /**** logged in User Profile  ****/
 module.exports.myProfile = async (req, res) => {
     try {
-        let user = await User.findOne({ _id: req.user._id })
+        let user = await User.findOne({ _id: req.data._id })
             .select(['-hash', '-salt'])
             .populate({ path: 'interests', model: 'interest' })
             .populate({ path: 'skills', model: 'skill' })
             .lean();
-        let post = await Post.find({ posted_by: req.user._id });
+        let post = await Post.find({ posted_by: req.data._id });
 
         responseManagement.sendResponse(res, httpStatus.OK, "", { user, post });
     } catch (error) {
