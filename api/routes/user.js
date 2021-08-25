@@ -58,7 +58,7 @@ router.get('/cities', profile.cities);
 
 router.get('/myProfile', auth, profile.myProfile);
 router.get('/profile', profileValidator.otherUserProfile, profile.otherUserProfile);
-router.post('/setProfile', auth, profileValidator.Profile, profile.setProfile);
+router.post('/setProfile', auth, profile.setProfile);
 router.post('/createPost', auth, postValidator.createPost, post.createPost);
 
 module.exports = router;
