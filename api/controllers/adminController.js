@@ -360,10 +360,10 @@ module.exports.createAdmin = async (req, res) => {
             const data = { admin_id: newuser._id, token, email: email };
             await AdminPWDToken(data).save();
             const password_reset_link = config.adminResetPasswordLink + token;
-            const html = await ejs.renderFile(path.join(__dirname, '../helper/email_templates/password_reset.html'), { password_reset_link });
-            const to = [email];
-            const subject = 'Younity - Set your account password';
-            const emailResult = await helper.sendEmail(to, subject, html);
+            // const html = await ejs.renderFile(path.join(__dirname, '../helper/email_templates/password_reset.html'), { password_reset_link });
+            // const to = [email];
+            // const subject = 'Younity - Set your account password';
+            // const emailResult = await helper.sendEmail(to, subject, html);
             responseManagement.sendResponse(res, httpStatus.OK, global.signup_success);
         }
     } catch (error) {

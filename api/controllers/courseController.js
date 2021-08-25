@@ -110,11 +110,8 @@ module.exports.updateCourse = async (req, res) => {
 /**** get courses for search ****/
 module.exports.searchCourses = async (req, res) => {
 	try {
-		let courses = await Course.find({ name: { $regex: req.query.name, $options: 'i' } });
-
-		// let courses1 = await Course.find({});
-		responseManagement.sendResponse(res, httpStatus.OK, '', { courses });
-
+		let courses = await Course.find({ name: { $regex: req.params.course, $options: 'i' } });
+		responseManagement.sendResponse(res, httpStatus.OK, '',courses);
 	} catch (error) {
 		console.log(error);
 		responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);

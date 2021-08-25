@@ -26,7 +26,7 @@ router.post('/forgotPassword', adminValidator.forgotPassword, admin.forgotPasswo
 router.post('/resetPassword', adminValidator.resetPassword, admin.resetPassword);
 
 router.post('/getRoles', auth, admin.getRoles);
-router.post('/addRole', auth, adminValidator.addRole, admin.addRole);
+router.post('/addRole',auth, adminValidator.addRole, admin.addRole);
 router.delete('/deleteRole', auth, adminValidator.deleteRole, admin.deleteRole);
 router.get('/editRole', auth, adminValidator.editRole, admin.editRole);
 router.get('/roles', auth, admin.roles);
@@ -36,11 +36,11 @@ router.get('/updateRoleStatus',auth, adminValidator.updateRoleStatus,admin.updat
 
 router.post('/admins', auth, admin.admins);
 router.get('/editAdmin', auth, adminValidator.editAdmin, admin.editAdmin);
-router.post('/createAdmin', auth, adminValidator.createAdmin, admin.createAdmin);
+router.post('/createAdmin',adminValidator.createAdmin, admin.createAdmin);
 router.post('/updateAdmin', auth, adminValidator.updateAdmin, admin.updateAdmin);
 router.delete('/deleteAdmin', auth, adminValidator.deleteAdmin, admin.deleteAdmin);
 router.get('/updateAdminStatus', auth, admin.updateAdminStatus);
-router.post('/registerAdmin', auth, admin.registerAdmin, adminValidator.registerAdmin);
+router.post('/registerAdmin', admin.registerAdmin, adminValidator.registerAdmin);
 
 router.post('/createInterest', auth, interestValidator.createInterest, interest.createInterest);
 router.delete('/deleteInterest', auth, interestValidator.deleteInterest, interest.deleteInterest);

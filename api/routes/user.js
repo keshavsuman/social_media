@@ -43,6 +43,7 @@ router.get('/searchSkills/:skill',auth,skill.searchSkills);
 router.get('/searchInterests/:interest',auth,interest.searchInterests);
 router.get('/searchCollege/:college',auth,college.searchCollege);
 router.get('/searchUniversity/:university',auth,university.searchUniversities);
+router.get('/searchCourse/:course',auth,course.searchCourses);
 
 
 router.get('/getSkillsList', auth, skill.getSkillsList);

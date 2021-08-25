@@ -10,6 +10,7 @@ var UserSchema = new mongoose.Schema({
     mobile: { type: String },
     dob: { type: String },
     hash: { type: String },
+    salt:{type:String},
     status: { type: Boolean, default: true },
     role_id: { type: mongoose.Schema.Types.ObjectId, ref: 'role' },
 }, { timestamps: true });
@@ -22,6 +23,7 @@ UserSchema.methods.validPassword = function (password) {
 };
 
 UserSchema.methods.setPassword = function (password) {
+    this.salt = crypto.randomBytes(16).toString('hex');
     this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
 };
 
