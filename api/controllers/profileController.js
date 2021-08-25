@@ -39,7 +39,7 @@ module.exports.setProfile = async (req, res) => {
             bodyContent.skills.push(skillIDS);
         }
 
-        const user = await User.findOneAndUpdate({ _id: req.user._id }, bodyContent);
+        const user = await User.findOneAndUpdate({ _id: req.data._id }, bodyContent);
         const user_data = {
                 id: user._id,
                 name: user.first_name + ' ' + user.last_name,
