@@ -114,7 +114,7 @@ module.exports.myProfile = async (req, res) => {
 /**** country list ****/
 module.exports.countries = async (req, res) => {
     try {
-        let countries = await Countries.find().select(['id', 'name']).lean();
+        let countries = await Countries.find({'name': {'$regex': req.params.country, '$options': 'i'}}).select(['id', 'name']).lean();
         responseManagement.sendResponse(res, httpStatus.OK, "", { countries });
     } catch (error) {
         console.log(error)
@@ -125,7 +125,7 @@ module.exports.countries = async (req, res) => {
 /**** state list ****/
 module.exports.states = async (req, res) => {
     try {
-        let states = await States.find(req.query).select(['id', 'name']).lean();
+        let states = await States.find().select(['id', 'name']).lean();
         responseManagement.sendResponse(res, httpStatus.OK, "", { states });
     } catch (error) {
         console.log(error)
@@ -137,7 +137,7 @@ module.exports.states = async (req, res) => {
 /**** city list ****/
 module.exports.cities = async (req, res) => {
     try {
-        let cities = await Cities.find(req.query).select(['id', 'name']).lean();
+        let cities = await Cities.find({'name': {'$regex': req.params.city, '$options': 'i'}}).select(['id', 'name']).lean();
         responseManagement.sendResponse(res, httpStatus.OK, "", { cities });
     } catch (error) {
         console.log(error)

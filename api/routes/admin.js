@@ -56,7 +56,7 @@ router.get('/editSkill', auth, skillValidator.deleteSkill, skill.editSkill);
 router.post('/updateSkill', auth, skillValidator.updateSkill, skill.updateSkill);
 router.get('/updateSkillStatus', skill.updateSkillStatus);
 
-router.post('/createUniversity', auth, universityValidator.createUniversity, university.createUniversity);
+router.post('/createUniversity', universityValidator.createUniversity, university.createUniversity);
 router.delete('/deleteUniversity', auth, universityValidator.deleteUniversity, university.deleteUniversity);
 router.post('/getUniversities', university.getUniversities);
 router.get('/editUniversity', auth, university.editUniversity);
@@ -65,14 +65,14 @@ router.get('/searchUniversity', university.searchUniversities);
 router.get('/getUniversitiesList', university.getUniversitiesListAdmin);
 router.get('/updateUniversityStatus', university.updateUniversityStatus);
 
-router.post('/createCollege', auth, collegeValidator.createCollege, college.createCollege);
+router.post('/createCollege', collegeValidator.createCollege, college.createCollege);
 router.delete('/deleteCollege', auth, collegeValidator.deleteCollege, college.deleteCollege);
 router.post('/getColleges', college.getColleges);
 router.get('/editCollege', auth, collegeValidator.deleteCollege, college.editCollege);
 router.post('/updateCollege', auth, collegeValidator.updateCollege, college.updateCollege);
 router.get('/updateCollegeStatus', auth, college.updateCollegeStatus);
 
-router.post('/createCourse', auth, courseValidator.createCourse, course.createCourse);
+router.post('/createCourse',auth,courseValidator.createCourse, course.createCourse);
 router.delete('/deleteCourse', auth, courseValidator.deleteCourse, course.deleteCourse);
 router.post('/getCourses', course.getCourses);
 router.get('/editCourse', auth, courseValidator.deleteCourse, course.editCourse);

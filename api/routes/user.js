@@ -52,9 +52,9 @@ router.get('/getCoursesList',  course.getCoursesList);
 router.get('/getInterestsList', auth, interest.getInterestsList);
 router.get('/getCollegesList', auth, college.getCollegesList);
 
-router.get('/countries', profile.countries);
+router.get('/countries/:country', profile.countries);
 router.get('/states', profile.states);
-router.get('/cities', profile.cities);
+router.get('/cities/:city', profile.cities);
 
 router.get('/myProfile', auth, profile.myProfile);
 router.get('/profile', profileValidator.otherUserProfile, profile.otherUserProfile);
