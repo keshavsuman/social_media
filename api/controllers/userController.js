@@ -217,7 +217,7 @@ module.exports.updateUser = async (req, res) => {
     try {
         const user = await User.findOne({ _id: req.data._id });
         if (user) {
-            const result = await User.updateOne({ _id: req.body._id }, req.body,{
+            const result = await User.findByIdAndUpdate(req.data._id, req.body,{
                 new:true,
             });
             if(result['college'] && result['course'] && result['start_date'] && result['end_date']){

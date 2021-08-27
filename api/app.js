@@ -44,6 +44,7 @@ if(config.environment=='development')
 mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useFindAndModify:false
   // reconnectTries: 60,
   // reconnectInterval: 2000,
 })
