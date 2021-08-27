@@ -11,7 +11,7 @@ module.exports.createUniversity = async (req, res) => {
 			responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, global.university_already_exist);
 		} else {
 			await University.create(req.body);
-			responseManagement.sendResponse(res, httpStatus.OK, global.university_created);
+			responseManagement.sendResponse(res, httpStatus.CREATED, global.university_created);
 		}
 	} catch (error) {
 		console.log(error)
@@ -23,11 +23,11 @@ module.exports.createUniversity = async (req, res) => {
 /**** Delete University ****/
 module.exports.deleteUniversity = async (req, res) => {
 	try {
-		let university = await University.findOne(req.query);
+		let university = await University.findById(req.params.universityId);
 		if (!university) {
 			responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, global.university_not_exist);
 		} else {
-			await University.deleteOne(req.query);
+			await University.findByIdAndDelete(req.params.universityId);
 			responseManagement.sendResponse(res, httpStatus.OK, global.university_deleted);
 		}
 	} catch (error) {
@@ -73,20 +73,20 @@ module.exports.getUniversities = async (req, res) => {
 	}
 };
 
-/**** send University according to the id ****/
-module.exports.editUniversity = async (req, res) => {
-	try {
-		let university = await University.findOne(req.query);
-		if (!university) {
-			responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, global.university_not_exist);
-		} else {
-			responseManagement.sendResponse(res, httpStatus.OK, '', university);
-		}
-	} catch (error) {
-		console.log(error)
-		responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
-	}
-};
+// /**** send University according to the id ****/
+// module.exports.editUniversity = async (req, res) => {
+// 	try {
+// 		let university = await University.findOne(req.query);
+// 		if (!university) {
+// 			responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, global.university_not_exist);
+// 		} else {
+// 			responseManagement.sendResponse(res, httpStatus.OK, '', university);
+// 		}
+// 	} catch (error) {
+// 		console.log(error)
+// 		responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
+// 	}
+// };
 
 
 /**** update University ****/
@@ -96,7 +96,7 @@ module.exports.updateUniversity = async (req, res) => {
 		if (university) {
 			responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, global.university_already_exist);
 		} else {
-			await University.updateOne({ _id: req.body._id }, req.body);
+			await University.updateOne({ _id: req.body.id }, {name:req.body.name});
 			responseManagement.sendResponse(res, httpStatus.OK, global.university_updated);
 		}
 	} catch (error) {
@@ -106,17 +106,17 @@ module.exports.updateUniversity = async (req, res) => {
 };
 
 /**** get universities for search ****/
-module.exports.searchUniversities = async (req, res) => {
-	try {
-		let universities = await University.find({ $text: { $search: req.query.name } });
-		let universities1 = await University.find({});
-		responseManagement.sendResponse(res, httpStatus.OK, '', { universities1 });
+// module.exports.searchUniversities = async (req, res) => {
+// 	try {
+// 		let universities = await University.find({ $text: { $search: req.query.name } });
+// 		let universities1 = await University.find({});
+// 		responseManagement.sendResponse(res, httpStatus.OK, '', { universities1 });
 
-	} catch (error) {
-		console.log(error);
-		responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
-	}
-};
+// 	} catch (error) {
+// 		console.log(error);
+// 		responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
+// 	}
+// };
 
 
 module.exports.getUniversitiesList = async (req, res) => {

@@ -9,7 +9,7 @@ const auth = require('../middleware/userAuth');
 const skill = require('../controllers/skillController');
 const course = require('../controllers/courseController');
 const college = require('../controllers/collegeController');
-const post = require('../controllers/postController');
+const post = require('../controllers/user/postController');
 const interest = require('../controllers/interestController');
 const university = require('../controllers/universityController');
 
@@ -57,7 +57,7 @@ router.get('/states', profile.states);
 router.get('/cities/:city', profile.cities);
 
 router.get('/myProfile', auth, profile.myProfile);
-router.get('/profile', profileValidator.otherUserProfile, profile.otherUserProfile);
+router.get('/profile/:id', profileValidator.otherUserProfile, profile.otherUserProfile);
 router.post('/setProfile', auth, profile.setProfile);
 router.post('/createPost', auth, postValidator.createPost, post.createPost);
 

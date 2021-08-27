@@ -116,7 +116,7 @@ module.exports.resetPassword = async (req, res) => {
 /****** Logout ****/
 module.exports.logout = async (req, res) => {
     try {
-        let result = await AdminToken.deleteOne({ admin_id: req.user._id, token: req.token });
+        let result = await AdminToken.deleteOne({ admin_id: req.data._id, token: req.token });
         if (result) {
             responseManagement.sendResponse(res, httpStatus.OK, global.logged_out_successful);
         }
@@ -298,9 +298,9 @@ module.exports.admins = async (req, res) => {
             query1 = {};
         }
         const role = await Role.findOne({ name:"superadmin" }); //,   { role_id:{ $ne: role._id } },
-        const admins = await Admin.find({ $and: [{ role_id: { $ne: null } },{ _id:{ $ne: req.user._id }}, query1] }, {}, { sort: sort_q, skip: start, limit: length }).populate({ path: 'role_id', select: ['name'], model: 'role' });
-        const total = await Admin.countDocuments({$and:[{ role_id: { $ne: null } },{ _id:{ $ne: req.user._id } },]});
-        const stotal = await Admin.countDocuments({ $and: [{ role_id: { $ne: null } },{ _id:{ $ne: req.user._id } }, query1] });
+        const admins = await Admin.find({ $and: [{ role_id: { $ne: null } },{ _id:{ $ne: req.data._id }}, query1] }, {}, { sort: sort_q, skip: start, limit: length }).populate({ path: 'role_id', select: ['name'], model: 'role' });
+        const total = await Admin.countDocuments({$and:[{ role_id: { $ne: null } },{ _id:{ $ne: req.data._id } },]});
+        const stotal = await Admin.countDocuments({ $and: [{ role_id: { $ne: null } },{ _id:{ $ne: req.data._id } }, query1] });
         res.send({ status: httpStatus.OK, admins: admins, draw: draw, recordsTotal: total, recordsFiltered: stotal })
     } catch (error) {
         console.log(error)

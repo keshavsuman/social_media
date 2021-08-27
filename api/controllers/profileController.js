@@ -72,7 +72,7 @@ module.exports.setProfile = async (req, res) => {
 /**** other user profile ****/
 module.exports.otherUserProfile = async (req, res) => {
     try {
-        let user = await User.findOne({ _id: req.query._id }).lean();
+        let user = await User.findOne({ _id: req.params.id }).lean();
         responseManagement.sendResponse(res, httpStatus.OK, "", { user });
     } catch (error) {
         console.log(error)
@@ -83,7 +83,7 @@ module.exports.otherUserProfile = async (req, res) => {
 /**** User Profile for admin ****/
 module.exports.userProfile = async (req, res) => {
     try {
-        let user = await User.findOne({ _id: req.query._id })
+        let user = await User.findOne({ _id: req.params.id })
             .populate({ path: 'interests', model: 'interest' })
             .populate({ path: 'skills', model: 'skill' });
         responseManagement.sendResponse(res, httpStatus.OK, "", { user });

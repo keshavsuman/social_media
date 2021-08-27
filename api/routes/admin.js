@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+
 const admin = require('../controllers/adminController');
 const interest = require('../controllers/interestController');
 const skillValidator = require('../validators/skillValidators');
@@ -11,7 +12,6 @@ const university = require('../controllers/universityController');
 const college = require('../controllers/collegeController');
 const course = require('../controllers/courseController');
 const user = require('../controllers/userController');
-const post = require('../controllers/postController');
 
 const profile = require('../controllers/profileController');
 const dashboard = require('../controllers/dashboardController');
@@ -19,7 +19,9 @@ const adminValidator = require('../validators/adminValidators');
 const interestValidator = require('../validators/interestValidators');
 const auth = require('../middleware/auth');
 
+const postRoutes  = require('../routes/adminRoutes/postRoutes');
 
+router.use('/post',postRoutes);
 router.post('/login', adminValidator.login, admin.login);
 router.get('/logout', auth, admin.logout);
 router.post('/forgotPassword', adminValidator.forgotPassword, admin.forgotPassword);
@@ -57,11 +59,11 @@ router.post('/updateSkill', auth, skillValidator.updateSkill, skill.updateSkill)
 router.get('/updateSkillStatus', skill.updateSkillStatus);
 
 router.post('/createUniversity', universityValidator.createUniversity, university.createUniversity);
-router.delete('/deleteUniversity', auth, universityValidator.deleteUniversity, university.deleteUniversity);
+router.delete('/deleteUniversity/:universityId', auth, universityValidator.deleteUniversity, university.deleteUniversity);
 router.post('/getUniversities', university.getUniversities);
-router.get('/editUniversity', auth, university.editUniversity);
+// router.get('/editUniversity', auth, university.editUniversity);
 router.post('/updateUniversity', auth, universityValidator.updateUniversity, university.updateUniversity);
-router.get('/searchUniversity', university.searchUniversities);
+// router.get('/searchUniversity', university.searchUniversities);
 router.get('/getUniversitiesList', university.getUniversitiesListAdmin);
 router.get('/updateUniversityStatus', university.updateUniversityStatus);
 
@@ -89,11 +91,6 @@ router.get('/editUser', auth, user.editUser);
 router.post('/updateUser', auth, user.updateUser);
 router.get('/updateUserStatus', auth, user.updateUserStatus);
 router.get('/userProfile', profile.userProfile);
-
-
-router.get('/adminPostsList',post.adminPostsList);
-router.get('/changePostStatus',post.changePostStatus);
-
 
 router.get('/dashboardData', dashboard.dashboardData);
 
