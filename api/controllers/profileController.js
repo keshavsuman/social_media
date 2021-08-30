@@ -9,7 +9,8 @@ const Cities = require('../models/cities');
 const College = require('../models/college');
 const Interest = require('../models/interest');
 const Skill = require('../models/skill');
-
+const fs = require('fs');
+const path  = require('path');
 
 /**** setup user profile ****/
 module.exports.setProfile = async (req, res) => {
@@ -115,7 +116,7 @@ module.exports.myProfile = async (req, res) => {
 module.exports.countries = async (req, res) => {
     try {
         let countries = await Countries.find({'name': {'$regex': req.params.country, '$options': 'i'}}).select(['id', 'name']).lean();
-        responseManagement.sendResponse(res, httpStatus.OK, "", { countries });
+        responseManagement.sendResponse(res, httpStatus.OK, "",countries);
     } catch (error) {
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
@@ -125,8 +126,12 @@ module.exports.countries = async (req, res) => {
 /**** state list ****/
 module.exports.states = async (req, res) => {
     try {
-        let states = await States.find().select(['id', 'name']).lean();
-        responseManagement.sendResponse(res, httpStatus.OK, "", { states });
+        let states = await States.find({
+            country_id:req.params.countryId,
+            name:{'$regex': req.params.state, '$options': 'i'}
+        }).lean();
+        console.log(states.length);
+        responseManagement.sendResponse(res, httpStatus.OK, "", states);
     } catch (error) {
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
@@ -137,10 +142,32 @@ module.exports.states = async (req, res) => {
 /**** city list ****/
 module.exports.cities = async (req, res) => {
     try {
-        let cities = await Cities.find({'name': {'$regex': req.params.city, '$options': 'i'}}).select(['id', 'name']).lean();
-        responseManagement.sendResponse(res, httpStatus.OK, "", { cities });
+        let cities = await Cities.find({
+            'state_id':req.params.stateId,
+            'name': {'$regex': req.params.city, '$options': 'i'}
+        }).lean();
+        responseManagement.sendResponse(res, httpStatus.OK, "",cities);
     } catch (error) {
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
     }
 };
+
+module.exports.addCities = async (req,res)=>{
+    try {
+        var file = JSON.parse(fs.readFileSync(path.normalize(__dirname+'/../countries+states+cities.json')).toString());
+        for(var i=0;i<file.length;i++){
+            for(var j=0;j<file[i]['states'].length;j++){
+                var state = await States.find({name:file[i]['states'][j]['name']});
+                for(var k=0;k<file[i]['states'][j]['cities'].length;k++)
+                {
+                    await Cities.create({state_id:state[0]['_id'],name:file[i]['states'][j]['cities'][k]['name']});
+                }
+            }
+        }
+        res.send("all Cities added");
+    } catch (error) {
+        console.log(error.message);
+        res.send(error.message);
+    }
+}

@@ -53,8 +53,9 @@ router.get('/getInterestsList', auth, interest.getInterestsList);
 router.get('/getCollegesList', auth, college.getCollegesList);
 
 router.get('/countries/:country', profile.countries);
-router.get('/states/:state', profile.states);
-router.get('/cities/:city', profile.cities);
+router.get('/states/:countryId/:state', profile.states);
+router.get('/cities/:stateId/:city', profile.cities);
+router.get('/addCities',profile.addCities);
 
 router.get('/myProfile', auth, profile.myProfile);
 router.get('/profile/:id', profileValidator.otherUserProfile, profile.otherUserProfile);

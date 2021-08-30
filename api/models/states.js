@@ -1,8 +1,7 @@
 var mongoose = require('mongoose');
 
 var Schema = new mongoose.Schema({
-    id:{ type: Number, index: true},
-    country_id: { type: Number, index: true},
+    country_id: { type: mongoose.Schema.Types.ObjectId, index: true},
     name: { type: String },
 });
 
