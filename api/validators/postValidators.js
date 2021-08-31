@@ -8,7 +8,7 @@ module.exports.createPost = celebrate({
         media_url: Joi.string().optional(),
     })
 });
-
+ 
 module.exports.updatePost = celebrate({
     body: Joi.object().options({ abortEarly: false }).keys({
         id:Joi.string().required(),

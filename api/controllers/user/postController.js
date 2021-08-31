@@ -1,11 +1,12 @@
 
 const httpStatus = require('http-status-codes');
 const post = require('../../models/post');
+const responseManagement = require('../../lib/responseManagement');
 
 async function createPost(req,res){
     try {
         await post.create({
-            author:req.findByIdAndUpdate._id,
+            author:req.data._id,
             content:req.body.content,
             media_type:req.body.media_type,
             visibility:req.body.visibility,
@@ -41,7 +42,7 @@ async function updatePost(req,res){
 
 async function getPosts(req,res){
     try {
-        var userPosts = await post.find({userId:req.findByIdAndUpdate._id}).sort({_id:-1}).limit(50);
+        var userPosts = await post.find({userId:req.data._id}).sort({_id:-1}).limit(50);
         responseManagement.sendResponse(res,httpStatus.OK,'',userPosts);
     } catch (error) {
         console.log(error);
