@@ -5,7 +5,7 @@ module.exports.createPost = celebrate({
         content: Joi.string().required(),
         media_type: Joi.string().required(),
         visibility: Joi.string().required(),
-        media_url: Joi.string().required(),
+        media_url: Joi.string().optional(),
     })
 });
 
@@ -15,7 +15,7 @@ module.exports.updatePost = celebrate({
         content: Joi.string().required(),
         media_type: Joi.string().required(),
         visibility: Joi.string().required(),
-        media_url: Joi.string().required(),
+        media_url: Joi.string().optional(),
     })
 });
 
