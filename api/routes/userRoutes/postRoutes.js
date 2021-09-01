@@ -5,7 +5,13 @@ const auth = require('../../middleware/userAuth');
 const postValidator = require('../../validators/postValidators');
 const multer  = require('multer');
 
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({storage: multer.diskStorage({
+    destination: 'uploads',
+    filename:(req,file,cb)=>{
+        var ext = file.originalname.split('.').pop();
+        cb(null,Date.now()+'.'+ext);
+    }
+})});
 
 router.use(auth);
 

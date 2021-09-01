@@ -52,7 +52,8 @@ async function getPosts(req,res){
 
 async function uploadMedia(req,res){
     try {
-        console.log(req.file);
+        req.file.path = req.protocol+'://'+req.headers.host+'/'+req.file.path;
+        responseManagement.sendResponse(res,httpStatus.OK,'',req.file);
     } catch (error) {
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
