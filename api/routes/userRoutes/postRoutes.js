@@ -10,7 +10,7 @@ const upload = multer({storage: multer.diskStorage({
     filename:(req,file,cb)=>{
         var ext = file.originalname.split('.').pop();
         cb(null,Date.now()+'.'+ext);
-    }
+    },
 })});
 
 router.use(auth);
