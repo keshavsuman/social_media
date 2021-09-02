@@ -99,8 +99,10 @@ module.exports.myProfile = async (req, res) => {
     try {
         let user = await User.findOne({ _id: req.data._id })
             .select(['-hash', '-salt'])
-            .populate({ path: 'interests', model: 'interest' })
-            .populate({ path: 'skills', model: 'skill' })
+            .populate({ path: 'interests', model: 'interest',select:{_id:1,name:1} })
+            .populate({ path: 'skills', model: 'skill',select:{_id:1,name:1} })
+            .populate({ path: 'course', model:'course',select:{_id:1,name:1}})
+            .populate({path: 'college' ,model:'college',select:{_id:1,name:1},populate:{path:'university_id',model:'universities'}})
             .lean();
         let post = await Post.find({ posted_by: req.data._id });
 
