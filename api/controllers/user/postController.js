@@ -42,7 +42,7 @@ async function updatePost(req,res){
 
 async function getPosts(req,res){
     try {
-        var userPosts = await post.find({userId:req.data._id}).sort({_id:-1}).limit(50);
+        var userPosts = await post.find({author:req.data._id}).sort({_id:-1}).limit(50);
         responseManagement.sendResponse(res,httpStatus.OK,'',userPosts);
     } catch (error) {
         console.log(error);
