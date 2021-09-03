@@ -27,11 +27,11 @@ router.use('/university',universityRoutes);
 router.use('/college',collegeRoutes);
 router.use('/batch',batchRoutes);
 
+router.post('/search',auth,user.search);
 router.post('/login', userValidator.login, user.login);
 router.post('/signup', userValidator.registerUser, user.createUser);
 router.post('/socialLogin',userValidator.socialLogin, user.socialLogin);
 router.post('/updateUser',auth,user.updateUser);
-
 
 
 // router.get('/logout', auth, user.logout);
