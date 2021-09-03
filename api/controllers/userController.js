@@ -273,15 +273,13 @@ module.exports.search = async (req,res) =>{
             {first_name:{$regex:req.body.keyword,$options:'i'}},
             {last_name:{$regex:req.body.keyword,$options:'i'}}
           ]
-        
-        console.log(filterBody);
-        var searchResults = await User.find(filterBody,{
+                var searchResults = await User.find(filterBody,{
              first_name:1,
              last_name:1 
           });
-        console.log(searchResults);
-        res.send(searchResults);  
-    } catch (error) {
+          
+        responseManagement.sendResponse(res,httpStatus.OK,'',searchResults);
+        } catch (error) {
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
     }
