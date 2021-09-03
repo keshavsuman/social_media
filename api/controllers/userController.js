@@ -256,18 +256,20 @@ module.exports.search = async (req,res) =>{
         var user = await User.findById(req.data._id);
         var {filters} = req.body;
         var filterBody = {}
-        if(filters.includes('course') && user.course){
-            filterBody.course=user.course
-        }
-        if(filters.includes('skills')){
-            filterBody.skills= {$in:user.skills}
-        }
-        if(filters.includes('interests')){
-            filterBody.interests = {$in:user.interests}
-        }
-        if(filters.includes('college')&&user.course)
-        {
-            filterBody.college = user.college
+        if(filters){
+            if(filters.includes('course') && user.course){
+                filterBody.course=user.course
+            }
+            if(filters.includes('skills')){
+                filterBody.skills= {$in:user.skills}
+            }
+            if(filters.includes('interests')){
+                filterBody.interests = {$in:user.interests}
+            }
+            if(filters.includes('college')&&user.course)
+            {
+                filterBody.college = user.college
+            }
         }
         filterBody.$or = [
             {first_name:{$regex:req.body.keyword,$options:'i'}},
@@ -275,9 +277,13 @@ module.exports.search = async (req,res) =>{
           ]
                 var searchResults = await User.find(filterBody,{
              first_name:1,
-             last_name:1 
+             last_name:1,
+             profile_pic:1,
+             home_town:1,
+             skills:1,
+             interests:1,
+             email:1
           });
-          
         responseManagement.sendResponse(res,httpStatus.OK,'',searchResults);
         } catch (error) {
         console.log(error);
