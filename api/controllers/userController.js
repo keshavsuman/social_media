@@ -142,7 +142,7 @@ module.exports.resetPassword = async (req, res) => {
 /****** Users Datatable ****/
 module.exports.users = async (req, res) => {
     try {
-        const { start, length, columns, order, search, draw, start_date, end_date, state } = req.body.data;
+        const { start, length, columns, order, search, draw, start_date, end_date, state } = req.body;
         const sortColumn = columns[order[0].column].data;
         const sortOrder = order[0].dir;
         const searchValue = search.value;
@@ -237,7 +237,7 @@ module.exports.updateUser = async (req, res) => {
 /**** Toggle User Status ****/
 module.exports.updateUserStatus = async (req, res) => {
     try {
-        let user = await User.findOne({ _id: req.query._id });
+        let user = await User.findOne({ _id: req.body.id });
         if (!user) {
             responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, global.user_not_exist);
         } else {
