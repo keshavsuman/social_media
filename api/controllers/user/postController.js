@@ -58,7 +58,7 @@ async function getPosts(req,res){
 
 async function uploadMedia(req,res){
     try {
-        req.file.path = req.protocol+'://'+req.headers.host+'/'+req.file.path;
+        req.file.path = req.protocol+'://13.127.215.198/'+req.file.path;
         responseManagement.sendResponse(res,httpStatus.OK,'',req.file);
     } catch (error) {
         console.log(error);
