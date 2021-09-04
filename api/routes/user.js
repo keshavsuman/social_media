@@ -62,4 +62,9 @@ router.get('/profile/:id', profileValidator.otherUserProfile, profile.otherUserP
 router.post('/setProfile', auth, profile.setProfile);
 router.post('/createPost', auth, postValidator.createPost, post.createPost);
 
+// router.post('/follow/:id',auth,user.followRequest);
+// router.post('/getFollowRequests',auth,user.followRequest);
+// router.post('/follow/:id',auth,user.followRequest);
 module.exports = router;
+
+// profile of user in admin 

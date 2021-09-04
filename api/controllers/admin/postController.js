@@ -35,8 +35,13 @@ module.exports.createPost = async (req, res) => {
 /**** user posts list for admin to approve ****/
 module.exports.adminPostsList = async (req,res) =>{
 	try{
-		let posts = await Post.find({admin_approved:false}).sort({createdAt:-1});
-		responseManagement.sendResponse(res, httpStatus.OK,{posts});
+		if(type=='approved')
+		{
+			let posts = await Post.find({admin_approved:true}).sort({createdAt:-1});
+		}else{
+			let posts = await Post.find({admin_approved:false}).sort({createdAt:-1});
+		}
+		responseManagement.sendResponse(res, httpStatus.OK,posts);
 	}
 	catch(error){
 		console.log(error)

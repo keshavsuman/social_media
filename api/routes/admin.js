@@ -90,7 +90,7 @@ router.post('/users', auth, user.users);
 router.get('/editUser', auth, user.editUser);
 router.post('/updateUser', auth, user.updateUser);
 router.get('/updateUserStatus', auth, user.updateUserStatus);
-router.get('/userProfile', profile.userProfile);
+router.get('/userProfile/:id', profile.userProfile);
 
 router.get('/dashboardData', dashboard.dashboardData);
 

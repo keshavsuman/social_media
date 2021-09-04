@@ -8,6 +8,6 @@ router.use(auth);
 
 router.post('/changeStatus',postController.changePostStatus);
 router.post('/adminPostsList',postController.adminPostsList);
-router.get('/getPendingPost',postController.adminPostsList);
+router.get('/getPost/:type',postController.adminPostsList);
 
 module.exports = router;
