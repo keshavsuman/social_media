@@ -142,45 +142,54 @@ module.exports.resetPassword = async (req, res) => {
 /****** Users Datatable ****/
 module.exports.users = async (req, res) => {
     try {
-        const { start, length, columns, order, search, draw, start_date, end_date, state } = req.body;
-        const sortColumn = columns[order[0].column].data;
-        const sortOrder = order[0].dir;
-        const searchValue = search.value;
-        var search_query = [];
-        let filter1 = {};
-        let filter2 = {};
-        let filter3 = {};
-        if (start_date) {
-            filter1 = { "createdAt": { $gte: new Date(start_date) } }
-        }
-        if (end_date) {
-            filter2 = { "createdAt": { $lte: new Date(end_date) } }
-        }
-        if (state) {
-            filter3 = { "state": state }
-        }
+        var limit  = req.body.limit || 50;
+        // const { start, length, columns, order, search, draw, start_date, end_date, state } = req.body;
+        // const sortColumn = columns[order[0].column].data;
+        // const sortOrder = order[0].dir;
+        // const searchValue = search.value;
+        // var search_query = [];
+        // let filter1 = {};
+        // let filter2 = {};
+        // let filter3 = {};
+        // if (start_date) {
+        //     filter1 = { "createdAt": { $gte: new Date(start_date) } }
+        // }
+        // if (end_date) {
+        //     filter2 = { "createdAt": { $lte: new Date(end_date) } }
+        // }
+        // if (state) {
+        //     filter3 = { "state": state }
+        // }
 
-        for (var i = 0; i < columns.length; i++) {
-            if (columns[i].searchable) {
-                var key = columns[i]['name']
-                search_query.push({
-                    [key]: { '$regex': searchValue, '$options': 'i' }
-                });
-            }
-        }
-        var sort_q = {
-            [sortColumn]: sortOrder
-        }
-        var query1;
-        if (searchValue) {
-            query1 = { $or: search_query };
-        } else {
-            query1 = {};
-        }
-        const users = await User.find({ $and: [query1, filter1, filter2, filter3] }, {}, { sort: sort_q, skip: start, limit: length });
-        const total = await User.countDocuments();
-        const stotal = await User.countDocuments({ $and: [query1, filter1, filter2, filter3] });
-        res.send({ status: httpStatus.OK, users: users, draw: draw, recordsTotal: total, recordsFiltered: stotal })
+        // for (var i = 0; i < columns.length; i++) {
+        //     if (columns[i].searchable) {
+        //         var key = columns[i]['name']
+        //         search_query.push({
+        //             [key]: { '$regex': searchValue, '$options': 'i' }
+        //         });
+        //     }
+        // }
+        // var sort_q = {
+        //     [sortColumn]: sortOrder
+        // }
+        // var query1;
+        // if (searchValue) {
+        //     query1 = { $or: search_query };
+        // } else {
+        //     query1 = {};
+        // }
+        // const users = await User.find({ $and: [query1, filter1, filter2, filter3] }, {}, { sort: sort_q, skip: start, limit: length });
+        // const total = await User.countDocuments();
+        // const stotal = await User.countDocuments({ $and: [query1, filter1, filter2, filter3] });
+        // res.send({ status: httpStatus.OK, users: users, draw: draw, recordsTotal: total, recordsFiltered: stotal })
+        var users  = await User.find({
+            $or:[
+                {first_name:{ '$regex': req.body.searchValue, '$options': 'i' }},
+                {last_name:{ '$regex': req.body.searchValue, '$options': 'i' }}
+            ]
+        },{hash:0,salt:0}).skip(req.body.after).limit(50);
+        var totalUsers = await User.countDocuments();
+        responseManagement.sendResponse(res,httpStatus.OK,'',{users:users,totalUsers:totalUsers});
     } catch (error) {
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);

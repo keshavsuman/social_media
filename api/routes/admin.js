@@ -22,6 +22,7 @@ const auth = require('../middleware/auth');
 const postRoutes  = require('../routes/adminRoutes/postRoutes');
 
 router.use('/post',postRoutes);
+
 router.post('/login', adminValidator.login, admin.login);
 router.get('/logout', auth, admin.logout);
 router.post('/forgotPassword', adminValidator.forgotPassword, admin.forgotPassword);
@@ -36,13 +37,12 @@ router.post('/updateRole', auth, adminValidator.updateRole, admin.updateRole);
 router.get('/updateRoleStatus',auth, adminValidator.updateRoleStatus,admin.updateRoleStatus);
 
 
-router.post('/admins', auth, admin.admins);
-router.get('/editAdmin', auth, adminValidator.editAdmin, admin.editAdmin);
+router.get('/admins', auth, admin.admins);
 router.post('/createAdmin',adminValidator.createAdmin, admin.createAdmin);
 router.post('/updateAdmin', auth, adminValidator.updateAdmin, admin.updateAdmin);
-router.delete('/deleteAdmin', auth, adminValidator.deleteAdmin, admin.deleteAdmin);
+router.delete('/deleteAdmin/:Id', auth, adminValidator.deleteAdmin, admin.deleteAdmin);
 router.get('/updateAdminStatus', auth, admin.updateAdminStatus);
-router.post('/registerAdmin', admin.registerAdmin, adminValidator.registerAdmin);
+router.post('/registerAdmin', adminValidator.registerAdmin,admin.registerAdmin);
 
 router.post('/createInterest', auth, interestValidator.createInterest, interest.createInterest);
 router.delete('/deleteInterest', auth, interestValidator.deleteInterest, interest.deleteInterest);
@@ -86,7 +86,7 @@ router.get('/updateCourseStatus', course.updateCourseStatus);
 router.get('/permissionList', admin.permissionList);
 router.post('/addPermission', admin.addPermission);
 
-router.post('/users', auth, user.users);
+router.get('/users', auth, user.users);
 router.get('/editUser', auth, user.editUser);
 router.post('/updateUser', auth, user.updateUser);
 router.get('/updateUserStatus', auth, user.updateUserStatus);

@@ -34,6 +34,7 @@ module.exports.registerAdmin = celebrate({
     body: Joi.object().options({ abortEarly: false }).keys({
         role_id: Joi.string().required(),
         name: Joi.string().required().max(30),
+        password:Joi.string().required(),
         email: Joi.string().required().email({ minDomainSegments: 2 }),
         mobile: Joi.string().required().max(30),
         dob: Joi.string().optional(),

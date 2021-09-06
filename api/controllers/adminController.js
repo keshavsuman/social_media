@@ -275,33 +275,40 @@ module.exports.updateRole = async (req, res) => {
 /****** Admins ****/
 module.exports.admins = async (req, res) => {
     try {
-        const { start, length, columns, order, search, draw } = req.body.data;
-        const sortColumn = columns[order[0].column].data;
-        const sortOrder = order[0].dir;
-        const searchValue = search.value;
-        var search_query = [];
-        for (var i = 0; i < columns.length; i++) {
-            if (columns[i].searchable) {
-                var key = columns[i]['name']
-                search_query.push({
-                    [key]: { '$regex': searchValue, '$options': 'i' }
-                });
-            }
-        }
-        var sort_q = {
-            [sortColumn]: sortOrder
-        }
-        var query1;
-        if (searchValue) {
-            query1 = { $or: search_query };
-        } else {
-            query1 = {};
-        }
-        const role = await Role.findOne({ name:"superadmin" }); //,   { role_id:{ $ne: role._id } },
-        const admins = await Admin.find({ $and: [{ role_id: { $ne: null } },{ _id:{ $ne: req.data._id }}, query1] }, {}, { sort: sort_q, skip: start, limit: length }).populate({ path: 'role_id', select: ['name'], model: 'role' });
-        const total = await Admin.countDocuments({$and:[{ role_id: { $ne: null } },{ _id:{ $ne: req.data._id } },]});
-        const stotal = await Admin.countDocuments({ $and: [{ role_id: { $ne: null } },{ _id:{ $ne: req.data._id } }, query1] });
-        res.send({ status: httpStatus.OK, admins: admins, draw: draw, recordsTotal: total, recordsFiltered: stotal })
+        // const { start, length, columns, order, search, draw } = req.body.data;
+        // const sortColumn = columns[order[0].column].data;
+        // const sortOrder = order[0].dir;
+        // const searchValue = search.value;
+        // var search_query = [];
+        // for (var i = 0; i < columns.length; i++) {
+        //     if (columns[i].searchable) {
+        //         var key = columns[i]['name']
+        //         search_query.push({
+        //             [key]: { '$regex': searchValue, '$options': 'i' }
+        //         });
+        //     }
+        // }
+        // var sort_q = {
+        //     [sortColumn]: sortOrder
+        // }
+        // var query1;
+        // if (searchValue) {
+        //     query1 = { $or: search_query };
+        // } else {
+        //     query1 = {};
+        // }
+        // const role = await Role.findOne({ name:"superadmin" }); //,   { role_id:{ $ne: role._id } },
+        // const admins = await Admin.find({ $and: [{ role_id: { $ne: null } },{ _id:{ $ne: req.data._id }}, query1] }, {}, { sort: sort_q, skip: start, limit: length }).populate({ path: 'role_id', select: ['name'], model: 'role' });
+        // const total = await Admin.countDocuments({$and:[{ role_id: { $ne: null } },{ _id:{ $ne: req.data._id } },]});
+        // const stotal = await Admin.countDocuments({ $and: [{ role_id: { $ne: null } },{ _id:{ $ne: req.data._id } }, query1] });
+        // res.send({ status: httpStatus.OK, admins: admins, draw: draw, recordsTotal: total, recordsFiltered: stotal })
+
+        var admins  = await Admin.find({
+            name:{ '$regex': req.body.searchValue, '$options': 'i' },
+        },{hash:0,salt:0}).limit(50);
+        var totalAdmins = await Admin.countDocuments();
+        responseManagement.sendResponse(res,httpStatus.OK,'',{admin:admins,totalAdmins:totalAdmins});
+
     } catch (error) {
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
@@ -316,29 +323,6 @@ module.exports.deleteAdmin = async (req, res) => {
         if (user) {
             const result = await Admin.deleteOne({ _id: req.query.id });
             responseManagement.sendResponse(res, httpStatus.OK, global.deleted_user_successfully);
-        } else {
-            responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, global.invalid_user_id)
-        }
-    } catch (error) {
-        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
-    }
-};
-
-
-/****** Admin Detail ****/
-module.exports.editAdmin = async (req, res) => {
-    try {
-        const user = await Admin.findOne({ _id: req.query._id });
-        if (user) {
-            const admin = {
-                _id: user._id,
-                name: user.name,
-                email: user.email,
-                mobile: user.mobile,
-                role_id: user.role_id,
-                status:user.status
-            };
-            responseManagement.sendResponse(res, httpStatus.OK, '', { admin });
         } else {
             responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, global.invalid_user_id)
         }
