@@ -20,5 +20,5 @@ router.post('/createPost',postValidator.createPost,postController.createPost);
 router.post('/updatePost',postValidator.updatePost,postController.updatePost);
 router.delete('/deletePost',postValidator.deletePost,postController.deletePost);
 router.put('/generateMediaUploadUrl',upload.single('file'),postController.uploadMedia);
-
+// router.get('/userSpecificPost',postController.getUserSpecificPost);
 module.exports = router;

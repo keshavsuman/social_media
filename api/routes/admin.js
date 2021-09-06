@@ -6,9 +6,7 @@ const interest = require('../controllers/interestController');
 const skillValidator = require('../validators/skillValidators');
 const collegeValidator = require('../validators/collegeValidators');
 const skill = require('../controllers/skillController');
-const universityValidator = require('../validators/universityValidators');
 const courseValidator = require('../validators/courseValidators');
-const university = require('../controllers/universityController');
 const college = require('../controllers/collegeController');
 const course = require('../controllers/courseController');
 const user = require('../controllers/userController');
@@ -19,22 +17,19 @@ const adminValidator = require('../validators/adminValidators');
 const interestValidator = require('../validators/interestValidators');
 const auth = require('../middleware/auth');
 
-const postRoutes  = require('../routes/adminRoutes/postRoutes');
+const postRoutes  = require('./adminRoutes/postRoutes');
+const universityRoutes = require('./adminRoutes/universityRoutes');
+const roleRoutes = require('./adminRoutes/roleRoutes');
+
 
 router.use('/post',postRoutes);
+router.use('/university',universityRoutes);
+router.use('/role',roleRoutes);
 
 router.post('/login', adminValidator.login, admin.login);
 router.get('/logout', auth, admin.logout);
 router.post('/forgotPassword', adminValidator.forgotPassword, admin.forgotPassword);
 router.post('/resetPassword', adminValidator.resetPassword, admin.resetPassword);
-
-router.post('/getRoles', auth, admin.getRoles);
-router.post('/addRole',auth, adminValidator.addRole, admin.addRole);
-router.delete('/deleteRole', auth, adminValidator.deleteRole, admin.deleteRole);
-router.get('/editRole', auth, adminValidator.editRole, admin.editRole);
-router.get('/roles', auth, admin.roles);
-router.post('/updateRole', auth, adminValidator.updateRole, admin.updateRole);
-router.get('/updateRoleStatus',auth, adminValidator.updateRoleStatus,admin.updateRoleStatus);
 
 
 router.get('/admins', auth, admin.admins);
@@ -58,14 +53,6 @@ router.get('/editSkill', auth, skillValidator.deleteSkill, skill.editSkill);
 router.post('/updateSkill', auth, skillValidator.updateSkill, skill.updateSkill);
 router.get('/updateSkillStatus', skill.updateSkillStatus);
 
-router.post('/createUniversity', universityValidator.createUniversity, university.createUniversity);
-router.delete('/deleteUniversity/:universityId', auth, universityValidator.deleteUniversity, university.deleteUniversity);
-router.post('/getUniversities', university.getUniversities);
-// router.get('/editUniversity', auth, university.editUniversity);
-router.post('/updateUniversity', auth, universityValidator.updateUniversity, university.updateUniversity);
-// router.get('/searchUniversity', university.searchUniversities);
-router.get('/getUniversitiesList', university.getUniversitiesListAdmin);
-router.get('/updateUniversityStatus', university.updateUniversityStatus);
 
 router.post('/createCollege', collegeValidator.createCollege, college.createCollege);
 router.delete('/deleteCollege', auth, collegeValidator.deleteCollege, college.deleteCollege);
@@ -87,6 +74,7 @@ router.get('/permissionList', admin.permissionList);
 router.post('/addPermission', admin.addPermission);
 
 router.get('/users', auth, user.users);
+router.post('/searchusers', auth, user.searchusers);
 router.get('/editUser', auth, user.editUser);
 router.post('/updateUser', auth, user.updateUser);
 router.get('/updateUserStatus', auth, user.updateUserStatus);

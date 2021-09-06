@@ -9,6 +9,8 @@ const UserPWDToken = require('../models/user_token');
 const helper = require('../helper/helper');
 const ejs = require('ejs');
 const path = require('path');
+const connections = require('../models/connections');
+
 /****** Login ****/
 module.exports.login = async (req, res) => {
     try {
@@ -95,6 +97,13 @@ module.exports.createUser = async (req, res) => {
             const token = require('crypto').randomBytes(32).toString('hex');
             const data = { user_id: newuser._id, token, email: email };
             await UserPWDToken(data).save();
+            await connections.create({
+                user:newuser._id,
+                followers:[],
+                followings:[],
+                requests:[],
+                connections:[]
+            })
             // const password_reset_link = config.userResetPasswordLink + token;
             // const html = await ejs.renderFile(path.join(__dirname, '../helper/email_templates/password_reset.html'), { password_reset_link });
             // const to = [email];
@@ -102,13 +111,22 @@ module.exports.createUser = async (req, res) => {
             // const emailResult = await helper.sendEmail(to, subject, html);
             responseManagement.sendResponse(res, httpStatus.OK, global.signup_success);
         }
+
     } catch (error) {
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
     }
 };
 
+module.exports.forgetPassword = async (req,res)=>{
+    try{
 
+        responseManagement.sendResponse(res, httpStatus.OK,'',{});
+    }catch(error){
+        console.log(error.body);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
+    }
+} 
 /****** Reset Password ****/
 module.exports.resetPassword = async (req, res) => {
     try {
@@ -140,7 +158,7 @@ module.exports.resetPassword = async (req, res) => {
 
 
 /****** Users Datatable ****/
-module.exports.users = async (req, res) => {
+module.exports.searchusers = async (req, res) => {
     try {
         var limit  = req.body.limit || 50;
         // const { start, length, columns, order, search, draw, start_date, end_date, state } = req.body;
@@ -187,7 +205,7 @@ module.exports.users = async (req, res) => {
                 {first_name:{ '$regex': req.body.searchValue, '$options': 'i' }},
                 {last_name:{ '$regex': req.body.searchValue, '$options': 'i' }}
             ]
-        },{hash:0,salt:0}).skip(req.body.after).limit(50);
+        },{hash:0,salt:0}).skip(req.body.after).limit(limit);
         var totalUsers = await User.countDocuments();
         responseManagement.sendResponse(res,httpStatus.OK,'',{users:users,totalUsers:totalUsers});
     } catch (error) {
@@ -196,7 +214,16 @@ module.exports.users = async (req, res) => {
     }
 };
 
-
+module.exports.users = async (req, res) => {
+    try {
+        var users  = await User.find({},{hash:0,salt:0}).limit(50);
+        var totalUsers = await User.countDocuments();
+        responseManagement.sendResponse(res,httpStatus.OK,'',{users:users,totalUsers:totalUsers});
+    } catch (error) {
+        console.log(error)
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
+    }
+};
 
 
 /***** Edit User ****/
@@ -297,5 +324,49 @@ module.exports.search = async (req,res) =>{
         } catch (error) {
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
+    }
+}
+
+module.exports.followUnfollowUser = async (req,res)=>{
+    try {
+        if(req.params.operation==='accept')
+        {
+            await connections.findOneAndUpdate({user:req.data._id},{
+                $pull:{requested:req.params.id}
+            });
+            await connections.findOneAndUpdate({user:req.data._id},{
+                $addToSet:{connections:req.params.id},
+            });
+        }else if(req.params.operation==='unfollow'){
+            await connections.findOneAndUpdate({user:req.data._id},{
+                $pull:{followers:req.params.id}
+            });
+            await connections.findOneAndUpdate({user:req.data._id},{
+                $pull:{followings:req.data._id}
+            });
+        }
+        else if(req.params.operation==='connect'){
+            await connections.findOneAndUpdate({user:req.data._id},{
+                $addToSet:{requested:req.params.id}
+            });
+        }
+        // else if(req.params.operation==='')
+        else{
+            responseManagement.sendResponse(res,httpStatus.OK,'Unknown operation');
+        }
+        responseManagement.sendResponse(res,httpStatus.OK,req.params.operation + ' operation performed',);
+    } catch (error) {
+        console.log(error);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
+    }
+}
+
+module.exports.getPendingRequests = async (req,res)=>{
+    try {
+        var requests = await connections.find({user:req.data._id},{requests:1}).populate({path:'user',select:{profile_pic:1,first_name:1,last_name:1}});
+        responseManagement.sendResponse(res,httpStatus.OK,'',requests);
+    } catch (error) {
+        console.log(error.message);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
     }
 }

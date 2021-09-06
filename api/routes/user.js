@@ -35,7 +35,7 @@ router.post('/updateUser',auth,user.updateUser);
 
 
 // router.get('/logout', auth, user.logout);
-// router.post('/forgotPassword', userValidator.forgotPassword, user.forgotPassword);
+// router.post('/forgotPassword', user.forgotPassword);
 router.post('/resetPassword', user.resetPassword);
 
 // Search Api
@@ -62,9 +62,9 @@ router.get('/profile/:id', profileValidator.otherUserProfile, profile.otherUserP
 router.post('/setProfile', auth, profile.setProfile);
 router.post('/createPost', auth, postValidator.createPost, post.createPost);
 
-// router.post('/follow/:id',auth,user.followRequest);
-// router.post('/getFollowRequests',auth,user.followRequest);
-// router.post('/follow/:id',auth,user.followRequest);
+router.get('/:operation/:id',auth,user.followUnfollowUser);
+router.get('/getFollowRequests',auth,user.getPendingRequests);
+
 module.exports = router;
 
 // profile of user in admin 
