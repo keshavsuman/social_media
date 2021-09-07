@@ -35,7 +35,7 @@ router.post('/updateUser',auth,user.updateUser);
 
 
 // router.get('/logout', auth, user.logout);
-router.get('/forgotPassword', user.forgetPassword);
+router.post('/forgotPassword', user.forgetPassword);
 router.post('/resetPassword', user.resetPassword);
 
 // Search Api

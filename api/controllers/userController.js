@@ -131,7 +131,7 @@ module.exports.forgetPassword = async (req,res)=>{
             // const emailResult = await helper.sendEmail(to, subject, html);
             responseManagement.sendResponse(res, httpStatus.OK,'Password Mail sent',{});
         }else{
-            responseManagement.sendResponse(res, httpStatus.OK,'Can\'t file user with this email address',{});
+            responseManagement.sendResponse(res, httpStatus.OK,'Can\'t find user with this email address',{});
         }
     }catch(error){
         console.log(error.message);
