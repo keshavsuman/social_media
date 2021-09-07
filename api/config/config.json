@@ -1,7 +1,7 @@
 {
     "port": "4001",
     "secretKey":"SXYUASDSDETLVFRPDSEA",
-    "emailUser":"",
-    "emailPassword":"",
+    "emailUser":"keshavsuman96@gmail.com",
+    "emailPassword":"Theoberoi@96",
     "environment":"development"
 }

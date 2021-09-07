@@ -10,6 +10,7 @@ const helper = require('../helper/helper');
 const ejs = require('ejs');
 const path = require('path');
 const connections = require('../models/connections');
+const jwt =require('jsonwebtoken');
 
 /****** Login ****/
 module.exports.login = async (req, res) => {
@@ -120,10 +121,20 @@ module.exports.createUser = async (req, res) => {
 
 module.exports.forgetPassword = async (req,res)=>{
     try{
-
-        responseManagement.sendResponse(res, httpStatus.OK,'',{});
+        var user = await User.find({email:req.body.email},{hash:0,salt:0});
+        if(user.length>0){
+            var token = jwt.sign({email:user[0]['email']},config.secretKey);
+            const password_reset_link = config.userResetPasswordLink + token;
+            const html = await ejs.renderFile(path.join(__dirname, '../helper/email_templates/password_reset.html'), { password_reset_link });
+            const to = [req.body.email];
+            const subject = 'Younity - Set your account reset password Link';
+            // const emailResult = await helper.sendEmail(to, subject, html);
+            responseManagement.sendResponse(res, httpStatus.OK,'Password Mail sent',{});
+        }else{
+            responseManagement.sendResponse(res, httpStatus.OK,'Can\'t file user with this email address',{});
+        }
     }catch(error){
-        console.log(error.body);
+        console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
     }
 } 
