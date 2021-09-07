@@ -62,7 +62,10 @@ router.get('/profile/:id', profileValidator.otherUserProfile, profile.otherUserP
 router.post('/setProfile', auth, profile.setProfile);
 router.post('/createPost', auth, postValidator.createPost, post.createPost);
 
-router.post('/:operation/:id',auth,user.followUnfollowUser);
+router.post('/follow',auth,user.follow);
+router.post('/unfollow',auth,user.unfollow);
+router.post('/connect',auth,user.connect);
+router.post('/accept',auth,user.accept);
 router.post('/getFollowRequests',auth,user.getPendingRequests);
 
 module.exports = router;

@@ -338,36 +338,56 @@ module.exports.search = async (req,res) =>{
     }
 }
 
-module.exports.followUnfollowUser = async (req,res)=>{
+module.exports.follow = async  (req,res)=>{
     try {
-        if(req.params.operation==='accept')
-        {
-            await connections.findOneAndUpdate({user:req.data._id},{
-                $pull:{requested:req.params.id}
-            });
-            await connections.findOneAndUpdate({user:req.data._id},{
-                $addToSet:{connections:req.params.id},
-            });
-        }else if(req.params.operation==='unfollow'){
-            await connections.findOneAndUpdate({user:req.data._id},{
-                $pull:{followers:req.params.id}
-            });
-            await connections.findOneAndUpdate({user:req.data._id},{
-                $pull:{followings:req.data._id}
-            });
-        }
-        else if(req.params.operation==='connect'){
-            await connections.findOneAndUpdate({user:req.data._id},{
-                $addToSet:{requested:req.params.id}
-            });
-        }
-        // else if(req.params.operation==='')
-        else{
-            responseManagement.sendResponse(res,httpStatus.OK,'Unknown operation');
-        }
-        responseManagement.sendResponse(res,httpStatus.OK,req.params.operation + ' operation performed',);
+        await connections.findOneAndUpdate({user:req.body._id},{
+            $pull:{followers:req.data._id}
+        });
+        await connections.findOneAndUpdate({user:req.data._id},{
+            $pull:{followings:req.body.id}
+        });
+        responseManagement.sendResponse(res,httpStatus.OK,'followed',{});
     } catch (error) {
-        console.log(error);
+        console.log(error.message);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
+    }
+}
+module.exports.unfollow = async (req,res)=>{
+    try {
+        await connections.findOneAndUpdate({user:req.body.id},{
+            $pull:{followers:req.data._id}
+        });
+        await connections.findOneAndUpdate({user:req.data._id},{
+            $pull:{followings:req.body._id}
+        });
+        responseManagement.sendResponse(res,httpStatus.OK,'unfollowed',{});
+    } catch (error) {
+        console.log(error.message);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
+    }
+}
+module.exports.accept = async (req,res)=>{
+    try {
+        await connections.findOneAndUpdate({user:req.body.id},{
+            $pull:{requested:req.data._id}
+        });
+        await connections.findOneAndUpdate({user:req.body.id},{
+            $addToSet:{connections:req.data._id},
+        });
+        responseManagement.sendResponse(res,httpStatus.OK,'accepted',{});
+    } catch (error) {
+        console.log(error.message);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
+    }
+}
+module.exports.connect = async (req,res)=>{
+    try {
+        await connections.findOneAndUpdate({user:req.body.id},{
+            $addToSet:{requested:req.data._id}
+        });
+        responseManagement.sendResponse(res,httpStatus.OK,'connect request send',{});
+    } catch (error) {
+        console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
     }
 }
