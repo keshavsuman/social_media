@@ -62,8 +62,8 @@ router.get('/profile/:id', profileValidator.otherUserProfile, profile.otherUserP
 router.post('/setProfile', auth, profile.setProfile);
 router.post('/createPost', auth, postValidator.createPost, post.createPost);
 
-router.get('/:operation/:id',auth,user.followUnfollowUser);
-router.get('/getFollowRequests',auth,user.getPendingRequests);
+router.post('/:operation/:id',auth,user.followUnfollowUser);
+router.post('/getFollowRequests',auth,user.getPendingRequests);
 
 module.exports = router;
 

@@ -146,8 +146,8 @@ module.exports.cities = async (req, res) => {
     try {
         let cities = await Cities.find({
             'state_id':req.params.stateId,
-            'name': {'$regex': req.params.city, '$options': 'i'}
-        }).lean();
+            // 'name': {'$regex': req.params.city, '$options': 'i'}
+        });
         responseManagement.sendResponse(res, httpStatus.OK, "",cities);
     } catch (error) {
         console.log(error)
@@ -157,16 +157,20 @@ module.exports.cities = async (req, res) => {
 
 module.exports.addCities = async (req,res)=>{
     try {
-        var file = JSON.parse(fs.readFileSync(path.normalize(__dirname+'/../countries+states+cities.json')).toString());
-        for(var i=0;i<file.length;i++){
-            for(var j=0;j<file[i]['states'].length;j++){
-                var state = await States.find({name:file[i]['states'][j]['name']});
-                for(var k=0;k<file[i]['states'][j]['cities'].length;k++)
-                {
-                    await Cities.create({state_id:state[0]['_id'],name:file[i]['states'][j]['cities'][k]['name']});
-                }
-            }
-        }
+        await Cities.create({
+            state_id:'612b275e60fde76ebeba87fd',
+            name:'jaipur'
+        });
+        // var file = JSON.parse(fs.readFileSync(path.normalize(__dirname+'/../countries+states+cities.json')).toString());
+        // for(var i=0;i<file.length;i++){
+        //     for(var j=0;j<file[i]['states'].length;j++){
+        //         var state = await States.find({name:file[i]['states'][j]['name']});
+        //         for(var k=0;k<file[i]['states'][j]['cities'].length;k++)
+        //         {
+        //             await Cities.create({state_id:state[0]['_id'],name:file[i]['states'][j]['cities'][k]['name']});
+        //         }
+        //     }
+        // }
         res.send("all Cities added");
     } catch (error) {
         console.log(error.message);
