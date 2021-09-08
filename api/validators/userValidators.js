@@ -44,3 +44,9 @@ module.exports.updateProfilePic = celebrate({
         profile_pic: Joi.string().required(),
     })
 });
+
+module.exports.followunfollowValidator = celebrate({
+    body: Joi.object().options({ abortEarly: false }).keys({
+        id: Joi.string().required(),
+        operation: Joi.string().required(),
+    })})

@@ -30,7 +30,7 @@ router.use('/batch',batchRoutes);
 router.post('/search',auth,user.search);
 router.post('/login', userValidator.login, user.login);
 router.post('/signup', userValidator.registerUser, user.createUser);
-router.post('/socialLogin',userValidator.socialLogin, user.socialLogin);
+router.post('`/socialLogin`',userValidator.socialLogin, user.socialLogin);
 router.post('/updateUser',auth,user.updateUser);
 
 
@@ -62,11 +62,9 @@ router.get('/profile/:id', profileValidator.otherUserProfile, profile.otherUserP
 router.post('/setProfile', auth, profile.setProfile);
 router.post('/createPost', auth, postValidator.createPost, post.createPost);
 
-router.post('/follow',auth,user.follow);
-router.post('/unfollow',auth,user.unfollow);
-router.post('/connect',auth,user.connect);
-router.post('/accept',auth,user.accept);
-router.post('/getFollowRequests',auth,user.getPendingRequests);
+router.post('/followUnfollow',auth,userValidator.followunfollowValidator ,user.followunfollow);
+router.post('/connectAcceptReject',auth,user.connectAcceptReject);
+router.post('/getConnectionRequests',auth,user.getPendingRequests);
 
 module.exports = router;
 
