@@ -386,10 +386,17 @@ module.exports.accept = async (req,res)=>{
 module.exports.connectAcceptReject = async (req,res)=>{
     try {
         if(req.body.operation==='reject'){
-
+            await connections.findOneAndUpdate({user:req.data._id},{
+                $pull:{requested:req.body.id}
+            });
         }
         if(req.body.operation==='accept'){
-
+            await connections.findOneAndUpdate({user:req.data._id},{
+                $pull:{requested:req.body.id}
+            });
+            await connections.findOneAndUpdate({user:req.data._id},{
+                $addToSet:{connections:req.body.id}
+            });
         }
         if(req.body.operation==='connect'){
             await connections.findOneAndUpdate({user:req.body.id},{
@@ -408,6 +415,16 @@ module.exports.getPendingRequests = async (req,res)=>{
     try {
         var requests = await connections.find({user:req.data._id},{requests:1}).populate({path:'user',select:{profile_pic:1,first_name:1,last_name:1}});
         responseManagement.sendResponse(res,httpStatus.OK,'',requests);
+    } catch (error) {
+        console.log(error.message);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
+    }
+}
+
+module.exports.myconnections = async (req,res)=>{
+    try {
+        var myconnections =  await connections.find({user:req.data._id},{connections:1}).populate('connections');
+        responseManagement.sendResponse(res, httpStatus.OK,'',myconnections);
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
