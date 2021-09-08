@@ -32,11 +32,11 @@ module.exports.createCollege = async (req, res) => {
 /**** Delete College ****/
 module.exports.deleteCollege = async (req, res) => {
     try {
-        let college = await College.findOne(req.query);
+        let college = await College.findById(req.body.id);
         if (!college) {
             responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, global.college_not_exist);
         } else {
-            await College.deleteOne(req.query);
+            await College.findByIdAndDelete(req.body.id);
             responseManagement.sendResponse(res, httpStatus.OK, global.college_deleted);
         }
     } catch (error) {
@@ -83,11 +83,17 @@ module.exports.getColleges = async (req, res) => {
 /**** send college according to the id ****/
 module.exports.editCollege = async (req, res) => {
     try {
-        let college = await College.findOne(req.query).populate({ path: 'course_id', model: 'course' });
+        let college = await College.findById(req.body.id);
         if (!college) {
             responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, global.college_not_exist);
         } else {
-            responseManagement.sendResponse(res, httpStatus.OK, '', college);
+            var newcollege = await College.findByIdAndUpdate(req.body.id,{
+                name:req.body.name??college.name,
+                university_id:req.body.university_id??college.university_id,
+                isAutonomous:req.body.isAutonomous??college.isAutonomous,
+                status:req.body.status??college.status
+            },{new:true});
+            responseManagement.sendResponse(res, httpStatus.OK, '', newcollege);
         }
     } catch (error) {
         console.log(error)

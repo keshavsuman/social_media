@@ -104,7 +104,6 @@ async function comment(req,res){
                 comment:req.body.comment,
                 user_id:req.data._id
             });
-            await post.findByIdAndUpdate(req.body.post_id,)
             responseManagement.sendResponse(res,httpStatus.OK,'Comment added',{});
         }else{
             responseManagement.sendResponse(res,httpStatus.OK,'post not found',{});
@@ -127,6 +126,17 @@ async function replyOnComment(req,res){
     }
 }
 
+async function myPosts(req,res){
+    try {
+        var posts = await post.find({user:req.data._id});
+        responseManagement.sendResponse(res,httpStatus.OK,'',posts);
+    } catch (error) {
+        console.log(error.message);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
+    }
+}
+
+
 module.exports = {
     getPosts,
     createPost,
@@ -137,6 +147,6 @@ module.exports = {
     reactOnPost,
     comment,
     replyOnComment,
-    getComments
-
+    getComments,
+    myPosts
 }

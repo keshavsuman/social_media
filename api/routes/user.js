@@ -67,6 +67,10 @@ router.post('/connectAcceptReject',auth,user.connectAcceptReject);
 router.post('/getConnectionRequests',auth,user.myconnections);
 router.post('/myconnections',auth,user.myconnections);
 router.post('/getFollowRequests',auth,user.getPendingRequests);
+
+
+router.get('/notifications',auth,user.getNotifications);
+
 module.exports = router;
 
 // profile of user in admin 

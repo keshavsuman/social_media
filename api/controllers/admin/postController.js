@@ -50,3 +50,18 @@ module.exports.adminPostsList = async (req,res) =>{
 	}	
 };
 
+
+module.exports.deletePost = async (req,res)=>{
+	try {
+		var post = await Post.findById(req.body.id);
+		if(post){
+			await Post.findByIdAndDelete(req.body.id);
+			responseManagement.sendResponse(res, httpStatus.OK,'post deleted',{});
+		}else{
+			responseManagement.sendResponse(res, httpStatus.OK,'can\'t find post',{});
+		}
+	} catch (error) {
+		console.log(error)
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
+	}
+}

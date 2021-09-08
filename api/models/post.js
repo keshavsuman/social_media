@@ -7,7 +7,6 @@ var Schema = new mongoose.Schema({
     visibility: { type: String },
     media_url: { type: String },
     admin_approved: {type: Boolean, default:false},
-    
     comments:[{type:mongoose.Schema.Types.ObjectId,ref:'comments'}],
 }, { timestamps: true });
 

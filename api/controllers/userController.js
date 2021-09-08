@@ -11,6 +11,7 @@ const ejs = require('ejs');
 const path = require('path');
 const connections = require('../models/connections');
 const jwt =require('jsonwebtoken');
+const notification =  require('../models/notifications');
 
 /****** Login ****/
 module.exports.login = async (req, res) => {
@@ -421,3 +422,14 @@ module.exports.myconnections = async (req,res)=>{
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
     }
 }
+
+module.exports.getNotifications = async (req,res)=>{
+    try {
+        var notifications = await notification.find({user:req.data._id}).sort({createdAt:-1}).limit(20);
+        responseManagement.sendResponse(res,httpStatus.OK,'',notifications);
+    } catch (error) {
+        console.log(error.message);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
+    }
+}
+

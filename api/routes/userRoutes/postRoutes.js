@@ -16,6 +16,7 @@ const upload = multer({storage: multer.diskStorage({
 router.use(auth);
 
 router.get('/getPost/:media_type',postController.getPosts);
+router.get('/myposts',postController.myPosts);
 router.post('/createPost',postValidator.createPost,postController.createPost);
 router.post('/updatePost',postValidator.updatePost,postController.updatePost);
 router.delete('/deletePost',postValidator.deletePost,postController.deletePost);
@@ -26,4 +27,5 @@ router.post('/comment',postController.comment);
 router.post('/getComments',postController.getComments);
 router.post('/replyOnComment',postController.replyOnComment);
 router.post('/share',postController.sharePost)
+
 module.exports = router;

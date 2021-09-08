@@ -9,16 +9,18 @@ module.exports.createCollege = celebrate({
 });
 
 module.exports.deleteCollege = celebrate({
-    query: Joi.object().options({ abortEarly: false }).keys({
-        _id: Joi.string().required()
+    body: Joi.object().options({ abortEarly: false }).keys({
+        id: Joi.string().required()
     })
 });
 
 module.exports.updateCollege = celebrate({
     body: Joi.object().options({ abortEarly: false }).keys({
-        _id: Joi.string().required(),
-        name: Joi.string().required(),
+        id: Joi.string().required(),
+        name: Joi.string().optional(),
         university_id:Joi.string().optional(),
-        course_id: Joi.array().optional()
+        course_id: Joi.array().optional(),
+        status:Joi.string().optional(),
+        isAutonomous:Joi.string().optional()
     })
 });
