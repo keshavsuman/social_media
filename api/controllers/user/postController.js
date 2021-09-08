@@ -97,18 +97,30 @@ async function getComments(req,res){
 }
 async function comment(req,res){
     try {
-        await comments.create();
-        responseManagement.sendResponse(res,httpStatus.OK,'Comment added',{});
-
+        var postToUpdate = post.findById(req.body.post_id);
+        if(postToUpdate){
+            var comment = await comments.create({
+                post_id:req.body.id,
+                comment:req.body.comment,
+                user_id:req.data._id
+            });
+            await post.findByIdAndUpdate(req.body.post_id,)
+            responseManagement.sendResponse(res,httpStatus.OK,'Comment added',{});
+        }else{
+            responseManagement.sendResponse(res,httpStatus.OK,'post not found',{});
+        }
     } catch (error) {
         console.log(error);
-        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
+        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,comment);
     }
 }
 
 async function replyOnComment(req,res){
     try{
-        
+        var reply = comments.create({
+
+        });
+        responseManagement.sendResponse(res,httpStatus.OK,'Reply added',{});
     }catch(error){
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});

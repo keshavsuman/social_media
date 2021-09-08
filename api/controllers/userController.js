@@ -400,7 +400,7 @@ module.exports.connectAcceptReject = async (req,res)=>{
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
     }
-}
+} 
 
 module.exports.getPendingRequests = async (req,res)=>{
     try {
