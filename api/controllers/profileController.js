@@ -157,10 +157,6 @@ module.exports.cities = async (req, res) => {
 
 module.exports.addCities = async (req,res)=>{
     try {
-        await Cities.create({
-            state_id:'612b275e60fde76ebeba87fd',
-            name:'jaipur'
-        });
         // var file = JSON.parse(fs.readFileSync(path.normalize(__dirname+'/../countries+states+cities.json')).toString());
         // for(var i=0;i<file.length;i++){
         //     for(var j=0;j<file[i]['states'].length;j++){

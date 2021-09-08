@@ -2,6 +2,7 @@
 const httpStatus = require('http-status-codes');
 const post = require('../../models/post');
 const responseManagement = require('../../lib/responseManagement');
+const comments = require('../../models/comment');
 
 async function createPost(req,res){
     try {
@@ -56,6 +57,16 @@ async function getPosts(req,res){
     }
 }
 
+async function sharePost(req,res){
+    try{
+        
+    }catch(error){
+        console.log(error);
+        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
+    }
+}
+
+
 async function uploadMedia(req,res){
     try {
         req.file.path = req.protocol+'://13.127.215.198/'+req.file.path;
@@ -66,27 +77,38 @@ async function uploadMedia(req,res){
     }
 }
 
-async function likePost(req,res){
+async function reactOnPost(req,res){
     try {
-        
+        req.body.post_id;
     } catch (error) {
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
     }
 }
 
+async function getComments(req,res){
+    try{
+        var comment = await comments.find({post_id:req.body.post_id}).populate('user');
+        responseManagement.sendResponse(res,httpStatus.OK,'',comment);
+    }catch(error){
+        console.log(error);
+        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
+    }
+}
 async function comment(req,res){
     try {
-        
+        await comments.create();
+        responseManagement.sendResponse(res,httpStatus.OK,'Comment added',{});
+
     } catch (error) {
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
     }
 }
 
-async function reply(req,res){
+async function replyOnComment(req,res){
     try{
-
+        
     }catch(error){
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
@@ -98,8 +120,11 @@ module.exports = {
     createPost,
     updatePost,
     deletePost,
+    sharePost,
     uploadMedia,
-    likePost,
+    reactOnPost,
     comment,
-    reply
+    replyOnComment,
+    getComments
+
 }

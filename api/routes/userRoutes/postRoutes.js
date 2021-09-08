@@ -21,4 +21,9 @@ router.post('/updatePost',postValidator.updatePost,postController.updatePost);
 router.delete('/deletePost',postValidator.deletePost,postController.deletePost);
 router.put('/generateMediaUploadUrl',upload.single('file'),postController.uploadMedia);
 // router.get('/userSpecificPost',postController.getUserSpecificPost);
+router.post('/react',postController.reactOnPost);
+router.post('/comment',postController.comment);
+router.post('/getComments',postController.getComments);
+router.post('/replyOnComment',postController.replyOnComment);
+router.post('/share',postController.sharePost)
 module.exports = router;
