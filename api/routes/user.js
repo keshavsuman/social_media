@@ -69,7 +69,7 @@ router.post('/myconnections',auth,user.myconnections);
 router.post('/getFollowRequests',auth,user.getPendingRequests);
 
 
-router.get('/notifications',auth,user.getNotifications);
+router.post('/notifications',auth,user.getNotifications);
 
 module.exports = router;
 
