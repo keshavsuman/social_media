@@ -339,8 +339,12 @@ module.exports.search = async (req,res) =>{
              home_town:1,
              skills:1,
              interests:1,
-             email:1
-          });
+             email:1,
+             start_date:1,
+             end_date:1,
+             college:1,
+             course:1
+          }).populate('college').populate('course');
         responseManagement.sendResponse(res,httpStatus.OK,'',searchResults);
         } catch (error) {
         console.log(error);

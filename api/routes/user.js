@@ -72,5 +72,3 @@ router.post('/getFollowRequests',auth,user.getPendingRequests);
 router.post('/notifications',auth,user.getNotifications);
 
 module.exports = router;
-
-// profile of user in admin 

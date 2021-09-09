@@ -64,12 +64,22 @@ app.use(mongoSanitize({
     console.warn(`This request[${key}] is sanitized`, req);
   },
 }));
+app.use(express.static('static/'));
 app.use(express.urlencoded({ extended: 'false' }));
 app.use(express.json());
 app.use(require('./routes'));
 app.use(errors());
 app.use('/uploads',express.static('uploads'));
 
+app.use(/^((?!(api))\/admin.)*/, (req, res) => {
+  if (req.method === 'GET') {
+    res.sendFile(path.join(__dirname, '../admin/build/index.html'))
+  } else {
+    res.status(500).json({
+      message: req.method + ' not Allowed'
+    })
+  }
+})
 app.use(/^((?!(api)).)*/, (req, res) => {
   if (req.method === 'GET') {
     res.sendFile(path.join(__dirname, '../users/build/index.html'))
