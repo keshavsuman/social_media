@@ -64,7 +64,7 @@ app.use(mongoSanitize({
     console.warn(`This request[${key}] is sanitized`, req);
   },
 }));
-app.use(express.static('static/'));
+// app.use(express.static(path.join(__dirname, "static")));
 app.use(express.urlencoded({ extended: 'false' }));
 app.use(express.json());
 app.use(require('./routes'));
