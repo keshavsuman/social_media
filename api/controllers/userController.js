@@ -119,7 +119,14 @@ module.exports.createUser = async (req, res) => {
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
     }
 };
-
+module.exports.logout = (req,res)=>{
+    try {
+        
+    } catch (error) {
+        console.log(error)
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
+    }
+}
 module.exports.forgetPassword = async (req,res)=>{
     try{
         var user = await User.find({email:req.body.email},{hash:0,salt:0});
@@ -415,7 +422,9 @@ module.exports.getPendingRequests = async (req,res)=>{
 
 module.exports.myconnections = async (req,res)=>{
     try {
-        var myconnections =  await connections.find({user:req.data._id},{connections:1}).populate('connections');
+        console.log(req.data._id);
+        var myconnections =  await connections.find({user:req.data._id},{connections:1,_id:0}).populate({path:'connections',select:{profile_pic:1,first_name:1,last_name:1,email:1}});
+        console.log(myconnections);
         responseManagement.sendResponse(res, httpStatus.OK,'',myconnections);
     } catch (error) {
         console.log(error.message);

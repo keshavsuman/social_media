@@ -9,7 +9,7 @@ module.exports.login = celebrate({
 
 module.exports.socialLogin = celebrate({
     body: Joi.object().options({ abortEarly: false }).keys({
-        email: Joi.any().required(),
+        email: Joi.any().optional(),
         provider_type: Joi.string().required(),
         provider_id: Joi.string().required(),
         // first_name: Joi.string().required(),

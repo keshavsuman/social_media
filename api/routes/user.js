@@ -34,7 +34,7 @@ router.post('`/socialLogin`',userValidator.socialLogin, user.socialLogin);
 router.post('/updateUser',auth,user.updateUser);
 
 
-// router.get('/logout', auth, user.logout);
+router.post('/logout', auth, user.logout);
 router.post('/forgotPassword', user.forgetPassword);
 router.post('/resetPassword', user.resetPassword);
 
