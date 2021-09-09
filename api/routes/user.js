@@ -64,7 +64,7 @@ router.post('/createPost', auth, postValidator.createPost, post.createPost);
 
 router.post('/followUnfollow',auth,userValidator.followunfollowValidator ,user.followunfollow);
 router.post('/connectAcceptReject',auth,user.connectAcceptReject);
-router.post('/getConnectionRequests',auth,user.myconnections);
+router.post('/getConnectionRequests',auth,user.getPendingRequests);
 router.post('/myconnections',auth,user.myconnections);
 router.post('/getFollowRequests',auth,user.getPendingRequests);
 

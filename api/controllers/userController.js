@@ -12,6 +12,7 @@ const path = require('path');
 const connections = require('../models/connections');
 const jwt =require('jsonwebtoken');
 const notification =  require('../models/notifications');
+const userToken = require('../models/user_token');
 
 /****** Login ****/
 module.exports.login = async (req, res) => {
@@ -121,7 +122,8 @@ module.exports.createUser = async (req, res) => {
 };
 module.exports.logout = (req,res)=>{
     try {
-        
+        user_
+        responseManagement.sendResponse(res, httpStatus.OK,'Logout Successfull',{});
     } catch (error) {
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
@@ -412,8 +414,8 @@ module.exports.connectAcceptReject = async (req,res)=>{
 
 module.exports.getPendingRequests = async (req,res)=>{
     try {
-        var requests = await connections.find({user:req.data._id},{requests:1}).populate({path:'user',select:{profile_pic:1,first_name:1,last_name:1}});
-        responseManagement.sendResponse(res,httpStatus.OK,'',requests);
+        var requests = await connections.find({user:req.data._id},{requested:1,_id:0}).populate({path:'requested',select:{profile_pic:1,first_name:1,last_name:1}});
+        responseManagement.sendResponse(res,httpStatus.OK,'',requests[0].requested);
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
@@ -423,7 +425,7 @@ module.exports.getPendingRequests = async (req,res)=>{
 module.exports.myconnections = async (req,res)=>{
     try {
         var myconnections =  await connections.find({user:req.data._id},{connections:1,_id:0}).populate({path:'connections',select:{profile_pic:1,first_name:1,last_name:1,email:1}});
-        responseManagement.sendResponse(res, httpStatus.OK,'',myconnections);
+        responseManagement.sendResponse(res, httpStatus.OK,'',myconnections[0].connections);
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
