@@ -422,9 +422,7 @@ module.exports.getPendingRequests = async (req,res)=>{
 
 module.exports.myconnections = async (req,res)=>{
     try {
-        console.log(req.data._id);
         var myconnections =  await connections.find({user:req.data._id},{connections:1,_id:0}).populate({path:'connections',select:{profile_pic:1,first_name:1,last_name:1,email:1}});
-        console.log(myconnections);
         responseManagement.sendResponse(res, httpStatus.OK,'',myconnections);
     } catch (error) {
         console.log(error.message);
