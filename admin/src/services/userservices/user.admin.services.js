@@ -8,7 +8,7 @@ export const adminLogin = async (email, password, url = apiconfig.baseurl + serv
     email: email,
     password: password
   })
-  if (response.data.statusCode === 200) {
+  if (response.data.status === 200) {
     localStorage.setItem("access_token", response.data.data.token)
     localStorage.setItem("username", response.data.data.user_data.name)
     localStorage.setItem("role", response.data.data.user_data.role)
@@ -346,7 +346,7 @@ export const searchCourses = async (name, accessToken, url = apiconfig.baseurl +
   }
 
   )
-  if (response.data.statusCode === 200) {
+  if (response.data.status === 200) {
     return response.data;
   } else {
     return response.data;
@@ -360,7 +360,7 @@ export const getCoursesList = async ( accessToken, url = apiconfig.baseurl + ser
   }
 
   )
-  if (response.data.statusCode === 200) {
+  if (response.data.status === 200) {
     return response.data;
   } else {
     return response.data;

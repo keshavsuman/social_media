@@ -23,7 +23,7 @@ const ForgotPassword = () => {
           setloadingStatus(true);
           var response = await  forgotPassword(email);
           setloadingStatus(false);
-          if(response.statusCode === 200){
+          if(response.status === 200){
             showToast(response.message, "success");
           }else{
             showToast(response.message, "error");

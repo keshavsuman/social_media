@@ -45,7 +45,7 @@ export default class InterestDataTable extends Component {
         );
         $("#datatable").DataTable().ajax.reload();
 
-        if (res.statusCode === 200)
+        if (res.status === 200)
           showToast(res.message, "success");
       }
 
@@ -62,7 +62,7 @@ export default class InterestDataTable extends Component {
       );
 
       console.log(res.data.photo,"----------------------------");
-      if (res.statusCode === 200) {
+      if (res.status === 200) {
         this.setState({
           interest: res.data.name,
           selectedFileurl:res.data.photo
@@ -116,7 +116,7 @@ export default class InterestDataTable extends Component {
 
           console.log("This is response of interest " + res);
           indexnum = 1;
-          if (res.data.statusCode === 200) {
+          if (res.data.status === 200) {
             callback({
               draw: res.data.draw,
               data: res.data.interests,
@@ -235,7 +235,7 @@ export default class InterestDataTable extends Component {
       selectedFile:null
     })
     url= null
-    if (res.statusCode === 200) {
+    if (res.status === 200) {
       showToast(res.message, "success")
       $("#datatable").DataTable().ajax.reload();
     } else {

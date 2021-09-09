@@ -20,7 +20,7 @@ const Courses = () => {
     };
     var res = await createcourses(model, token);
     // debugger;
-    if (res.statusCode === 200) {
+    if (res.status === 200) {
       $("#datatable").DataTable().ajax.reload();
       showToast(res.message, "success");
     } else {

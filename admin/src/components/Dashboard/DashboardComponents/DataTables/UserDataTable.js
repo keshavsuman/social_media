@@ -3,17 +3,8 @@ import $ from "jquery";
 import { withRouter } from "react-router-dom";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-
-
-
 import { ToastContainer } from "react-toastify";
 import showToast from "../../../../utils/toast/toast";
-
-
-
-
-
-
 import {baseurl} from "../../../../services/config/config"
 import {getStates} from "../../../../services/userservices/user.services"
 import {usersDataTable} from "../../../../services/config/serviceroutes"
@@ -91,7 +82,7 @@ class UserDatatable extends Component {
     if (event.target.hasAttribute("delete-id")) {
       const id = event.target.getAttribute("delete-id");
       console.log(id);
-      var res = await   deleteUniversity(
+      var res = await  deleteUniversity(
         id,
         localStorage.getItem("access_token")
       );
@@ -108,12 +99,10 @@ class UserDatatable extends Component {
         localStorage.getItem("access_token")
       );
 
-      this.setState({
-        status: res.data.user.status,
-      });
+      this.setState({  status: res.data.user.status  });
       document.getElementById("show_selected").value = this.state.status;
 
-      //   if (res.statusCode === 200) {
+      //   if (res.status === 200) {
       //     this.setState({
       //       university: res.data.name,
       //     });
@@ -173,7 +162,7 @@ class UserDatatable extends Component {
             config
           );
           indexnum = 1;
-          if (res.data.statusCode === 200) {
+          if (res.data.status === 200) {
             callback({
               draw: res.data.draw,
               data: res.data.users,
@@ -350,7 +339,7 @@ class UserDatatable extends Component {
 
       this.state.status == "true"
     );
-    if (res.statusCode === 200) {
+    if (res.status === 200) {
       $("#datatable").DataTable().ajax.reload();
       showToast(res.message, "success");
     } else {

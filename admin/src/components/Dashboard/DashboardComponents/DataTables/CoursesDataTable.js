@@ -47,7 +47,7 @@ async manageDatatable(event) {
 
         localStorage.getItem("access_token")
       );
-      if (res.statusCode === 200) {
+      if (res.status === 200) {
         this.setState({
             courses: res.data.name,
         });
@@ -98,7 +98,7 @@ async manageDatatable(event) {
             }
           );
           indexnum = 1;
-          if (res.data.statusCode === 200) {
+          if (res.data.status === 200) {
             callback({
               draw: res.data.draw,
               data: res.data.courses,
@@ -200,7 +200,7 @@ async manageDatatable(event) {
 
   async saveNewCoursesChanges() {
     var res = await updateCourses(ids, uni, loc);
-    if (res.statusCode === 200) {
+    if (res.status === 200) {
       $("#datatable").DataTable().ajax.reload();
       showToast(res.message, 'success')
     } else {

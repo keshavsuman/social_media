@@ -1,18 +1,8 @@
 
 import React, { Component } from "react";
-
 import $ from "jquery";
-
-
-
 import { ToastContainer } from "react-toastify";
 import showToast from "../../../../utils/toast/toast";
-
-
-
-
-
-
 import {baseurl} from "../../../../services/config/config"
 import {universityDataTable} from "../../../../services/config/serviceroutes"
 import {updateUniversityStatus,updateUniversity,editUniversity,deleteUniversity} from "../../../../services/userservices/user.admin.services"
@@ -41,7 +31,7 @@ export default class Datatable extends Component {
       $("#datatable").DataTable().ajax.reload();
       // TODO: HERE res is undefined response is not present
       console.log("my",res);
-      // if(res.statusCode === 200){
+      // if(res.status === 200){
         // $("#datatable").DataTable().ajax.reload();
       // }
 
@@ -56,7 +46,7 @@ export default class Datatable extends Component {
 
         localStorage.getItem("access_token")
       );
-      if (res.statusCode === 200) {
+      if (res.status === 200) {
         this.setState({
           university: res.data.name,
         });
@@ -116,7 +106,7 @@ export default class Datatable extends Component {
             }
           );
           indexnum = 1;
-          if (res.data.statusCode === 200) {
+          if (res.data.status === 200) {
             callback({
               draw: res.data.draw,
               data: res.data.universities,
@@ -207,7 +197,7 @@ export default class Datatable extends Component {
 
   async saveNewUniversityChanges() {
     var res = await updateUniversity(ids, uni, loc);
-    if (res.statusCode === 200) {
+    if (res.status === 200) {
       $("#datatable").DataTable().ajax.reload();
       showToast(res.message, 'success')
     } else {

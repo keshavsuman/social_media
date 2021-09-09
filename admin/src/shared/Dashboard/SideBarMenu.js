@@ -58,7 +58,8 @@ const SideBarMenu = () => {
                   <span>Courses</span>
                </Link>
             </li>
-
+            
+           
             <li className={splitLocation[1] === "skills-management" ? "active" : ""}>
                <Link to="/skills-management">
                   <span className="las la-graduation-cap"></span>
@@ -117,6 +118,18 @@ const SideBarMenu = () => {
                 <span>Courses</span>
              </Link>
           </li>
+          <li className={splitLocation[1] === "skills-management" ? "active" : ""}>
+               <Link to="/unapproved-post">
+                  <span className="las la-graduation-cap"></span>
+                  <span>Unapproved Post</span>
+               </Link>
+            </li>
+            <li className={splitLocation[1] === "skills-management" ? "active" : ""}>
+               <Link to="/approved-post">
+                  <span className="las la-graduation-cap"></span>
+                  <span>Approved Post</span>
+               </Link>
+            </li>
 
           <li className={splitLocation[1] === "skills-management" ? "active" : ""}>
              <Link to="/skills-management">

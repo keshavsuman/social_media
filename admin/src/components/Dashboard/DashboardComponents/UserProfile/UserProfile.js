@@ -3,14 +3,13 @@ import SideBarMenu from "../../../../shared/Dashboard/SideBarMenu";
 import DashboardHeader from "../../../../shared/Dashboard/DashboardHeader";
 import UserDatatable from "../DataTables/UserDataTable";
 import avatar from "../../../../static/images/users/avatar-3.jpg";
+import * as RouterService from "../../../../services/router/index";
 import avatar2 from "../../../../static/images/users/avatar-2.jpg";
-
-
-
 import avatar3 from "../../../../static/images/users/avatar-4.jpg";
+import { token, baseurl } from "../../../../services/config/config";
 import { useParams, useLocation } from "react-router";
 import {userProfile} from "../../../../services/userservices/user.admin.services"
-
+import * as userService from "../../../../services/userservices/user";
 const UserProfile = () => {
   const location = useLocation();
   var a = location.pathname.split("/");
@@ -22,21 +21,36 @@ const UserProfile = () => {
   const [email, setEmail] = useState("");
   const[profile_pic,setProfilepic]=useState("");
   const[bio,setBio]=useState("");
+  const[collegYear,setCollegeYear]=useState("");
+  const[course,setCourse]=useState("");
+  const[dob,setDob]=useState("");
+  const[college, setCollege]=useState("");
+  const[HomeTown,setHomeTown]=useState("");
+  const[interests,setInterests]=useState([]);
+  const[skills,setSkills]=useState([]);
 
   useEffect(() => {
+    let urlData = RouterService.urlToSplitData(RouterService.getLocationData().pathname)
+    console.log('urlData', urlData)
+  
     const fetch = async () => {
       try {
-        const data = await  userProfile(
-          a[3],
-          localStorage.getItem("access_token")
-        );
-       setBio(data.data.user.bio)
-       setProfilepic(data.data.user.profile_pic)
-        setfirstName(data.data.user.first_name);
-        setlastname(data.data.user.last_name);
-        setlocations(data.data.user.state);
-        setMobile(data.data.user.mobile);
-        setEmail(data.data.user.email);
+        let result = await userService.getUser(urlData[3], token);
+        console.log('result.data.user', result.data.user)
+       setBio(result.data.user.bio)
+       setProfilepic(result.data.user.profile_pic)
+        setfirstName(result.data.user.first_name);
+        setlastname(result.data.user.last_name);
+        setlocations(result.data.user.state);
+        setMobile(result.data.user.mobile);
+        setEmail(result.data.user.email);
+        setCollege(result.data.user.college)
+        setCollegeYear(result.data.user.college_year)
+        setCourse(result.data.user.course)
+        setDob(result.data.user.dob)
+        setHomeTown(result.data.user.home_town)
+        setInterests(result.data.user.interests)
+        setSkills(result.data.user.skills)
       } catch (error) {
         console.log(error);
       }
@@ -86,6 +100,7 @@ const UserProfile = () => {
               <div className="col-xl-4 col-lg-5">
                 <div className="card text-center">
                   <div className="card-body">
+                    {console.log('profile_pic', profile_pic)}
                     <img 
                     width="200px"
                     height="200px"
@@ -464,6 +479,7 @@ const UserProfile = () => {
                                   className="form-control"
                                   id="firstname"
                                   placeholder="Enter first name"
+                                  value={firstname || ''}
                                 />
                               </div>
                             </div>
@@ -480,6 +496,7 @@ const UserProfile = () => {
                                   className="form-control"
                                   id="lastname"
                                   placeholder="Enter last name"
+                                  value={lastname || ''}
                                 />
                               </div>
                             </div>{" "}
@@ -497,7 +514,7 @@ const UserProfile = () => {
                                   id="userbio"
                                   rows={4}
                                   placeholder="Write something..."
-                                  defaultValue={""}
+                                  defaultValue={bio || ''}
                                 />
                               </div>
                             </div>{" "}
@@ -518,6 +535,7 @@ const UserProfile = () => {
                                   className="form-control"
                                   id="useremail"
                                   placeholder="Enter email"
+                                  value={email||''}
                                 />
                                 <span className="form-text text-muted">
                                   <small>
@@ -541,6 +559,7 @@ const UserProfile = () => {
                                   className="form-control"
                                   id="userpassword"
                                   placeholder="Enter password"
+                                 
                                 />
                                 <span className="form-text text-muted">
                                   <small>
@@ -572,6 +591,7 @@ const UserProfile = () => {
                                   className="form-control"
                                   id="companyname"
                                   placeholder="Enter company name"
+                                  // value={compana}
                                 />
                               </div>
                             </div>

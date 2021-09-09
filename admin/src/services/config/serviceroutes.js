@@ -5,6 +5,7 @@ module.exports={
 adminlogin:"/admin/login",
 adminlogut:"/admin/logout",
 forgotPassword:"/admin/forgotPassword",
+postList:"/admin/post/getpost/",
 
 dashBoard:"/admin/dashboardData",
 
@@ -72,10 +73,11 @@ editUser:"/admin/editUser?_id=",
  permissionList:"/admin/permissionList",
 
  getRolesList:"/admin/roles",
- userProfile:"/admin/userProfile?_id=",
+ userProfile:"/admin/userProfile/",
  getStates:"/user/states",
- addRole:"/admin/addRole"
- 
+ addRole:"/admin/addRole",
+ approvedPost: "/admin/post/changeStatus/",
+ getAllUserList: "/admin/users"
 
 
 }

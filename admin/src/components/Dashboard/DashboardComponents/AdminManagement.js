@@ -54,7 +54,7 @@ console.log("data  -->",res.roles);
     var res = await   createAdmin(admin)
     dataEmpty();
 
-    if (res.statusCode === 200) {
+    if (res.status === 200) {
       $("#datatable").DataTable().ajax.reload();
 
       showToast(res.message, "success");

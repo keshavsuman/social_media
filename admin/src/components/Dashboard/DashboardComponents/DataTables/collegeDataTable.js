@@ -134,7 +134,7 @@ export default class CollegeDataTable extends Component {
         selectedOption:ar
       })
     
-      if (res.statusCode == 200) {
+      if (res.status == 200) {
 this.setState({
 
 
@@ -197,7 +197,7 @@ this.setState({
           // console.log(res.data);
           // console.log("This is response of Colleges "+ res);
           indexnum = 1;
-          if (res.data.statusCode === 200) {
+          if (res.data.status === 200) {
             callback({
               draw: res.data.draw,
               data: res.data.colleges,
@@ -310,7 +310,7 @@ this.setState({
 
     var res = await updateCollege(ids, this.state.college, loc,this.state.selectedUniversity,assigned_course);
    
-    if(res.statusCode == 200){
+    if(res.status == 200){
      $("#datatable").DataTable().ajax.reload();
      //assigned_course=[]
     // this.state.courseList=[]

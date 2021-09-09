@@ -48,7 +48,7 @@ export default class AdminDatatable extends Component {
       $("#datatable").DataTable().ajax.reload();
       // TODO: HERE res is undefined response is not present
       console.log("my", res);
-      // if(res.statusCode === 200){
+      // if(res.status === 200){
       // $("#datatable").DataTable().ajax.reload();
       // }
     } else if (event.target.hasAttribute("edit-id")) {
@@ -83,7 +83,7 @@ export default class AdminDatatable extends Component {
       });
       document.getElementById("show_selected").value = this.state.status;
 
-      //   if (res.statusCode === 200) {
+      //   if (res.status === 200) {
       //     this.setState({
       //       university: res.data.name,
       //     });
@@ -138,7 +138,7 @@ export default class AdminDatatable extends Component {
             config
           );
           indexnum = 1;
-          if (res.data.statusCode === 200) {
+          if (res.data.status === 200) {
             callback({
               draw: res.data.draw,
               data: res.data.admins,
@@ -241,7 +241,7 @@ export default class AdminDatatable extends Component {
       this.state.mobile,
       this.state.role_id
     );
-    if (res.statusCode === 200) {
+    if (res.status === 200) {
       $("#datatable").DataTable().ajax.reload();
       showToast(res.message, "success");
     } else {

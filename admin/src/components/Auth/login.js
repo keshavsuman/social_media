@@ -30,9 +30,11 @@ const Login = () => {
       event.preventDefault();
       setloadingStatus(true);
       var response = await adminLogin(email, password);
+      console.log('response', response)
       setloadingStatus(1);
-      if (response.statusCode === 200) {
+      if (response.status === 200) {
         showToast(response.message, "success");
+        localStorage.setItem('access_token', response.data.token)
         history.push("/home")
       } else {
         showToast(response.message, "error");
@@ -44,23 +46,14 @@ const Login = () => {
   };
 
   return (
-    <LoadingOverlay
-      active={loadingStatus}
-      fadeSpeed={200}
-      spinner={<BounceLoader color="#FFF" />}
-    >
+    <>
       <div className="container" style={{height:"100vh"}}>
         <div className="row">
           <div className="col-sm-4 col-md-4 col-xs-12"></div>
           <div className="col-sm-4 col-md-4 col-xs-12">
             <div className={style.Form_container}>
               <h4 className={style.signin_heading}>Welcome</h4>
-            
-              <h4
-                className={style.heading}>
-                Login To Your Account
-              </h4>
-
+              <h4 className={style.heading}> Login To Your Account </h4>
               <form className="ln-form">
                 <div className="form-group">
                   <input
@@ -129,7 +122,7 @@ const Login = () => {
         </div>
       </div>
       <ToastContainer />
-    </LoadingOverlay>
+      </>
   );
 };
 

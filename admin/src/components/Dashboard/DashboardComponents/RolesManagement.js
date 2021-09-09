@@ -79,7 +79,7 @@ var res = await permissionList(localStorage.getItem('access_token'))
     var res = await addRole(model)
     dataEmpty();
 
-    if (res.statusCode === 200) {
+    if (res.status === 200) {
       $("#datatable").DataTable().ajax.reload();
 
       showToast(res.message, "success");

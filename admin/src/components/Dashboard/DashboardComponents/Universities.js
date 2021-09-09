@@ -15,7 +15,7 @@ const Universities = () => {
   const saveUniversity = async () => {
     var token = localStorage.getItem("access_token");
     var res = await createUniversity(university, token);
-    if (res.statusCode === 200) {
+    if (res.status === 200) {
       $("#datatable").DataTable().ajax.reload();
 
       showToast(res.message, "success");

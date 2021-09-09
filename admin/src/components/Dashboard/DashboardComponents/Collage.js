@@ -82,7 +82,7 @@ course_array.push(selectedOptions[i].value)
     setSelectedOptions(null);
     options = [];
     console.log(college);
-    if (res.statusCode === 200) {
+    if (res.status === 200) {
       $("#datatable").DataTable().ajax.reload();
 
       showToast(res.message, "success");

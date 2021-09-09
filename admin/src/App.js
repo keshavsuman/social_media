@@ -17,11 +17,15 @@ import AdminManagement from "./components/Dashboard/DashboardComponents/AdminMan
 import Skills from "./components/Dashboard/DashboardComponents/Skills";
 import Interest from "./components/Dashboard/DashboardComponents/Interest";
 import ProtectedRoute from "./utils/protectedRoute/protectedRoute";
-import UserManagement from "./components/Dashboard/DashboardComponents/UsrManagement";
+import UserManagement from "./components/Dashboard/DashboardComponents/UserManagement";
 import RolesManagement from "./components/Dashboard/DashboardComponents/RolesManagement";
-
 import UserProfile from "./components/Dashboard/DashboardComponents/UserProfile/UserProfile";
 // import Dashboard from './components/newDashboard/Dashboard';
+import "./scss/style.scss";
+import "react-toastify/dist/ReactToastify.css";
+import ApprovedPost from "./components/Dashboard/DashboardComponents/ApprovedPost";
+import UnapprovedPost from "./components/Dashboard/DashboardComponents/UnapprovedPost";
+import { ToastContainer, toast } from 'react-toastify';
 
 function App() {
   if (localStorage.getItem("role") === "superadmin") {
@@ -31,71 +35,39 @@ function App() {
       {/* <Header /> */}
       {/* <Menu /> */}
       <Switch>
-        <ProtectedRoute
-          exact
-          path="/"
-          component={withRouter(DashboardComponent)}
-        />
-
-        <ProtectedRoute
-          exact
-          path="/home"
-          component={withRouter(DashboardComponent)}
-        />
-        <Route exact path="/login" component={withRouter(Login)} />
-        <ProtectedRoute
-          path="/forgotPassword"
-          component={withRouter(ForgotPassword)}
-        />
-
-<ProtectedRoute
-          path="/roles-management"
-          component={withRouter(RolesManagement)}
-        />
-        
-        <ProtectedRoute
-          path="/universities-management"
-          component={withRouter(Universities)}
-        />
-        <ProtectedRoute
-          path="/collages-management"
-          component={withRouter(Collage)}
-        />
-        <ProtectedRoute
-          path="/courses-management"
-          component={withRouter(Courses)}
-        />
-
+        <Route exact path="/" component={DashboardComponent} />
+        <Route exact path="/home" component={DashboardComponent} />
+        <Route exact path="/login" component={Login} />
+        <Route path="/forgotPassword" component={ForgotPassword} />
+        <Route path="/roles-management" component={RolesManagement} />
+        <Route path="/universities-management" component={Universities} />
+        <Route path="/collages-management" component={Collage} />
+        <Route path="/courses-management" component={Courses} />
+        <Route path="/unapproved-post" component={UnapprovedPost} />
+        <Route path="/approved-post" component={ApprovedPost} />
         {localStorage.getItem("role") === "superadmin" ? (
-          <ProtectedRoute
-            path="/admin-management"
-            component={withRouter(AdminManagement)}
-          />
+          <Route path="/admin-management" component={AdminManagement} />
         ) : (
-          <ProtectedRoute
-            exact
-            path="/admin-management"
-            component={withRouter(AdminManagement)}
-          />
+          <Route exact path="/admin-management" component={AdminManagement} />
         )}
-
-        <ProtectedRoute
-          path="/skills-management"
-          component={withRouter(Skills)}
-        />
-        <ProtectedRoute
-          path="/interests-management"
-          component={withRouter(Interest)}
-        />
-        <ProtectedRoute
-          path="/user-management"
-          component={withRouter(UserManagement)}
-        />
-        <ProtectedRoute
-          path="/admin/user-profile/:id"
-          component={withRouter(UserProfile)}
-        />
+        <Route path="/skills-management" component={Skills} />
+        <Route path="/interests-management" component={Interest} />
+        <Route path="/user-management" component={UserManagement} />
+        <Route path="/admin/user-profile/:id" component={UserProfile} />
       </Switch>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      {/* Same as */}
+      <ToastContainer />
     </Router>
   );
 }

@@ -1,12 +1,7 @@
 import React, { Component } from "react";
 import $ from "jquery";
-
-
 import { ToastContainer } from "react-toastify";
 import showToast from "../../../../utils/toast/toast";
-
-
-
 import {baseurl} from "../../../../services/config/config"
 import {skillDataTable} from "../../../../services/config/serviceroutes"
 import {updateSkillStatus,updateSkill,editSkill,deleteSkill} from "../../../../services/userservices/user.admin.services"
@@ -44,7 +39,7 @@ export default class SkillDataTable extends Component {
         id,
         localStorage.getItem("access_token")
       );
-      if(res.statusCode === 200){
+      if(res.status === 200){
         this.setState({
           skill: res.data.name,
         });
@@ -97,7 +92,7 @@ export default class SkillDataTable extends Component {
             }
           );
           indexnum = 1;
-          if (res.data.statusCode === 200) {
+          if (res.data.status === 200) {
             callback({
               draw: res.data.draw,
               data: res.data.skills,
@@ -186,8 +181,8 @@ export default class SkillDataTable extends Component {
   }
 
   async updateSkillDetails() {
-    var res = await      updateSkill(ids, uni, loc);
-    if(res.statusCode === 200){
+    var res = await  updateSkill(ids, uni, loc);
+    if(res.status === 200){
       showToast(res.message, 'success')
       $("#datatable").DataTable().ajax.reload();
     }else{

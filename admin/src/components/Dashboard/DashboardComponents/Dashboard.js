@@ -30,7 +30,7 @@ export default class Dashboard extends Component {
   async getDashboardData() {
     var a = localStorage.getItem("access_token");
     var data = await dashBoard(a);
-    if (data.statusCode === 200) {
+    if (data.status === 200) {
       this.setState(data.data);
     } else {
       showToast(data.message, "error");

@@ -5,7 +5,6 @@ import DashboardHeader from '../../shared/Dashboard/DashboardHeader';
 import logo from "../../static/images/Younity Logo.png"
 
 function DashboardComponent() {
-  
     return (
       <div className="wrapper">
          <input type="checkbox" id="nav-toggle" />
