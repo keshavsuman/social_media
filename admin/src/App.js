@@ -35,7 +35,7 @@ function App() {
       {/* <Header /> */}
       {/* <Menu /> */}
       <Switch>
-        <Route exact path="/" component={DashboardComponent} />
+        <Route exact path="/admin" component={DashboardComponent} />
         <Route exact path="/home" component={DashboardComponent} />
         <Route exact path="/login" component={Login} />
         <Route path="/forgotPassword" component={ForgotPassword} />

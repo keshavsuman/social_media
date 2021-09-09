@@ -70,6 +70,7 @@ app.use(express.json());
 app.use(require('./routes'));
 app.use(errors());
 app.use('/uploads',express.static('uploads'));
+app.use('/static',express.static('static'));
 
 app.use(/^((?!(api))\/admin.)*/, (req, res) => {
   if (req.method === 'GET') {
@@ -80,6 +81,7 @@ app.use(/^((?!(api))\/admin.)*/, (req, res) => {
     })
   }
 })
+
 app.use(/^((?!(api)).)*/, (req, res) => {
   if (req.method === 'GET') {
     res.sendFile(path.join(__dirname, '../users/build/index.html'))
