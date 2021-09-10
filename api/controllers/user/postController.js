@@ -80,6 +80,7 @@ async function uploadMedia(req,res){
 async function reactOnPost(req,res){
     try {
         req.body.post_id;
+        //ned to be done
     } catch (error) {
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
@@ -117,7 +118,7 @@ async function comment(req,res){
 async function replyOnComment(req,res){
     try{
         var reply = comments.create({
-
+            // Need to coplete
         });
         responseManagement.sendResponse(res,httpStatus.OK,'Reply added',{});
     }catch(error){
@@ -135,7 +136,52 @@ async function myPosts(req,res){
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
     }
 }
-
+async function timelineposts(req,res){
+    try {
+        var connectionDocument = await post.find({user:req.data._id});
+        var timelineposts = await post.aggregate([
+                {
+                  '$lookup': {
+                    'from': 'users', 
+                    'localField': 'author', 
+                    'foreignField': '_id', 
+                    'as': 'user'
+                  }
+                }, {
+                  '$addFields': {
+                    'college': {
+                      '$first': '$user.college'
+                    }
+                  }
+                }, {
+                  '$unset': 'user'
+                }, {
+                  '$match': {
+                      $or:[{
+                          'author': {
+                              '$in': connectionDocument[0].connections
+                            }
+                        },{
+                            'author':{
+                                '$in':connectionDocument[0].followers
+                            }
+                        } ,{
+                            'college': req.data.college
+                        }
+                    ],
+                  }
+                },{
+                    $sort:{
+                        createdAt: -1
+                      }
+                }
+        ]);
+        responseManagement.sendResponse(res,httpStatus.OK,'',timelineposts);
+    } catch (error) {
+        console.log(error.message);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
+    }
+}
 
 module.exports = {
     getPosts,
@@ -148,5 +194,6 @@ module.exports = {
     comment,
     replyOnComment,
     getComments,
-    myPosts
+    myPosts,
+    timelineposts
 }

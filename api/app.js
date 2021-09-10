@@ -72,9 +72,10 @@ app.use(errors());
 app.use('/uploads',express.static('uploads'));
 app.use('/static',express.static('static'));
 
-app.use(/^((?!(api))\/admin.)*/, (req, res) => {
+
+app.use(/^((?!(api)).)*/, (req, res) => {
   if (req.method === 'GET') {
-    res.sendFile(path.join(__dirname, '../admin/build/index.html'))
+    res.sendFile(path.join(__dirname, '../users/build/index.html'))
   } else {
     res.status(500).json({
       message: req.method + ' not Allowed'
@@ -82,9 +83,9 @@ app.use(/^((?!(api))\/admin.)*/, (req, res) => {
   }
 })
 
-app.use(/^((?!(api)).)*/, (req, res) => {
+app.use(/^((?!(api))\/admin.)*/, (req, res) => {
   if (req.method === 'GET') {
-    res.sendFile(path.join(__dirname, '../users/build/index.html'))
+    res.sendFile(path.join(__dirname, '../admin/build/index.html'))
   } else {
     res.status(500).json({
       message: req.method + ' not Allowed'

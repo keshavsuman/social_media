@@ -68,7 +68,6 @@ router.post('/getConnectionRequests',auth,user.getPendingRequests);
 router.post('/myconnections',auth,user.myconnections);
 router.post('/getFollowRequests',auth,user.getPendingRequests);
 
-
 router.post('/notifications',auth,user.getNotifications);
 
 module.exports = router;

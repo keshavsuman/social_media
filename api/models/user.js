@@ -44,7 +44,11 @@ UserSchema.methods.setPassword = function (password) {
 };
 
 UserSchema.methods.generateJWT = function () {
-    return jwt.sign({ _id: this._id }, config.secretKey);
+    return jwt.sign({
+         _id: this._id,
+         college:this.college,
+         university:this.university
+         }, config.secretKey);
 };
 
 module.exports = mongoose.model('user', UserSchema);
