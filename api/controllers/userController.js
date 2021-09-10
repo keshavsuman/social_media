@@ -122,7 +122,6 @@ module.exports.createUser = async (req, res) => {
 };
 module.exports.logout = (req,res)=>{
     try {
-        user_
         responseManagement.sendResponse(res, httpStatus.OK,'Logout Successfull',{});
     } catch (error) {
         console.log(error)
