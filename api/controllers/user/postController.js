@@ -177,8 +177,9 @@ async function timelineposts(req,res){
                             }
                         } ,{
                             'college': req.data.college
-                        }
+                        },
                     ],
+                    media_type:req.body.type
                   }
                 },{
                     $sort:{
