@@ -3,6 +3,7 @@ const httpStatus = require('http-status-codes');
 const post = require('../../models/post');
 const responseManagement = require('../../lib/responseManagement');
 const comments = require('../../models/comment');
+const connections = require('../../models/connections');
 
 async function createPost(req,res){
     try {
@@ -59,7 +60,7 @@ async function getPosts(req,res){
 
 async function sharePost(req,res){
     try{
-        
+        // need to complete
     }catch(error){
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
@@ -105,6 +106,7 @@ async function comment(req,res){
                 comment:req.body.comment,
                 user_id:req.data._id
             });
+            await post.updateOne({_id:req.body.id},{$addToSet:{comments:comment._id}})
             responseManagement.sendResponse(res,httpStatus.OK,'Comment added',{});
         }else{
             responseManagement.sendResponse(res,httpStatus.OK,'post not found',{});
@@ -117,8 +119,13 @@ async function comment(req,res){
 
 async function replyOnComment(req,res){
     try{
-        var reply = comments.create({
-            // Need to coplete
+        var reply = comments.findOneAndUpdate({
+            _id:req.body.id
+        },{
+            $addToSet:{reply:{
+                'reply':req.body.comment,
+                'user':req.data._id,
+            }}
         });
         responseManagement.sendResponse(res,httpStatus.OK,'Reply added',{});
     }catch(error){
@@ -138,7 +145,10 @@ async function myPosts(req,res){
 }
 async function timelineposts(req,res){
     try {
-        var connectionDocument = await post.find({user:req.data._id});
+        console.log(req.data._id);
+
+        var connectionDocument = await connections.find({user:req.data._id});
+        console.log(connectionDocument);
         var timelineposts = await post.aggregate([
                 {
                   '$lookup': {
