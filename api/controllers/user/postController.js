@@ -145,7 +145,6 @@ async function myPosts(req,res){
 }
 async function timelineposts(req,res){
     try {
-        console.log(req.data._id);
 
         var connectionDocument = await connections.find({user:req.data._id});
         console.log(connectionDocument);
@@ -163,9 +162,7 @@ async function timelineposts(req,res){
                       '$first': '$user.college'
                     }
                   }
-                }, {
-                  '$unset': 'user'
-                }, {
+                },{
                   '$match': {
                       $or:[{
                           'author': {
