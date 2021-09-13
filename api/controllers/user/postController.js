@@ -44,13 +44,21 @@ async function updatePost(req,res){
 
 async function getPosts(req,res){
     try {
-        var userPosts = await post.find(
-            {
-             author:req.data._id,
-             admin_approved:true,
-             media_type:req.params.media_type
-            },  
-            ).sort({_id:-1}).limit(50);
+        var searchBody; 
+        if(req.params.media_type=='ALL')
+        {
+            searchBody={
+                author:req.data._id,
+                admin_approved:true,
+               };
+        }else{
+            searchBody=searchBody={
+                author:req.data._id,
+                admin_approved:true,
+                media_type:req.params.media_type
+               };
+        }
+        var userPosts = await post.find(searchBody).sort({_id:-1}).limit(50);
         responseManagement.sendResponse(res,httpStatus.OK,'',userPosts);
     } catch (error) {
         console.log(error);
