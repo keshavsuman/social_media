@@ -44,21 +44,12 @@ async function updatePost(req,res){
 
 async function getPosts(req,res){
     try {
-        var searchBody; 
-        if(req.params.media_type=='ALL')
-        {
-            searchBody={
-                author:req.data._id,
-                admin_approved:true,
-               };
-        }else{
-            searchBody=searchBody={
-                author:req.data._id,
-                admin_approved:true,
-                media_type:req.params.media_type
-               };
-        }
-        var userPosts = await post.find(searchBody).sort({_id:-1}).limit(50);
+        var userPosts = await post.find(
+            {
+             author:req.data._id,
+             admin_approved:true,
+            },  
+            ).sort({_id:-1}).limit(50);
         responseManagement.sendResponse(res,httpStatus.OK,'',userPosts);
     } catch (error) {
         console.log(error);
@@ -153,28 +144,64 @@ async function myPosts(req,res){
 }
 async function timelineposts(req,res){
     try {
-
+        var timelineposts;
         var connectionDocument = await connections.find({user:req.data._id});
-        console.log(connectionDocument);
-        var timelineposts = await post.aggregate([
+        if(req.body.type=='ALL'){
+            timelineposts = await post.aggregate([
+                    {
+                    '$lookup': {
+                        'from': 'users', 
+                        'localField': 'author', 
+                        'foreignField': '_id', 
+                        'as': 'user'
+                    }
+                    }, {
+                    '$addFields': {
+                        'college': {
+                        '$first': '$user.college'
+                        }
+                    }
+                    },{
+                    '$match': {
+                        $or:[{
+                            'author': {
+                                '$in': connectionDocument[0].connections
+                                }
+                            },{
+                                'author':{
+                                    '$in':connectionDocument[0].followers
+                                }
+                            } ,{
+                                'college': req.data.college
+                            },
+                        ],
+                    }
+                    },{
+                        $sort:{
+                            createdAt: -1
+                        }
+                    }
+            ]);
+        }else{
+            timelineposts = await post.aggregate([
                 {
-                  '$lookup': {
+                '$lookup': {
                     'from': 'users', 
                     'localField': 'author', 
                     'foreignField': '_id', 
                     'as': 'user'
-                  }
+                }
                 }, {
-                  '$addFields': {
+                '$addFields': {
                     'college': {
-                      '$first': '$user.college'
+                    '$first': '$user.college'
                     }
-                  }
+                }
                 },{
-                  '$match': {
-                      $or:[{
-                          'author': {
-                              '$in': connectionDocument[0].connections
+                '$match': {
+                    $or:[{
+                        'author': {
+                            '$in': connectionDocument[0].connections
                             }
                         },{
                             'author':{
@@ -185,13 +212,14 @@ async function timelineposts(req,res){
                         },
                     ],
                     media_type:req.body.type
-                  }
+                }
                 },{
                     $sort:{
                         createdAt: -1
-                      }
+                    }
                 }
         ]);
+        }    
         responseManagement.sendResponse(res,httpStatus.OK,'',timelineposts);
     } catch (error) {
         console.log(error.message);

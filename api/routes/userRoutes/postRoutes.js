@@ -15,7 +15,7 @@ const upload = multer({storage: multer.diskStorage({
 
 router.use(auth);
 
-router.get('/getPost/:media_type',postController.getPosts);
+router.get('/getPost',postController.getPosts);
 router.get('/myposts',postController.myPosts);
 router.post('/createPost',postValidator.createPost,postController.createPost);
 router.post('/updatePost',postValidator.updatePost,postController.updatePost);
