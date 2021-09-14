@@ -13,7 +13,7 @@ const commentsSchema = mongoose.Schema({
     post_id:{type:mongoose.Schema.Types.ObjectId,ref:'posts',required:true},
     comment:{type:String},
     reply:[replySchema],
-    user_id:{type:mongoose.Schema.Types.ObjectId,ref:'users',required:true}
+    user_id:{type:mongoose.Schema.Types.ObjectId,ref:'user',required:true}
 },{timestamps:true});
 
 module.exports = mongoose.model('comments',commentsSchema);

@@ -101,11 +101,11 @@ async function comment(req,res){
         var postToUpdate = post.findById(req.body.post_id);
         if(postToUpdate){
             var comment = await comments.create({
-                post_id:req.body.id,
+                post_id:req.body.post_id,
                 comment:req.body.comment,
-                user_id:req.data._id
+                user_id:req.body.user_id
             });
-            await post.updateOne({_id:req.body.id},{$addToSet:{comments:comment._id}})
+            await post.updateOne({_id:req.body.post_id},{$addToSet:{comments:comment._id}})
             responseManagement.sendResponse(res,httpStatus.OK,'Comment added',{});
         }else{
             responseManagement.sendResponse(res,httpStatus.OK,'post not found',{});
