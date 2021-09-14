@@ -68,7 +68,7 @@ module.exports.socialLogin = async (req, res) => {
                 profile_setup: user.profile_setup,
                 token:token
             };
-            responseManagement.sendResponse(res, httpStatus.OK, global.logged_in_successful,user_data)
+            responseManagement.sendResponse(res, httpStatus.OK, global.logged_in_successful, {"token": user_data.token,user_data});
         } else {
             const uuser = await User.findOne({ email });
             const nuser = await User.create({ provider_type, provider_id, first_name, last_name, email, profile_pic });
