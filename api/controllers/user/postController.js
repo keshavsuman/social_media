@@ -103,7 +103,7 @@ async function comment(req,res){
             var comment = await comments.create({
                 post_id:req.body.post_id,
                 comment:req.body.comment,
-                user_id:req.body.user_id
+                user_id:req.data._id
             });
             await post.updateOne({_id:req.body.post_id},{$addToSet:{comments:comment._id}})
             responseManagement.sendResponse(res,httpStatus.OK,'Comment added',{});
