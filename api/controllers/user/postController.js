@@ -89,7 +89,12 @@ async function reactOnPost(req,res){
 
 async function getComments(req,res){
     try{
-        var comment = await comments.find({post_id:req.body.post_id}).populate('user');
+        var comment = await comments.find({post_id:req.body.post_id},{updatedAt:0,__v:0}).populate({path:'user_id',select:{
+            _id:1,
+            first_name:1,
+            last_name:1,
+            profile_pic:1
+        }});
         responseManagement.sendResponse(res,httpStatus.OK,'',comment);
     }catch(error){
         console.log(error);
