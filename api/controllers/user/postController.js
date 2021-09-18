@@ -140,7 +140,10 @@ async function replyOnComment(req,res){
 
 async function myPosts(req,res){
     try {
-        var posts = await post.find({user:req.data._id});
+        var posts = await post.find({
+            author:req.data._id,
+            media_type:req.params.type
+        });
         responseManagement.sendResponse(res,httpStatus.OK,'',posts);
     } catch (error) {
         console.log(error.message);
