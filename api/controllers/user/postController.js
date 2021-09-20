@@ -4,6 +4,7 @@ const post = require('../../models/post');
 const responseManagement = require('../../lib/responseManagement');
 const comments = require('../../models/comment');
 const connections = require('../../models/connections');
+const mongoose = require('mongoose');
 
 async function createPost(req,res){
     try {
@@ -154,75 +155,104 @@ async function timelineposts(req,res){
     try {
         var timelineposts;
         var connectionDocument = await connections.find({user:req.data._id});
+        console.log(req.data._id);
         if(req.body.type=='ALL'){
-            timelineposts = await post.aggregate([
+
+        timelineposts = await post.aggregate([
                     {
-                    '$lookup': {
+                      '$lookup': {
                         'from': 'users', 
                         'localField': 'author', 
                         'foreignField': '_id', 
                         'as': 'user'
-                    }
+                      }
                     }, {
-                    '$addFields': {
+                      '$addFields': {
                         'college': {
-                        '$first': '$user.college'
+                          '$first': '$user.college'
+                        }, 
+                        'course': {
+                          '$first': '$user.course'
                         }
-                    }
-                    },
-                    {
-                        $lookup: {
-                               'from': 'colleges', 
-                               'localField': 'college', 
-                               'foreignField': '_id', 
-                               'as': 'college'
-                           },
-                    },
-                    {
-                    '$match': {
-                        $or:[{
+                      }
+                    }, {
+                      '$match': {
+                        $or:[
+                            {
                             'author': {
                                 '$in': connectionDocument[0].connections
                                 }
-                            },{
+                            },
+                            {
                                 'author':{
                                     '$in':connectionDocument[0].followers
                                 }
-                            } ,{
-                                'college': req.data.college
                             },
+                            {
+                                'college': mongoose.Types.ObjectId(req.data.college)
+                            },
+                            {
+                                'author':mongoose.Types.ObjectId(req.data._id)
+                            }
                         ],
                         admin_approved:true
-                    }
-                    },{
+                      }
+                    },
+                    {
+                        $lookup: {
+                               'from': 'courses', 
+                               'localField': 'course', 
+                               'foreignField': '_id', 
+                               'as': 'course'
+                           },
+                       },
+                    {
                         $sort:{
                             createdAt: -1
                         }
-                    }
+                    },
             ]);
         }else{
             timelineposts = await post.aggregate([
                 {
-                '$lookup': {
+                  '$lookup': {
                     'from': 'users', 
                     'localField': 'author', 
                     'foreignField': '_id', 
                     'as': 'user'
-                }
+                  }
                 }, {
-                '$addFields': {
+                  '$addFields': {
                     'college': {
-                    '$first': '$user.college'
+                      '$first': '$user.college'
+                    }, 
+                    'course': {
+                      '$first': '$user.course'
                     }
-                }
-                },
-                {
-                 $lookup: {
-                        'from': 'college', 
-                        'localField': 'college', 
-                        'foreignField': '_id', 
-                        'as': 'college'
-                    },
+                  }
+                }, {
+                  '$match': {
+                    $or:[
+                        {
+                        'author': {
+                            '$in': connectionDocument[0].connections
+                            }
+                        },
+                        {
+                            'author':{
+                                '$in':connectionDocument[0].followers
+                            }
+                        },
+                        {
+                            'college': mongoose.Types.ObjectId(req.data.college)
+                        },
+                        {
+                            'author':mongoose.Types.ObjectId(req.data._id)
+                        }
+                    ],
+                    media_type:req.body.type,
+                    admin_approved:true
+                  }
                 },
                 {
                     $lookup: {
@@ -233,35 +263,14 @@ async function timelineposts(req,res){
                        },
                    },
                 {
-                '$match': {
-                    $or:[{
-                        'author': {
-                            '$in': connectionDocument[0].connections
-                            }
-                        },{
-                            'author':{
-                                '$in':connectionDocument[0].followers
-                            }
-                        } ,{
-                            'college': req.data.college
-                        },
-                    ],
-                    media_type:req.body.type,
-                    admin_approved:true
-                }
-                },{
                     $sort:{
                         createdAt: -1
                     }
                 },
-                {
-                    $project:{
-                        
-                    }
-                }
         ]);
         }    
-        responseManagement.sendResponse(res,httpStatus.OK,'',timelineposts);
+
+         responseManagement.sendResponse(res,httpStatus.OK,'',timelineposts);
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
