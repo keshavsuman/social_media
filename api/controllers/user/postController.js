@@ -169,7 +169,16 @@ async function timelineposts(req,res){
                         '$first': '$user.college'
                         }
                     }
-                    },{
+                    },
+                    {
+                        $lookup: {
+                               'from': 'colleges', 
+                               'localField': 'college', 
+                               'foreignField': '_id', 
+                               'as': 'college'
+                           },
+                    },
+                    {
                     '$match': {
                         $or:[{
                             'author': {
@@ -205,7 +214,16 @@ async function timelineposts(req,res){
                     '$first': '$user.college'
                     }
                 }
-                },{
+                },
+                {
+                 $lookup: {
+                        'from': 'college', 
+                        'localField': 'college', 
+                        'foreignField': '_id', 
+                        'as': 'college'
+                    },
+                },
+                {
                 '$match': {
                     $or:[{
                         'author': {
@@ -219,7 +237,8 @@ async function timelineposts(req,res){
                             'college': req.data.college
                         },
                     ],
-                    media_type:req.body.type
+                    media_type:req.body.type,
+                    admin_approved:true
                 }
                 },{
                     $sort:{
