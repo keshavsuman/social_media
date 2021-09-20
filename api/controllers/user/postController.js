@@ -69,7 +69,7 @@ async function sharePost(req,res){
 
 async function uploadMedia(req,res){
     try {
-        req.file.path = req.protocol+'://13.127.215.198/'+req.file.path;
+        req.file.path = req.protocol+'://13.127.217.154/'+req.file.path;
         responseManagement.sendResponse(res,httpStatus.OK,'',req.file);
     } catch (error) {
         console.log(error);
@@ -192,6 +192,7 @@ async function timelineposts(req,res){
                                 'college': req.data.college
                             },
                         ],
+                        admin_approved:true
                     }
                     },{
                         $sort:{
@@ -224,6 +225,14 @@ async function timelineposts(req,res){
                     },
                 },
                 {
+                    $lookup: {
+                           'from': 'courses', 
+                           'localField': 'course', 
+                           'foreignField': '_id', 
+                           'as': 'course'
+                       },
+                   },
+                {
                 '$match': {
                     $or:[{
                         'author': {
@@ -243,6 +252,11 @@ async function timelineposts(req,res){
                 },{
                     $sort:{
                         createdAt: -1
+                    }
+                },
+                {
+                    $project:{
+                        
                     }
                 }
         ]);
