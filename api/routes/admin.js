@@ -15,6 +15,7 @@ const roleRoutes = require('./adminRoutes/roleRoutes');
 const interestRoutes = require('./adminRoutes/interestRoutes');
 const collegeRoutes = require('./adminRoutes/collegeRoutes');
 const skillRoutes = require('./adminRoutes/skillRoutes');
+const courseRoutes = require('./adminRoutes/courseRoutes');
 
 router.use('/post',postRoutes);
 router.use('/university',universityRoutes);
@@ -22,6 +23,7 @@ router.use('/role',roleRoutes);
 router.use('/interests',interestRoutes);
 router.use('/college',collegeRoutes);
 router.use('/skills',skillRoutes);
+router.use('/course',courseRoutes);
 
 router.post('/login', adminValidator.login, admin.login);
 router.get('/logout', auth, admin.logout);
