@@ -90,7 +90,7 @@ async function reactOnPost(req,res){
 
 async function getComments(req,res){
     try{
-        var comment = await comments.find({post_id:req.body.post_id},{updatedAt:0,__v:0}).populate({path:'user_id',select:{
+        var comment = await comments.find({post_id:req.body.post_id},{updatedAt:0,__v:0}).populate({path:'user',select:{
             _id:1,
             first_name:1,
             last_name:1,
@@ -268,8 +268,7 @@ async function timelineposts(req,res){
                     }
                 },
         ]);
-        }    
-
+        }
          responseManagement.sendResponse(res,httpStatus.OK,'',timelineposts);
     } catch (error) {
         console.log(error.message);
