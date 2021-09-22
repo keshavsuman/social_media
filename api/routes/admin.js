@@ -30,7 +30,7 @@ router.get('/logout', auth, admin.logout);
 router.post('/forgotPassword', adminValidator.forgotPassword, admin.forgotPassword);
 router.post('/resetPassword', adminValidator.resetPassword, admin.resetPassword);
 
-router.get('/admins', auth, admin.admins);
+router.post('/admins', auth, admin.admins);
 router.post('/createAdmin',adminValidator.createAdmin, admin.createAdmin);
 router.post('/updateAdmin', auth, adminValidator.updateAdmin, admin.updateAdmin);
 router.delete('/deleteAdmin/:Id', auth, adminValidator.deleteAdmin, admin.deleteAdmin);
