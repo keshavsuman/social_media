@@ -45,35 +45,35 @@ module.exports.deleteCollege = async (req, res) => {
     }
 };
 
-/**** Create College ****/
 module.exports.getColleges = async (req, res) => {
     try {
-        const { start, length, columns, order, search, draw } = req.body.data;
-        const sortColumn = columns[order[0].column].data;
-        const sortOrder = order[0].dir;
-        const searchValue = search.value;
-        var search_query = [];
-        for (var i = 0; i < columns.length; i++) {
-            if (columns[i].searchable) {
-                var key = columns[i]['name']
-                search_query.push({
-                    [key]: { $regex: searchValue, $options: 'i' }
-                });
-            }
-        }
-        var sort_q = {
-            [sortColumn]: sortOrder
-        }
-        var query1;
-        if (searchValue) {
-            query1 = { $or: search_query };
-        } else {
-            query1 = {};
-        }
-        const colleges = await College.find({ $and: [query1] }, {}, { sort: sort_q, skip: start, limit: length });
+        // const { start, length, columns, order, search, draw } = req.body.data;
+        // const sortColumn = columns[order[0].column].data;
+        // const sortOrder = order[0].dir;
+        // const searchValue = search.value;
+        // var search_query = [];
+        // for (var i = 0; i < columns.length; i++) {
+        //     if (columns[i].searchable) {
+        //         var key = columns[i]['name']
+        //         search_query.push({
+        //             [key]: { $regex: searchValue, $options: 'i' }
+        //         });
+        //     }
+        // }
+        // var sort_q = {
+        //     [sortColumn]: sortOrder
+        // }
+        // var query1;
+        // if (searchValue) {
+        //     query1 = { $or: search_query };
+        // } else {
+        //     query1 = {};
+        // }
+        const colleges = await College.find({}).sort({_id:-1}).skip(req.body.after).limit(req.body.limit);
         const total = await College.countDocuments({});
-        const stotal = await College.countDocuments({ $and: [query1] });
-        res.send({ status: httpStatus.OK, colleges: colleges, draw: draw, recordsTotal: total, recordsFiltered: stotal })
+        // const stotal = await College.countDocuments({ $and: [query1] });
+
+        res.send({ status: httpStatus.OK, colleges: colleges, recordsTotal: total})
     } catch (error) {
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
