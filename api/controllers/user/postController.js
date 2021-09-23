@@ -5,6 +5,7 @@ const responseManagement = require('../../lib/responseManagement');
 const comments = require('../../models/comment');
 const connections = require('../../models/connections');
 const mongoose = require('mongoose');
+const reactions = require('../../models/reactions');
 
 async function createPost(req,res){
     try {
@@ -80,10 +81,46 @@ async function uploadMedia(req,res){
 
 async function reactOnPost(req,res){
     try {
-        
-        req.body.post_id;
-        //ned to be done
-    } catch (error) {
+        var userpost = await post.findById(req.body.post_id);
+        if(userpost)
+        {
+            var userReaction = await reactions.find({post_id:req.body.post_id,user:req.data._id});
+            if(userReaction.length>0 && userReaction[0].reaction_type==req.body.type)
+            {
+                responseManagement.sendResponse(res,httpStatus.PRECONDITION_FAILED,'reaction already exits',{});
+            }else if(userReaction.length>0 && userReaction[0].reaction_type!=req.body.type)
+            {
+                await reactions.findByIdAndDelete(userReaction[0]._id);
+                await reactions.create({
+                    post_id:req.body.post_id,
+                    user:req.data._id,
+                    reaction_type:req.body.type
+                });
+                var updateBody ={};
+                updateBody[req.body.type]=userpost[req.body.type]+1;
+                updateBody[userReaction[0].reaction_type]=userpost[userReaction[0].reaction_type]-1;
+                await post.findByIdAndUpdate(userpost._id,{
+                    $set:updateBody
+                });
+                responseManagement.sendResponse(res,httpStatus.OK,'reaction successfull',{});
+            }else{
+                await reactions.create({
+                    post_id:req.body.post_id,
+                    user:req.data._id,
+                    reaction_type:req.body.type
+                });
+                var updateBody ={};
+                updateBody[req.body.type]=userpost[req.body.type]+1;
+                console.log(updateBody);
+                console.log(userpost._id);
+                await post.findByIdAndUpdate(userpost._id,{
+                    $set:updateBody
+                });
+                responseManagement.sendResponse(res,httpStatus.OK,'reaction successfull',{});
+            }
+        }else{
+            responseManagement.sendResponse(res,httpStatus.UNPROCESSABLE_ENTITY,'post doesn\'t exits',{});        }
+        } catch (error) {
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
     }
@@ -156,9 +193,7 @@ async function timelineposts(req,res){
     try {
         var timelineposts;
         var connectionDocument = await connections.find({user:req.data._id});
-        console.log(req.data._id);
         if(req.body.type=='ALL'){
-
         timelineposts = await post.aggregate([
                     {
                       '$lookup': {

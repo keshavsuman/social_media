@@ -429,7 +429,6 @@ module.exports.getPendingRequests = async (req,res)=>{
 
 module.exports.myconnections = async (req,res)=>{
     try {
-        console.log(req.data._id);
         var myconnections =  await connections.aggregate([
                     {
                       '$match': {
@@ -462,7 +461,7 @@ module.exports.myconnections = async (req,res)=>{
                
         ]); 
         if(myconnections){
-            responseManagement.sendResponse(res, httpStatus.OK,'',myconnections);
+            responseManagement.sendResponse(res, httpStatus.OK,'',myconnections[0]);
         }else{
             responseManagement.sendResponse(res, httpStatus.OK,'Connections not found',{});
         }
