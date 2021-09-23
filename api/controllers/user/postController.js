@@ -80,6 +80,7 @@ async function uploadMedia(req,res){
 
 async function reactOnPost(req,res){
     try {
+        
         req.body.post_id;
         //ned to be done
     } catch (error) {

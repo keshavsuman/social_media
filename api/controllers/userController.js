@@ -13,6 +13,7 @@ const connections = require('../models/connections');
 const jwt =require('jsonwebtoken');
 const notification =  require('../models/notifications');
 const userToken = require('../models/user_token');
+const mongoose = require('mongoose');
 
 /****** Login ****/
 module.exports.login = async (req, res) => {
@@ -428,9 +429,40 @@ module.exports.getPendingRequests = async (req,res)=>{
 
 module.exports.myconnections = async (req,res)=>{
     try {
-        var myconnections =  await connections.find({user:req.data._id},{connections:1,_id:0}).populate({path:'connections',select:{profile_pic:1,first_name:1,last_name:1,email:1}});
+        console.log(req.data._id);
+        var myconnections =  await connections.aggregate([
+                    {
+                      '$match': {
+                        'user': mongoose.Types.ObjectId(req.data._id)
+                      }
+                    }, {
+                      '$lookup': {
+                        'from': 'users', 
+                        'localField': 'connections', 
+                        'foreignField': '_id', 
+                        'as': 'connections'
+                      }
+                    }, {
+                      '$project': {
+                        'connections.first_name': 1, 
+                        'connections.last_name': 1, 
+                        'connections.start_date': 1, 
+                        'connections.end_date': 1, 
+                        'connections.profile_pic': 1, 
+                        'connections.course': 1
+                      }
+                    }, {
+                      '$lookup': {
+                        'from': 'courses', 
+                        'localField': 'connections.course', 
+                        'foreignField': '_id', 
+                        'as': 'courses'
+                      }
+                    }
+               
+        ]); 
         if(myconnections){
-            responseManagement.sendResponse(res, httpStatus.OK,'',myconnections[0].connections);
+            responseManagement.sendResponse(res, httpStatus.OK,'',myconnections);
         }else{
             responseManagement.sendResponse(res, httpStatus.OK,'Connections not found',{});
         }
