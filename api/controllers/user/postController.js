@@ -97,10 +97,9 @@ async function reactOnPost(req,res){
                     reaction_type:req.body.type
                 });
                 var updateBody ={};
-                updateBody[req.body.type]=userpost[req.body.type]+1;
-                updateBody[userReaction[0].reaction_type]=userpost[userReaction[0].reaction_type]-1;
+                updateBody = [{}]
                 await post.findByIdAndUpdate(userpost._id,{
-                    $set:updateBody
+                    $set:{}
                 });
                 responseManagement.sendResponse(res,httpStatus.OK,'reaction successfull',{});
             }else{
@@ -111,8 +110,6 @@ async function reactOnPost(req,res){
                 });
                 var updateBody ={};
                 updateBody[req.body.type]=userpost[req.body.type]+1;
-                console.log(updateBody);
-                console.log(userpost._id);
                 await post.findByIdAndUpdate(userpost._id,{
                     $set:updateBody
                 });
