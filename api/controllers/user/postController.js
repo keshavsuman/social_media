@@ -174,12 +174,12 @@ async function replyOnComment(req,res){
     }
 }
 
-async function myPosts(req,res){
+async function contents(req,res){
     try {
         var posts = await post.find({
-            author:req.data._id,
-            media_type:req.params.type
-        });
+            author:req.body.id,
+            media_type:req.body.type
+        }).limit(50);
         responseManagement.sendResponse(res,httpStatus.OK,'',posts);
     } catch (error) {
         console.log(error.message);
@@ -320,6 +320,6 @@ module.exports = {
     comment,
     replyOnComment,
     getComments,
-    myPosts,
+    contents,
     timelineposts
 }
