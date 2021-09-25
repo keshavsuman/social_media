@@ -73,8 +73,8 @@ module.exports.setProfile = async (req, res) => {
 /**** other user profile ****/
 module.exports.otherUserProfile = async (req, res) => {
     try {
-        let user = await User.findOne({ _id: req.params.id },{salt:0,hash:0}).lean();
-        responseManagement.sendResponse(res, httpStatus.OK, "", { user });
+        let user = await User.findOne({ _id: req.params.id },{salt:0,hash:0}).populate({path:'college'}).populate({path:'course'});
+        responseManagement.sendResponse(res, httpStatus.OK, "",user);
     } catch (error) {
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
