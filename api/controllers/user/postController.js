@@ -206,7 +206,10 @@ async function timelineposts(req,res){
                         }, 
                         'course': {
                           '$first': '$user.course'
-                        }
+                        },
+                        'totalComments':{
+                            '$size':'$comments'
+                          }
                       }
                     }, {
                       '$match': {
@@ -244,6 +247,13 @@ async function timelineposts(req,res){
                             createdAt: -1
                         }
                     },
+                    {
+                        $project:{
+                            comments:0,
+                            __v:0,
+                            
+                        }
+                    }
             ]);
         }else{
             timelineposts = await post.aggregate([
@@ -261,7 +271,10 @@ async function timelineposts(req,res){
                     }, 
                     'course': {
                       '$first': '$user.course'
-                    }
+                    },
+                    'totalComments':{
+                        '$size':'$comments'
+                      }
                   }
                 }, {
                   '$match': {
@@ -300,6 +313,11 @@ async function timelineposts(req,res){
                         createdAt: -1
                     }
                 },
+                {
+                    $project:{
+                        comments:-1
+                    }
+                }
         ]);
         }
          responseManagement.sendResponse(res,httpStatus.OK,'',timelineposts);
