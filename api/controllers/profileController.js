@@ -9,8 +9,7 @@ const Cities = require('../models/cities');
 const College = require('../models/college');
 const Interest = require('../models/interest');
 const Skill = require('../models/skill');
-const fs = require('fs');
-const path  = require('path');
+const connection = require('../models/connections');
 
 /**** setup user profile ****/
 module.exports.setProfile = async (req, res) => {
@@ -74,7 +73,24 @@ module.exports.setProfile = async (req, res) => {
 module.exports.otherUserProfile = async (req, res) => {
     try {
         let user = await User.findOne({ _id: req.params.id },{salt:0,hash:0}).populate({path:'college'}).populate({path:'course'});
-        responseManagement.sendResponse(res, httpStatus.OK, "",user);
+        let connections = await connection.find({user:req.params.id});
+        var connectionData = {};
+        connectionData.connection_count = connections[0].connections.length;
+        connectionData.follower_count = connections[0].followers.length;
+        connectionData.following_count = connections[0].followings.length;
+        if(connections[0].connections.includes(req.params.id))
+        {
+            connectionData.isConnected=true;
+        }else{
+            connectionData.isConnected=false;
+        }
+        if(connections[0].followers.includes(req.params.id))
+        {
+            connectionData.isFollowed=true;
+        }else{
+            connectionData.isFollowed=false;
+        }
+        responseManagement.sendResponse(res, httpStatus.OK, "",{user,connectionData});
     } catch (error) {
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
@@ -104,9 +120,12 @@ module.exports.myProfile = async (req, res) => {
             .populate({ path: 'course', model:'course',select:{_id:1,name:1}})
             .populate({path: 'college' ,model:'college',select:{_id:1,name:1},populate:{path:'university_id',model:'universities'}})
             .lean();
-        let post = await Post.find({ posted_by: req.data._id });
-
-        responseManagement.sendResponse(res, httpStatus.OK, "", { user, post });
+            let connections = await connection.find({user:req.params.id});
+            var connectionData = {};
+            connectionData.connection_count = connections[0].connections.length;
+            connectionData.follower_count = connections[0].followers.length;
+            connectionData.following_count = connections[0].followings.length;   
+        responseManagement.sendResponse(res, httpStatus.OK, "", { user, connectionData});
     } catch (error) {
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);

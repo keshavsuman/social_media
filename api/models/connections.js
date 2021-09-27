@@ -9,7 +9,3 @@ const connectionSchema = mongoose.Schema({
 });
 
 module.exports = mongoose.model('connections',connectionSchema);
-
-/*
-connection type can be  :- Pending,Partial,Requested,Connected  
-*/
