@@ -98,9 +98,13 @@ async function reactOnPost(req,res){
                 });
                 var updateBody ={};
                 updateBody = [{}]
-                await post.findByIdAndUpdate(userpost._id,{
-                    $set:{}
-                });
+                userpost.reactions.LIKE = userpost.reactions.LIKE + 1;
+                console.log(userpost);
+                await userpost.save();
+                console.log(userpost);
+                // await post.findByIdAndUpdate(userpost._id,{
+                //     $set:{}
+                // });
                 responseManagement.sendResponse(res,httpStatus.OK,'reaction successfull',{});
             }else{
                 await reactions.create({
@@ -144,7 +148,7 @@ async function comment(req,res){
             var comment = await comments.create({
                 post_id:req.body.post_id,
                 comment:req.body.comment,
-                user_id:req.data._id
+                user:req.data._id
             });
             await post.updateOne({_id:req.body.post_id},{$addToSet:{comments:comment._id}})
             responseManagement.sendResponse(res,httpStatus.OK,'Comment added',{});
