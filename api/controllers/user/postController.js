@@ -97,14 +97,10 @@ async function reactOnPost(req,res){
                     reaction_type:req.body.type
                 });
                 var updateBody ={};
-                updateBody = [{}]
-                userpost.reactions.LIKE = userpost.reactions.LIKE + 1;
-                console.log(userpost);
-                await userpost.save();
-                console.log(userpost);
-                // await post.findByIdAndUpdate(userpost._id,{
-                //     $set:{}
-                // });
+                updateBody=[req.body.type]=userpost[req.body.type]+1;
+                await post.findByIdAndUpdate(userpost._id,{
+                    $set:updateBody
+                });
                 responseManagement.sendResponse(res,httpStatus.OK,'reaction successfull',{});
             }else{
                 await reactions.create({
