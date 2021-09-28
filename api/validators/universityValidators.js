@@ -14,7 +14,7 @@ module.exports.deleteUniversity = celebrate({
 
 module.exports.updateUniversity = celebrate({
     body: Joi.object().options({ abortEarly: false }).keys({
-        id: Joi.string().required(),
+        _id: Joi.string().required(),
         name: Joi.string().required(),
     })
 });
