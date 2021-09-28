@@ -179,7 +179,7 @@ async function contents(req,res){
         var posts = await post.find({
             author:req.body.id,
             media_type:req.body.type
-        }).limit(50);
+        }).populate({path:'author',select:{hash:0,salt:0}}).limit(50);
         responseManagement.sendResponse(res,httpStatus.OK,'',posts);
     } catch (error) {
         console.log(error.message);

@@ -443,12 +443,14 @@ module.exports.myconnections = async (req,res)=>{
                       }
                     }, {
                       '$project': {
+                        'connections._id':1,
                         'connections.first_name': 1, 
                         'connections.last_name': 1, 
                         'connections.start_date': 1, 
                         'connections.end_date': 1, 
                         'connections.profile_pic': 1, 
-                        'connections.course': 1
+                        'connections.course': 1,
+                        _id:0
                       }
                     }, {
                       '$lookup': {
@@ -461,7 +463,7 @@ module.exports.myconnections = async (req,res)=>{
                
         ]); 
         if(myconnections){
-            responseManagement.sendResponse(res, httpStatus.OK,'',myconnections[0]);
+            responseManagement.sendResponse(res, httpStatus.OK,'',myconnections);
         }else{
             responseManagement.sendResponse(res, httpStatus.OK,'Connections not found',{});
         }
