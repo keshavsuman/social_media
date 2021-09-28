@@ -139,11 +139,13 @@ module.exports.myProfile = async (req, res) => {
             .populate({ path: 'course', model:'course',select:{_id:1,name:1}})
             .populate({path: 'college' ,model:'college',select:{_id:1,name:1},populate:{path:'university_id',model:'universities'}})
             .lean();
-            let connections = await connection.find({user:req.params.id});
+            let connections = await connection.find({user:req.data._id});
             var data = {};
-            data.connection_count = connections[0].connections.length;
-            data.follower_count = connections[0].followers.length;
-            data.following_count = connections[0].followings.length;   
+            if(connections.length>0){
+                data.connection_count = connections[0].connections.length;
+                data.follower_count = connections[0].followers.length;
+                data.following_count = connections[0].followings.length;   
+            }
         responseManagement.sendResponse(res, httpStatus.OK, "", { user, data});
     } catch (error) {
         console.log(error)
