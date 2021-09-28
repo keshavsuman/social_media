@@ -77,11 +77,11 @@ module.exports.getInterests = async(req,res)=>{
 /**** send interest according to the id ****/
 module.exports.editInterest = async(req,res)=>{
 	try{
-		let interest = await Interest.findById(req.body.id);
+		let interest = await Interest.findById(req.body._id);
 		if(!interest){
             responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, global.interest_not_exist);	
 		} else {
-			await Interest.findByIdAndUpdate(req.body.id,{
+			await Interest.findByIdAndUpdate(req.body._id,{
 				name:req.body.name??interest.name,
 				photo:req.body.photo??interest.photo,
 				status:req.body.status??interest.status
