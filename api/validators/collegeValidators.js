@@ -10,7 +10,7 @@ module.exports.createCollege = celebrate({
 
 module.exports.deleteCollege = celebrate({
     body: Joi.object().options({ abortEarly: false }).keys({
-        id: Joi.string().required()
+        // id: Joi.string().required()
     })
 });
 
