@@ -15,7 +15,7 @@ module.exports.deleteInterest = celebrate({
 
 module.exports.updateInterest = celebrate({
     body: Joi.object().options({ abortEarly: false }).keys({
-        id: Joi.string().required(),
+        _id: Joi.string().required(),
         name: Joi.string().required(),
         photo: Joi.string().optional(),
         status:Joi.string().optional()

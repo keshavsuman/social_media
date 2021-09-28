@@ -87,11 +87,13 @@ module.exports.searchSkills = async (req,res)=>{
 /**** send Skill according to the id ****/
 module.exports.editSkill = async (req, res) => {
 	try {
-		let skill = await Skill.findOne(req.body._id);
+		let skill = await Skill.findById(req.body._id);
 		if (!skill) {
 			responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, global.skill_not_exist);
 		} else {
-		
+			await Skill.findByIdAndUpdate(req.body._id,{
+				name:req.body.name
+			})
 			responseManagement.sendResponse(res, httpStatus.OK, '', skill);
 		}
 	} catch (error) {
