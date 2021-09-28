@@ -97,7 +97,7 @@ module.exports.updateUniversity = async (req, res) => {
 		if (university) {
 			responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, global.university_already_exist);
 		} else {
-			await University.updateOne({ _id: req.body.id }, {name:req.body.name});
+			await University.updateOne({ _id: req.body._id }, {name:req.body.name});
 			responseManagement.sendResponse(res, httpStatus.OK, global.university_updated);
 		}
 	} catch (error) {
