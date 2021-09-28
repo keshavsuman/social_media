@@ -83,11 +83,11 @@ module.exports.getColleges = async (req, res) => {
 /**** send college according to the id ****/
 module.exports.editCollege = async (req, res) => {
     try {
-        let college = await College.findById(req.body.id);
+        let college = await College.findById(req.query._id);
         if (!college) {
             responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, global.college_not_exist);
         } else {
-            var newcollege = await College.findByIdAndUpdate(req.body.id,{
+            var newcollege = await College.findByIdAndUpdate(req.query._id,{
                 name:req.body.name??college.name,
                 university_id:req.body.university_id??college.university_id,
                 isAutonomous:req.body.isAutonomous??college.isAutonomous,
