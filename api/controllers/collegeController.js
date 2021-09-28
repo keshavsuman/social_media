@@ -32,11 +32,11 @@ module.exports.createCollege = async (req, res) => {
 /**** Delete College ****/
 module.exports.deleteCollege = async (req, res) => {
     try {
-        let college = await College.findById(req.body.id);
+        let college = await College.findById(req.query._id);
         if (!college) {
             responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, global.college_not_exist);
         } else {
-            await College.findByIdAndDelete(req.body.id);
+            await College.findByIdAndDelete(req.query._id);
             responseManagement.sendResponse(res, httpStatus.OK, global.college_deleted);
         }
     } catch (error) {

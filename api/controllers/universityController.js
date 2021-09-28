@@ -23,12 +23,12 @@ module.exports.createUniversity = async (req, res) => {
 /**** Delete University ****/
 module.exports.deleteUniversity = async (req, res) => {
 	try {
-		let university = await University.findById(req.params.universityId);
+		let university = await University.findById(req.query._id);
 		console.log(university);
 		if (!university) {
 			responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, global.university_not_exist);
 		} else {
-			await University.findByIdAndDelete(req.params.universityId);
+			await University.findByIdAndDelete(req.query._id);
 			responseManagement.sendResponse(res, httpStatus.OK, global.university_deleted);
 		}
 	} catch (error) {

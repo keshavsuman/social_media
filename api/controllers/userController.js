@@ -333,7 +333,7 @@ module.exports.search = async (req,res) =>{
             {first_name:{$regex:req.body.keyword,$options:'i'}},
             {last_name:{$regex:req.body.keyword,$options:'i'}}
           ]
-                var searchResults = await User.find(filterBody,{
+          var searchResults = await User.find(filterBody,{
              first_name:1,
              last_name:1,
              profile_pic:1,
@@ -452,14 +452,15 @@ module.exports.myconnections = async (req,res)=>{
                         'connections.course': 1,
                         _id:0
                       }
-                    }, {
-                      '$lookup': {
-                        'from': 'courses', 
-                        'localField': 'connections.course', 
-                        'foreignField': '_id', 
-                        'as': 'courses'
-                      }
-                    }
+                    },
+                    //  {
+                    //   '$lookup': {
+                    //     'from': 'courses', 
+                    //     'localField': 'connections.course', 
+                    //     'foreignField': '_id', 
+                    //     'as': 'courses'
+                    //   }
+                    // }
                
         ]); 
         if(myconnections){
