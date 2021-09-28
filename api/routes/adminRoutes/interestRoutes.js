@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/createInterest', auth, interestValidator.createInterest, interest.createInterest);
 router.delete('/deleteInterest', auth, interestValidator.deleteInterest, interest.deleteInterest);
 router.post('/getInterests', interest.getInterests);
-router.get('/editInterest', auth, interestValidator.deleteInterest, interest.editInterest);
+router.post('/updateInterest', auth, interestValidator.updateInterest, interest.editInterest);
 router.get('/updateInterestStatus',auth, interest.updateInterestStatus);
 
 module.exports = router;

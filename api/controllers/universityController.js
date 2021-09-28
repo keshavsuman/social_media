@@ -24,6 +24,7 @@ module.exports.createUniversity = async (req, res) => {
 module.exports.deleteUniversity = async (req, res) => {
 	try {
 		let university = await University.findById(req.params.universityId);
+		console.log(university);
 		if (!university) {
 			responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, global.university_not_exist);
 		} else {

@@ -74,23 +74,42 @@ module.exports.otherUserProfile = async (req, res) => {
     try {
         let user = await User.findOne({ _id: req.params.id },{salt:0,hash:0}).populate({path:'college'}).populate({path:'course'});
         let connections = await connection.find({user:req.params.id});
-        var connectionData = {};
-        connectionData.connection_count = connections[0].connections.length;
-        connectionData.follower_count = connections[0].followers.length;
-        connectionData.following_count = connections[0].followings.length;
+        var data = {
+            profile_pic:user.profile_pic,
+            state:user.state,
+            home_town:user.home_town,
+            country:user.country,
+            skills:user.skills,
+            interests:user.interests,
+            first_name:user.first_name,
+            last_name:user.last_name,
+            email:user.email,
+            dob:user.dob,
+            start_date:user.start_date,
+            end_date:user.end_date,
+            status:user.status,
+            gender:user.gender,
+            dob:user.dob,
+            mobile:user.mobile,
+            college:user.college,
+            course:user.course,
+        };
+        data.connection_count = connections[0].connections.length;
+        data.follower_count = connections[0].followers.length;
+        data.following_count = connections[0].followings.length;
         if(connections[0].connections.includes(req.params.id))
         {
-            connectionData.isConnected=true;
+            data.isConnected=true;
         }else{
-            connectionData.isConnected=false;
+            data.isConnected=false;
         }
         if(connections[0].followers.includes(req.params.id))
         {
-            connectionData.isFollowed=true;
+            data.isFollowed=true;
         }else{
-            connectionData.isFollowed=false;
+            data.isFollowed=false;
         }
-        responseManagement.sendResponse(res, httpStatus.OK, "",{user,connectionData});
+        responseManagement.sendResponse(res, httpStatus.OK, "",data);
     } catch (error) {
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
@@ -121,11 +140,11 @@ module.exports.myProfile = async (req, res) => {
             .populate({path: 'college' ,model:'college',select:{_id:1,name:1},populate:{path:'university_id',model:'universities'}})
             .lean();
             let connections = await connection.find({user:req.params.id});
-            var connectionData = {};
-            connectionData.connection_count = connections[0].connections.length;
-            connectionData.follower_count = connections[0].followers.length;
-            connectionData.following_count = connections[0].followings.length;   
-        responseManagement.sendResponse(res, httpStatus.OK, "", { user, connectionData});
+            var data = {};
+            data.connection_count = connections[0].connections.length;
+            data.follower_count = connections[0].followers.length;
+            data.following_count = connections[0].followings.length;   
+        responseManagement.sendResponse(res, httpStatus.OK, "", { user, data});
     } catch (error) {
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
