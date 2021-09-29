@@ -56,7 +56,7 @@ router.get('/cities/:stateId/:city', profile.cities);
 router.get('/addCities',profile.addCities);
 
 router.get('/myProfile', auth, profile.myProfile);
-router.get('/profile/:id', profileValidator.otherUserProfile, profile.otherUserProfile);
+router.get('/profile/:id', auth,profileValidator.otherUserProfile, profile.otherUserProfile);
 router.post('/setProfile', auth, profile.setProfile);
 router.post('/createPost', auth, postValidator.createPost, post.createPost);
 
