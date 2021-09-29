@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var Schema = new mongoose.Schema({
-    author: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
     content: { type: String },
     media_type: { type: String },
     visibility: { type: String },

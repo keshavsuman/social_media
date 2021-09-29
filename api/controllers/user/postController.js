@@ -10,7 +10,7 @@ const reactions = require('../../models/reactions');
 async function createPost(req,res){
     try {
         await post.create({
-            author:req.data._id,
+            user:req.data._id,
             content:req.body.content,
             media_type:req.body.media_type,
             visibility:req.body.visibility,
@@ -48,7 +48,7 @@ async function getPosts(req,res){
     try {
         var userPosts = await post.find(
             {
-             author:req.data._id,
+             user:req.data._id,
              admin_approved:true,
             },  
             ).sort({_id:-1}).limit(50);
@@ -177,9 +177,9 @@ async function replyOnComment(req,res){
 async function contents(req,res){
     try {
         var posts = await post.find({
-            author:req.body.id,
+            user:req.body.id,
             media_type:req.body.type
-        }).populate({path:'author',select:{hash:0,salt:0}}).limit(50);
+        }).populate({path:'user',select:{hash:0,salt:0}}).limit(50);
         responseManagement.sendResponse(res,httpStatus.OK,'',posts);
     } catch (error) {
         console.log(error.message);
@@ -195,7 +195,7 @@ async function timelineposts(req,res){
                     {
                       '$lookup': {
                         'from': 'users', 
-                        'localField': 'author', 
+                        'localField': 'user', 
                         'foreignField': '_id', 
                         'as': 'user'
                       }
@@ -215,12 +215,12 @@ async function timelineposts(req,res){
                       '$match': {
                         $or:[
                             {
-                            'author': {
+                            'user': {
                                 '$in': connectionDocument[0].connections
                                 }
                             },
                             {
-                                'author':{
+                                'user':{
                                     '$in':connectionDocument[0].followers
                                 }
                             },
@@ -228,7 +228,7 @@ async function timelineposts(req,res){
                                 'college': mongoose.Types.ObjectId(req.data.college)
                             },
                             {
-                                'author':mongoose.Types.ObjectId(req.data._id)
+                                'user':mongoose.Types.ObjectId(req.data._id)
                             }
                         ],
                         admin_approved:true
@@ -260,7 +260,7 @@ async function timelineposts(req,res){
                 {
                   '$lookup': {
                     'from': 'users', 
-                    'localField': 'author', 
+                    'localField': 'user', 
                     'foreignField': '_id', 
                     'as': 'user'
                   }
@@ -280,12 +280,12 @@ async function timelineposts(req,res){
                   '$match': {
                     $or:[
                         {
-                        'author': {
+                        'user': {
                             '$in': connectionDocument[0].connections
                             }
                         },
                         {
-                            'author':{
+                            'user':{
                                 '$in':connectionDocument[0].followers
                             }
                         },
@@ -293,7 +293,7 @@ async function timelineposts(req,res){
                             'college': mongoose.Types.ObjectId(req.data.college)
                         },
                         {
-                            'author':mongoose.Types.ObjectId(req.data._id)
+                            'user':mongoose.Types.ObjectId(req.data._id)
                         }
                     ],
                     media_type:req.body.type,
