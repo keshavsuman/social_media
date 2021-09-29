@@ -93,7 +93,7 @@ module.exports.editCollege = async (req, res) => {
                 isAutonomous:req.body.isAutonomous??college.isAutonomous,
                 status:req.body.status??college.status
             },{new:true});
-            responseManagement.sendResponse(res, httpStatus.OK, '', newcollege);
+            responseManagement.sendResponse(res, httpStatus.OK, 'college updated successfully', newcollege);
         }
     } catch (error) {
         console.log(error)

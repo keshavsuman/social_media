@@ -97,6 +97,7 @@ module.exports.otherUserProfile = async (req, res) => {
         data.connection_count = connections[0].connections.length;
         data.follower_count = connections[0].followers.length;
         data.following_count = connections[0].followings.length;
+        
         if(connections[0].connections.includes(req.params.id))
         {
             data.isConnected=true;
@@ -108,6 +109,12 @@ module.exports.otherUserProfile = async (req, res) => {
             data.isFollowed=true;
         }else{
             data.isFollowed=false;
+        }
+        if(connections[0].requested.includes(req.params.id))
+        {
+            data.isRequested=true;
+        }else{
+            data.isRequested=false;
         }
         responseManagement.sendResponse(res, httpStatus.OK, "",data);
     } catch (error) {
