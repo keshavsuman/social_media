@@ -197,15 +197,18 @@ async function timelineposts(req,res){
                         'from': 'users', 
                         'localField': 'user', 
                         'foreignField': '_id', 
-                        'as': 'user'
+                        'as': 'myuser'
                       }
                     }, {
                       '$addFields': {
+                        'user':{
+                            $first:'$myuser'
+                        },
                         'college': {
-                          '$first': '$user.college'
+                          '$first': '$myuser.college'
                         }, 
                         'course': {
-                          '$first': '$user.course'
+                          '$first': '$myuser.course'
                         },
                         'totalComments':{
                             '$size':'$comments'
@@ -262,15 +265,18 @@ async function timelineposts(req,res){
                     'from': 'users', 
                     'localField': 'user', 
                     'foreignField': '_id', 
-                    'as': 'user'
+                    'as': 'myuser'
                   }
                 }, {
                   '$addFields': {
+                    'user':{
+                        $first:'$myuser'
+                    },
                     'college': {
-                      '$first': '$user.college'
+                      '$first': '$myuser.college'
                     }, 
                     'course': {
-                      '$first': '$user.course'
+                      '$first': '$myuser.course'
                     },
                     'totalComments':{
                         '$size':'$comments'

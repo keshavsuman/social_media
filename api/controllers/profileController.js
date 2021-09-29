@@ -153,7 +153,7 @@ module.exports.myProfile = async (req, res) => {
                 data.follower_count = connections[0].followers.length;
                 data.following_count = connections[0].followings.length;   
             }
-        responseManagement.sendResponse(res, httpStatus.OK, "", { user, data});
+        responseManagement.sendResponse(res, httpStatus.OK, "", { user, connectionData});
     } catch (error) {
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
