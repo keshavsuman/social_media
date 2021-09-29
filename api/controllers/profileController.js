@@ -144,7 +144,7 @@ module.exports.myProfile = async (req, res) => {
             .populate({ path: 'interests', model: 'interest',select:{_id:1,name:1} })
             .populate({ path: 'skills', model: 'skill',select:{_id:1,name:1} })
             .populate({ path: 'course', model:'course',select:{_id:1,name:1}})
-            .populate({path: 'college' ,model:'college',select:{_id:1,name:1},populate:{path:'university_id',model:'universities'}})
+            .populate({path: 'college' ,model:'college',select:{_id:1,name:1},populate:{path:'university_id',model:'university'}})
             .lean();
             let connections = await connection.find({user:req.data._id});
             var data = {};
