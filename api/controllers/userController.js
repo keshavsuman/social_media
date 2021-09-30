@@ -238,7 +238,7 @@ module.exports.searchusers = async (req, res) => {
 
 module.exports.users = async (req, res) => {
     try {
-        var users  = await User.find({},{hash:0,salt:0}).limit(50);
+        var users  = await User.find({},{hash:0,salt:0}).populate('home_town').limit(50);
         var totalUsers = await User.countDocuments();
         responseManagement.sendResponse(res,httpStatus.OK,'',{users:users,totalUsers:totalUsers});
     } catch (error) {
