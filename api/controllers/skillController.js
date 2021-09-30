@@ -91,9 +91,6 @@ module.exports.editSkill = async (req, res) => {
 		if (!skill) {
 			responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, global.skill_not_exist);
 		} else {
-			await Skill.findByIdAndUpdate(req.body._id,{
-				name:req.body.name
-			})
 			responseManagement.sendResponse(res, httpStatus.OK, '', skill);
 		}
 	} catch (error) {
@@ -110,8 +107,9 @@ module.exports.updateSkill = async (req, res) => {
 		if (skill) {
 			responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, global.interest_already_exist);
 		} else {
-
-			await Skill.updateOne({ _id: req.body._id }, req.body);
+			await Skill.findByIdAndUpdate(req.body._id,{
+				name:req.body.name
+			})
 			responseManagement.sendResponse(res, httpStatus.OK, global.skill_updated);
 		}
 	} catch (error) {

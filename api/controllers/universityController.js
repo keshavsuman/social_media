@@ -105,7 +105,19 @@ module.exports.updateUniversity = async (req, res) => {
 		responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
 	}
 };
-
+module.exports.editUniversity = async (req, res) => {
+	try {
+		let university = await University.findOne({ name: req.body.name });
+		if (university) {
+			responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, global.university_already_exist);
+		} else {
+			responseManagement.sendResponse(res, httpStatus.OK, global.university_updated,university);
+		}
+	} catch (error) {
+		console.log(error);
+		responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
+	}
+};
 /**** get universities for search ****/
 // module.exports.searchUniversities = async (req, res) => {
 // 	try {

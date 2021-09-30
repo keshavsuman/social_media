@@ -9,8 +9,8 @@ router.post('/createUniversity', universityValidator.createUniversity, universit
 router.delete('/deleteUniversity', auth, universityValidator.deleteUniversity, university.deleteUniversity);
 router.post('/getUniversities', university.getUniversities);
 router.post('/updateUniversity', auth, universityValidator.updateUniversity, university.updateUniversity);
-router.get('/getUniversitiesList', university.getUniversitiesListAdmin);
-router.get('/updateUniversityStatus', university.updateUniversityStatus);
-
+router.get('/getUniversitiesList',auth, university.getUniversitiesListAdmin);
+router.get('/updateUniversityStatus',auth, university.updateUniversityStatus);
+router.get('/editUniversity',auth,university.editUniversity);
 
 module.exports=router;
