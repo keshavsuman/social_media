@@ -188,6 +188,7 @@ async function contents(req,res){
 }
 async function timelineposts(req,res){
     try {
+        // connectionDocument[0].connections
         var timelineposts;
         var connectionDocument = await connections.find({user:req.data._id});
         if(req.body.type=='ALL'){
@@ -204,12 +205,6 @@ async function timelineposts(req,res){
                         'user':{
                             $first:'$myuser'
                         },
-                        'college': {
-                          '$first': '$myuser.college'
-                        }, 
-                        'course': {
-                          '$first': '$myuser.course'
-                        },
                         'totalComments':{
                             '$size':'$comments'
                           }
@@ -218,20 +213,19 @@ async function timelineposts(req,res){
                       '$match': {
                         $or:[
                             {
-                            'user': {
-                                '$in': connectionDocument[0].connections
-                                }
-                            },
+                                'user._id':{
+                                    '$in':connectionDocument[0].connections
+                                }                            },
                             {
-                                'user':{
+                                'user._id':{
                                     '$in':connectionDocument[0].followers
                                 }
                             },
                             {
-                                'college': mongoose.Types.ObjectId(req.data.college)
+                                'user.college': mongoose.Types.ObjectId(req.data.college)
                             },
                             {
-                                'user':mongoose.Types.ObjectId(req.data._id)
+                                'user._id':mongoose.Types.ObjectId(req.data._id)
                             }
                         ],
                         admin_approved:true
@@ -240,7 +234,7 @@ async function timelineposts(req,res){
                     {
                         $lookup: {
                                'from': 'courses', 
-                               'localField': 'course', 
+                               'localField': 'user.course', 
                                'foreignField': '_id', 
                                'as': 'course'
                            },
@@ -252,9 +246,12 @@ async function timelineposts(req,res){
                     },
                     {
                         $project:{
+                            myuser:0,
                             comments:0,
                             __v:0,
-                            
+                            'user.hash':0,
+                            'user.salt':0,
+                            'user.__v':0
                         }
                     }
             ]);
@@ -272,12 +269,6 @@ async function timelineposts(req,res){
                     'user':{
                         $first:'$myuser'
                     },
-                    'college': {
-                      '$first': '$myuser.college'
-                    }, 
-                    'course': {
-                      '$first': '$myuser.course'
-                    },
                     'totalComments':{
                         '$size':'$comments'
                       }
@@ -286,20 +277,20 @@ async function timelineposts(req,res){
                   '$match': {
                     $or:[
                         {
-                        'user': {
+                        'user._id': {
                             '$in': connectionDocument[0].connections
                             }
                         },
                         {
-                            'user':{
+                            'user._id':{
                                 '$in':connectionDocument[0].followers
                             }
                         },
                         {
-                            'college': mongoose.Types.ObjectId(req.data.college)
+                            'user.college': mongoose.Types.ObjectId(req.data.college)
                         },
                         {
-                            'user':mongoose.Types.ObjectId(req.data._id)
+                            'user._id':mongoose.Types.ObjectId(req.data._id)
                         }
                     ],
                     media_type:req.body.type,
@@ -309,7 +300,7 @@ async function timelineposts(req,res){
                 {
                     $lookup: {
                            'from': 'courses', 
-                           'localField': 'course', 
+                           'localField': 'user.course', 
                            'foreignField': '_id', 
                            'as': 'course'
                        },
@@ -321,7 +312,12 @@ async function timelineposts(req,res){
                 },
                 {
                     $project:{
-                        comments:-1
+                        myuser:0,
+                        comments:-1,
+                        __v:0,
+                        'user.hash':0,
+                        'user.salt':0,
+                        'user.__v':0
                     }
                 }
         ]);

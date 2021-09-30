@@ -311,7 +311,6 @@ module.exports.updateUserStatus = async (req, res) => {
 
 module.exports.search = async (req,res) =>{
     try {
-        // var user = await User.findById(req.data._id);
         var {filters} = req.body;
         var filterBody = {}
         if(filters){
@@ -333,20 +332,7 @@ module.exports.search = async (req,res) =>{
             {first_name:{$regex:req.body.keyword,$options:'i'}},
             {last_name:{$regex:req.body.keyword,$options:'i'}}
           ]
-        //   var searchResults = await User.find(filterBody,{
-        //      first_name:1,
-        //      last_name:1,
-        //      profile_pic:1,
-        //      home_town:1,
-        //      skills:1,
-        //      interests:1,
-        //      email:1,
-        //      start_date:1,
-        //      end_date:1,
-        //      college:1,
-        //      course:1
-        //   }).populate('college').populate('course');
-
+        
         var searchResults = await User.aggregate([
             {
               '$match': filterBody
@@ -393,7 +379,7 @@ module.exports.search = async (req,res) =>{
                 'start_date': 1, 
                 'end_date': 1, 
                 'college': 1, 
-                'course': 1, 
+                'course': 1,
                 'isConnected': 1, 
                 'isFollowing': 1, 
                 'isRequested': 1
