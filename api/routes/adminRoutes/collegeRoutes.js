@@ -8,6 +8,7 @@ const router = express.Router();
 router.post('/createCollege', collegeValidator.createCollege, college.createCollege);
 router.delete('/deleteCollege', auth, collegeValidator.deleteCollege, college.deleteCollege);
 router.post('/getColleges', auth,college.getColleges);
-router.post('/editCollege', auth, college.editCollege);
+router.post('/updateCollege', auth, college.updateCollege);
+router.get('/editCollege', auth, college.editCollege);
 
 module.exports = router;

@@ -81,7 +81,7 @@ module.exports.getColleges = async (req, res) => {
 };
 
 /**** send college according to the id ****/
-module.exports.editCollege = async (req, res) => {
+module.exports.updateCollege = async (req, res) => {
     try {
         let college = await College.findById(req.body._id);
         if (!college) {
@@ -103,14 +103,13 @@ module.exports.editCollege = async (req, res) => {
 
 
 /**** update college ****/
-module.exports.updateCollege = async (req, res) => {
+module.exports.editCollege = async (req, res) => {
     try {
-        let college = await College.findOne({ $and: [{ name: req.body.name }, { _id: { $ne: req.body._id } }] });
-        if (college) {
-            responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, global.college_already_exist);
+        let college = await College.findById(req.query._id);
+        if (!college) {
+            responseManagement.sendResponse(res, httpStatus.BAD_REQUEST,'college doesn\'t exits');
         } else {
-            await College.updateOne({ _id: req.body._id }, req.body);
-            responseManagement.sendResponse(res, httpStatus.OK, global.college_updated);
+            responseManagement.sendResponse(res, httpStatus.OK, global.college_updated,college);
         }
     } catch (error) {
         console.log(error)
