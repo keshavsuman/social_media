@@ -8,10 +8,10 @@ var Schema = new mongoose.Schema({
     media_url: [{ type: String }],
     admin_approved: {type: Boolean, default:false},
     comments:[{type:mongoose.Schema.Types.ObjectId,ref:'comments'}],
-    reactions:[{
-            reactionName:{type:String},
-            count:{type:Number,default:0}
-    }],
+    LIKE:{type:Number,default:0},
+    DISLIKE:{type:Number,default:0},
+    SAD:{type:Number,default:0},
+    ANGRY:{type:Number,default:0}
 }, { timestamps: true });
 
 

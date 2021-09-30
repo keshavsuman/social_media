@@ -37,6 +37,7 @@ module.exports.login = async (req, res) => {
                     responseManagement.sendResponse(res, httpStatus.OK, global.logged_in_successful, { "token": token, user_data })
 
                 } else {
+                    console.log("adsfh");
                     responseManagement.sendResponse(res, httpStatus.UNAUTHORIZED, global.user_is_inactive);
                 }
             } else {

@@ -188,7 +188,6 @@ async function contents(req,res){
 }
 async function timelineposts(req,res){
     try {
-        // connectionDocument[0].connections
         var timelineposts;
         var connectionDocument = await connections.find({user:req.data._id});
         if(req.body.type=='ALL'){
