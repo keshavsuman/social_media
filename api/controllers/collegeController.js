@@ -105,7 +105,7 @@ module.exports.updateCollege = async (req, res) => {
 /**** update college ****/
 module.exports.editCollege = async (req, res) => {
     try {
-        let college = await College.findById(req.query._id).populate('course_id');
+        let college = await College.findById(req.query._id).populate('course_id').populate('university_id');
         if (!college) {
             responseManagement.sendResponse(res, httpStatus.BAD_REQUEST,'college doesn\'t exits');
         } else {
