@@ -107,7 +107,7 @@ module.exports.updateUniversity = async (req, res) => {
 };
 module.exports.editUniversity = async (req, res) => {
 	try {
-		let university = await University.findOne({ name: req.query._id });
+		let university = await University.findById(req.query._id);
 		if (university) {
 			responseManagement.sendResponse(res, httpStatus.BAD_REQUEST, global.university_already_exist);
 		} else {
