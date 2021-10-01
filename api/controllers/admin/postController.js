@@ -38,9 +38,9 @@ module.exports.adminPostsList = async (req,res) =>{
 		let posts;
 		if(req.params.type=='approved')
 		{
-			posts = await Post.find({admin_approved:true}).sort({createdAt:-1});
+			posts = await Post.find({admin_approved:true}).populate('user').sort({createdAt:-1});
 		}else{
-			posts = await Post.find({admin_approved:false}).sort({createdAt:-1});
+			posts = await Post.find({admin_approved:false}).populate('user').sort({createdAt:-1});
 		}
 		responseManagement.sendResponse(res, httpStatus.OK,'',posts);
 	}

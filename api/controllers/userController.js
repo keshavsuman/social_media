@@ -403,17 +403,21 @@ module.exports.followunfollow = async  (req,res)=>{
             await connections.findOneAndUpdate({user:req.data._id},{
                 $addToSet:{followings:req.body.id}
             });
+
+
+            // Need to write logic
             responseManagement.sendResponse(res,httpStatus.OK,'followed',{});
 
         }else if(req.body.operation=='unfollow')
         {
             await connections.findOneAndUpdate({user:req.body.id},{
-                $pull:{followers:req.data._id}
+                $pull:{followers:req.data._id},
+                $pull:{connections:req.data._id}
             });
             await connections.findOneAndUpdate({user:req.data._id},{
-                $pull:{followings:req.body.id}
+                $pull:{followings:req.body.id},
+                $pull:{connections:req.body.id}
             });
-            responseManagement.sendResponse(res,httpStatus.OK,'unfollowed',{});
         }else {
             responseManagement.sendResponse(res,httpStatus.NOT_ACCEPTABLE,'operation not acceptable',{});
         }
@@ -435,10 +439,14 @@ module.exports.connectAcceptReject = async (req,res)=>{
         }
         if(req.body.operation==='accept'){
             await connections.findOneAndUpdate({user:req.data._id},{
-                $pull:{requested:req.body.id}
+                $pull:{requested:req.body.id},
+                $addToSet:{connections:req.body.id},
+                $addToSet:{followings:req.body.id},
+                $addToSet:{followers:req.body.id},
             });
-            await connections.findOneAndUpdate({user:req.data._id},{
-                $addToSet:{connections:req.body.id}
+            await connections.findOneAndUpdate({user:req.body.id},{
+                $addToSet:{followings:req.data._id},
+                $addToSet:{followers:req.data._id},
             });
             responseManagement.sendResponse(res,httpStatus.OK,'accepted',{});
         }
