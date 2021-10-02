@@ -1,0 +1,57 @@
+{
+	"signup_success":"Please check your mail for verification",
+	"logged_in_successful":"Login Successfull",
+    "internal_server_error": "Internal Server Error",
+    "invalid_credentials": "Invalid Email or Password",
+    "INTERNAL_SERVER_ERROR":"INTERNAL SERVER ERROR",
+    "email_already_exist":"email_already_exist",
+    "email_or_mobile_already_exist":"Email or Mobile already Exist",
+    "invalid_email":"Please enter a valid Email!",
+    "password_reset_link":"Password reset link has been sent to Email",
+    "password_reset_successfully":"Password has been changed successfully",
+    "logged_out_successful":"Successfully Logout",
+    "admin_update_successful":"Admin Updated Successfully",
+    "admin_not_exist":"Admin Not Exist",
+    "user_not_exist":"User Not Exist",
+    "profile_updated_successfully":"Profile Updated Successfully",
+
+    "interest_created":"Interest Created Successfully",
+    "interest_deleted":"Interest Deleted Successfully",
+    "interest_updated":"Interest Updated Successfully",
+    "interest_not_exist":"Interest Does'nt Exist",
+    "interest_already_exist":"Interest Already Exist",
+
+    "skill_created":"Skill Created Successfully",
+    "skill_deleted":"Skill Deleted Successfully",
+    "skill_updated":"Skill Updated Successfully",
+    "skill_not_exist":"Skill Does'nt Exist",
+    "skill_already_exist":"Skill Already Exist",
+
+    "university_created":"University Created Successfully",
+    "university_deleted":"University Deleted Successfully",
+    "university_updated":"University Updated Successfully",
+    "university_not_exist":"University Does'nt Exist",
+    "university_already_exist":"University Already Exist",
+
+    "college_created":"College Created Successfully",
+    "college_deleted":"College Deleted Successfully",
+    "college_updated":"College Updated Successfully",
+    "college_not_exist":"College Does'nt Exist",
+    "college_already_exist":"College Already Exist",
+
+    "course_created":"Course Created Successfully",
+    "course_deleted":"Course Deleted Successfully",
+    "course_updated":"Course Updated Successfully",
+    "course_not_exist":"Course Does'nt Exist",
+    "course_already_exist":"Course Already Exist",
+
+    "role_add_successfully":"Role added successfully",
+    "deleted_role_successfully":"Role deleted successfully",
+    "role_update_successfully":"Role updated successfully",
+
+    "status_updated":"Status Updated Successfully",
+    "permission_already_exist":"Permission already exist",
+
+    "post_created":"Post Created Successfully",
+    "post_not_exist":"Post Does'nt Exist"
+}
