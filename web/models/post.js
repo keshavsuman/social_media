@@ -11,7 +11,8 @@ var Schema = new mongoose.Schema({
     LIKE:{type:Number,default:0},
     DISLIKE:{type:Number,default:0},
     SAD:{type:Number,default:0},
-    ANGRY:{type:Number,default:0}
+    ANGRY:{type:Number,default:0},
+    reaction_count:{type:Number,default:0}
 }, { timestamps: true });
 
 
