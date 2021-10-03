@@ -151,7 +151,7 @@ module.exports.updateCollegeStatus = async (req, res) => {
 
 module.exports.searchCollege = async (req,res)=>{
     try {
-		var colleges  = await College.find({'name': {'$regex': req.params.college, '$options': 'i'}});
+		var colleges  = await College.find({'name': {'$regex': req.params.college, '$options': 'i'}}).populate({path:'course_id',select:{name:1,duration:1,_id:1}});
 		responseManagement.sendResponse(res,httpStatus.OK,"",colleges);
 	} catch (error) {
 		console.log(error);

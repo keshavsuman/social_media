@@ -312,7 +312,10 @@ module.exports.updateUserStatus = async (req, res) => {
 module.exports.search = async (req,res) =>{
     try {
         var {filters} = req.body;
-        var filterBody = {}
+        var filterBody = {};
+        if(req.body.keyword){
+            responseManagement.sendResponse(res,httpStatus.NOT_ACCEPTABLE,"Keyword length is so small, it must have length of 2",{});
+        }else{
         if(filters){
             if(filters.includes('course') && user.course){
                 filterBody.course=user.course
@@ -387,6 +390,8 @@ module.exports.search = async (req,res) =>{
             }
           ]);
         responseManagement.sendResponse(res,httpStatus.OK,'',searchResults);
+    }
+
         } catch (error) {
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
@@ -468,7 +473,12 @@ module.exports.connectAcceptReject = async (req,res)=>{
 module.exports.getPendingRequests = async (req,res)=>{
     try {
         var requests = await connections.find({user:req.data._id},{requested:1,_id:0}).populate({path:'requested',select:{profile_pic:1,first_name:1,last_name:1}});
-        responseManagement.sendResponse(res,httpStatus.OK,'',requests[0].requested);
+        if(requests.length>0)
+        {
+            responseManagement.sendResponse(res,httpStatus.OK,'',requests[0].requested);
+        }else{
+            responseManagement.sendResponse(res,httpStatus.NOT_FOUND,'oops...Someone deleted the Connection document from database',{});
+        }
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
@@ -511,10 +521,10 @@ module.exports.myconnections = async (req,res)=>{
                     // }
                
         ]); 
-        if(myconnections){
+        if(myconnections.length>0){
             responseManagement.sendResponse(res, httpStatus.OK,'',myconnections[0]);
         }else{
-            responseManagement.sendResponse(res, httpStatus.OK,'Connections not found',{});
+            responseManagement.sendResponse(res, httpStatus.OK,'Connections not found in the database',{});
         }
     } catch (error) {
         console.log(error.message);
