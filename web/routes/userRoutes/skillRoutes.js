@@ -9,7 +9,7 @@ router.use(auth);
 
 /**
  * Header with authorization in required like 
- * Authorization:'Bearer ${authentication Token}'
+ * Authorization:'Bearer ${authentication  Token}'
  * 
  */
 router.get('/getSkills', UserSkillController.getSkills);

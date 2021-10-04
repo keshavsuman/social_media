@@ -5,7 +5,6 @@ const SKILL =require('../../models/skill');
 
 async function getSkills(req,res){
     try {
-        var data=[];
         var skills = await USER.findById(req.data._id,{skills:1,_id:0}).populate({path:'skills',select:{"name":1,_id:1}});
         console.log(skills);
         responseManagement.sendResponse(res,httpStatus.OK,"",skills);
