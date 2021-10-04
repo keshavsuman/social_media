@@ -313,7 +313,7 @@ module.exports.search = async (req,res) =>{
     try {
         var {filters} = req.body;
         var filterBody = {};
-        if(req.body.keyword){
+        if(req.body.keyword.length<2){
             responseManagement.sendResponse(res,httpStatus.NOT_ACCEPTABLE,"Keyword length is so small, it must have length of 2",{});
         }else{
         if(filters){
