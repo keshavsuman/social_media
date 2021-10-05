@@ -35,6 +35,7 @@ async function deletePost(req,res){
 
 async function updatePost(req,res){
     try {
+
         await post.findByIdAndUpdate(req.body.postId,req.body);
         responseManagement.sendResponse(res,httpStatus.OK,'Post updated successfully',{});
 
@@ -183,7 +184,7 @@ async function contents(req,res){
         var message = 'user posts';
         if(req.body.type!='all')
         {
-            findBody.type=req.body.type   
+            findBody.media_type=req.body.media_type   
         }
         if(req.data._id==req.body.id)
         {   
@@ -209,7 +210,7 @@ async function timelineposts(req,res){
         {
             responseManagement.sendResponse(res,httpStatus.OK,'Connection document not found in database');
         }else{
-            if(req.body.type=='ALL'){
+            if(req.body.media_type=='all'){
             timelineposts = await post.aggregate([
                         {
                         '$lookup': {
@@ -311,7 +312,7 @@ async function timelineposts(req,res){
                                 'user._id':mongoose.Types.ObjectId(req.data._id)
                             }
                         ],
-                        media_type:req.body.type,
+                        media_type:req.body.media_type,
                         admin_approved:true
                     }
                     },

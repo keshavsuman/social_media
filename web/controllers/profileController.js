@@ -73,9 +73,7 @@ module.exports.setProfile = async (req, res) => {
 module.exports.otherUserProfile = async (req, res) => {
     try {
         let user = await User.findOne({ _id: req.params.id },{salt:0,hash:0}).populate({path:'college'}).populate({path:'course'});
-        let connections = await connection.find({user:req.params.id});
-        console.log(connections);
-        
+        let connections = await connection.find({user:req.params.id});        
         if(!user){
             responseManagement.sendResponse(res, httpStatus.NOT_FOUND, "User doesn't exits",{});
         }
@@ -121,7 +119,7 @@ module.exports.otherUserProfile = async (req, res) => {
         }else{
             data.isRequested=false;
         }
-        responseManagement.sendResponse(res, httpStatus.OK, "",data);
+        responseManagement.sendResponse(res, httpStatus.OK, "profile data",data);
     } catch (error) {
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
@@ -161,7 +159,7 @@ module.exports.myProfile = async (req, res) => {
                 user.follower_count = 0;
                 user.following_count = 0;
             }
-        responseManagement.sendResponse(res, httpStatus.OK, "", user);
+        responseManagement.sendResponse(res, httpStatus.OK, "profile data", user);
     } catch (error) {
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);

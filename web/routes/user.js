@@ -22,10 +22,11 @@ const batchRoutes = require('./userRoutes/batchRoutes');
 router.use('/skill',skillRoutes);
 router.use('/interest',interestRoutes);
 router.use('/post',postRoutes);
-router.use('/college',collegeRoutes);
+router.use('/college',collegeRoutes); //Add college or update college
+// add university and update university
 router.use('/batch',batchRoutes);
 
-router.post('/search',auth,user.search);
+router.post('/search',auth,user.search); // remove self from search result 
 router.post('/login', userValidator.login, user.login);
 router.post('/signup', userValidator.registerUser, user.createUser);
 router.post('/socialLogin',userValidator.socialLogin, user.socialLogin);
@@ -41,12 +42,11 @@ router.get('/searchSkills/:skill',auth,skill.searchSkills);
 router.get('/searchInterests/:interest',auth,interest.searchInterests);
 router.get('/searchCollege/:college',auth,college.searchCollege);
 router.get('/searchUniversity/:university',auth,university.searchUniversities);
-router.get('/searchCourse/:course',auth,course.searchCourses);
 
 
 router.get('/getSkillsList', auth, skill.getSkillsList);
 router.get('/getUniversitiesList', auth, university.getUniversitiesList);
-router.get('/getCoursesList',  course.getCoursesList);
+router.post('/getCoursesList',  course.getCoursesList);
 router.get('/getInterestsList', auth, interest.getInterestsList);
 router.get('/getCollegesList', auth, college.getCollegesList);
 

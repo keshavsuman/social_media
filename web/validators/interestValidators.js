@@ -8,8 +8,8 @@ module.exports.createInterest = celebrate({
 });
 
 module.exports.deleteInterest = celebrate({
-    query: Joi.object().options({ abortEarly: false }).keys({
-        _id: Joi.string().required()
+    body: Joi.object().options({ abortEarly: false }).keys({
+        id: Joi.string().required()
     })
 });
 

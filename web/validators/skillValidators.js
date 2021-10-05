@@ -7,8 +7,8 @@ module.exports.createSkill = celebrate({
 });
 
 module.exports.deleteSkill = celebrate({
-    query: Joi.object().options({ abortEarly: false }).keys({
-        _id: Joi.string().required()
+    body: Joi.object().options({ abortEarly: false }).keys({
+        id: Joi.string().required()
     })
 });
 

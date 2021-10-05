@@ -334,7 +334,7 @@ module.exports.search = async (req,res) =>{
             {first_name:{$regex:req.body.keyword,$options:'i'}},
             {last_name:{$regex:req.body.keyword,$options:'i'}}
           ]
-        
+        filterBody._id = {$ne:mongoose.Types.ObjectId(req.data._id)};
         var searchResults = await User.aggregate([
             {
               '$match': filterBody
@@ -407,21 +407,22 @@ module.exports.followunfollow = async  (req,res)=>{
             await connections.findOneAndUpdate({user:req.data._id},{
                 $addToSet:{followings:req.body.id}
             });
-
-
-            // Need to write logic
             responseManagement.sendResponse(res,httpStatus.OK,'followed',{});
-
         }else if(req.body.operation=='unfollow')
         {
-            await connections.findOneAndUpdate({user:req.body.id},{
+            console.log(req.body.id);
+            console.log(req.data._id)
+            var data = await connections.findByIdAndUpdate(req.body.id,{
                 $pull:{followers:req.data._id},
                 $pull:{connections:req.data._id}
             });
-            await connections.findOneAndUpdate({user:req.data._id},{
+            var data1 = await connections.findByIdAndUpdate(req.data._id,{
                 $pull:{followings:req.body.id},
                 $pull:{connections:req.body.id}
             });
+            console.log(data);
+            console.log(data1);
+            responseManagement.sendResponse(res,httpStatus.OK,'unfollowed',{});
         }else {
             responseManagement.sendResponse(res,httpStatus.NOT_ACCEPTABLE,'operation not acceptable',{});
         }
@@ -537,7 +538,7 @@ module.exports.myconnections = async (req,res)=>{
 module.exports.getNotifications = async (req,res)=>{
     try {
         var notifications = await notification.find({user:req.data._id}).sort({createdAt:-1}).limit(20);
-        responseManagement.sendResponse(res,httpStatus.OK,'',notifications);
+        responseManagement.sendResponse(res,httpStatus.OK,'User notification',notifications);
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
