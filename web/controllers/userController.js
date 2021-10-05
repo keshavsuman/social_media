@@ -274,14 +274,13 @@ module.exports.editUser = async (req, res) => {
 module.exports.updateUser = async (req, res) => {
     try {
         const user = await User.findOne({ _id: req.data._id });
+        console.log(user);
         if (user) {
-            const result = await User.findByIdAndUpdate(req.data._id, req.body,{
-                new:true,
-            });
+            const result = await User.findByIdAndUpdate(req.data._id, req.body);
             if(result['college'] && result['course'] && result['start_date'] && result['end_date']){
                 await User.updateOne({_id:req.data._id},{profile_setup:true});
             }
-            responseManagement.sendResponse(res, httpStatus.OK, global.user_update_successful);
+            responseManagement.sendResponse(res, httpStatus.OK, global.profile_updated_successfully);
         } else {
             responseManagement.sendResponse(res, httpStatus.UNAUTHORIZED, global.internal_server_error);
         }

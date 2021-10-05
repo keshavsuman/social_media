@@ -1,10 +1,10 @@
 {
-	"signup_success":"Please check your mail for verification",
+	"signup_success":"Please Check your mail for verification of your Younigems account",
 	"logged_in_successful":"Login Successfull",
     "internal_server_error": "Internal Server Error",
     "invalid_credentials": "Invalid Email or Password",
     "INTERNAL_SERVER_ERROR":"INTERNAL SERVER ERROR",
-    "email_already_exist":"email_already_exist",
+    "email_already_exist":"Email Already Exist. Try Again With Different Email Address.",
     "email_or_mobile_already_exist":"Email or Mobile already Exist",
     "invalid_email":"Please enter a valid Email!",
     "password_reset_link":"Password reset link has been sent to Email",

@@ -29,7 +29,7 @@ router.post('/search',auth,user.search);
 router.post('/login', userValidator.login, user.login);
 router.post('/signup', userValidator.registerUser, user.createUser);
 router.post('/socialLogin',userValidator.socialLogin, user.socialLogin);
-router.post('/updateUser',auth,user.updateUser);
+router.post('/updateUser',auth,user.updateUser); //Email,status restrict krna hai update ke liye
 
 
 router.post('/logout', auth, user.logout);

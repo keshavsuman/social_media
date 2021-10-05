@@ -7,7 +7,7 @@ async function getSkills(req,res){
     try {
         var skills = await USER.findById(req.data._id,{skills:1,_id:0}).populate({path:'skills',select:{"name":1,_id:1}});
         console.log(skills);
-        responseManagement.sendResponse(res,httpStatus.OK,"",skills);
+        responseManagement.sendResponse(res,httpStatus.OK,"User skill list",skills);
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
@@ -21,12 +21,12 @@ async function createSkill(req,res){
             await USER.findByIdAndUpdate(req.data._id,{
                 $addToSet:{skills:newSkill._id}
             });
-            responseManagement.sendResponse(res,httpStatus.CREATED,"Skill has been updated",{});
+            responseManagement.sendResponse(res,httpStatus.CREATED,"Skill has been Added",skills);
         }else{
             await USER.findByIdAndUpdate(req.data._id,{
                 $addToSet:{skills:skills[0]._id}
             });
-            responseManagement.sendResponse(res,httpStatus.CREATED,"Skill has been updated",{});
+            responseManagement.sendResponse(res,httpStatus.CREATED,"Skill has been Added",skills);
         }
     }catch(error){
         console.log(error.message);

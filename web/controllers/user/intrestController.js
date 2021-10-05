@@ -39,7 +39,7 @@ async function deleteInterest(req,res){
 
 async function getInterests(req,res){
     try {
-        var data = await USER.findById(req.data._id,{interests:1,_id:0}).populate({path:'interests',select:{"name":1,_id:1}});
+        var data = await USER.findById(req.data._id,{interests:1,_id:0}).populate({path:'interests',select:{"name":1,_id:1,"photo":1}});
         responseManagement.sendResponse(res,httpStatus.OK,"",data);
     
     } catch (error) {

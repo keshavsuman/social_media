@@ -76,9 +76,13 @@ module.exports.getSkills = async (req, res) => {
 module.exports.searchSkills = async (req,res)=>{
 	try {
 		var skills  = await Skill.find({'name': {'$regex': req.params.skill, '$options': 'i'}});
-		console.log(skills)
-		responseManagement.sendResponse(res,httpStatus.OK,"",skills);
-	} catch (error) {
+		if(skills.length==0){
+			responseManagement.sendResponse(res,httpStatus.OK,"skill list is empty",skills);
+		}else{
+			responseManagement.sendResponse(res,httpStatus.OK,"skill list",skills);
+		}
+
+		} catch (error) {
 		console.log(error);
 		responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
 	}
