@@ -71,8 +71,8 @@ async function sharePost(req,res){
 
 async function uploadMedia(req,res){
     try {
-        req.file.path = req.protocol+'://13.127.217.154/'+req.file.path;
-        responseManagement.sendResponse(res,httpStatus.OK,'',req.file);
+        req.file.path = req.protocol+'://younigems.in/'+req.file.path;
+        responseManagement.sendResponse(res,httpStatus.OK,'File uploaded successfully',req.file);
     } catch (error) {
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
