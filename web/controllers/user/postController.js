@@ -16,7 +16,7 @@ async function createPost(req,res){
             visibility:req.body.visibility,
             media_url:req.body.media_url
         });
-        responseManagement.sendResponse(res,httpStatus.CREATED,"Post succesfully created",{});
+        responseManagement.sendResponse(res,httpStatus.CREATED,"Post successfully created",{});
     } catch (error) {
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
@@ -176,11 +176,26 @@ async function replyOnComment(req,res){
 
 async function contents(req,res){
     try {
-        var posts = await post.find({
+        var findBody = {
             user:req.body.id,
-            media_type:req.body.type
-        }).populate({path:'user',select:{hash:0,salt:0}}).limit(50);
-        responseManagement.sendResponse(res,httpStatus.OK,'',posts);
+            admin_approved:true            
+        };
+        var message = 'user posts';
+        if(req.body.type!='all')
+        {
+            findBody.type=req.body.type   
+        }
+        if(req.data._id==req.body.id)
+        {   
+            message='my posts'
+        }else{
+            var connectionData = await connections.find({user:req.data._id});
+            if(!connectionData[0].connections.includes(req.body.id)||!connectionData[0].followers.includes(req.body.id)){
+                findBody.visibility='public'
+            }
+        }
+        var posts = await post.find(findBody).populate({path:'user',select:{hash:0,salt:0}}).limit(50);
+        responseManagement.sendResponse(res,httpStatus.OK,message,posts);
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
