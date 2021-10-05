@@ -442,24 +442,27 @@ module.exports.connectAcceptReject = async (req,res)=>{
             });
             responseManagement.sendResponse(res,httpStatus.OK,'rejected',{});
         }
-        if(req.body.operation==='accept'){
-            await connections.findOneAndUpdate({user:req.data._id},{
+        else if(req.body.operation==='accept'){
+            var data = await connections.findOneAndUpdate({user:req.data._id},{
                 $pull:{requested:req.body.id},
-                $addToSet:{connections:req.body.id},
                 $addToSet:{followings:req.body.id},
                 $addToSet:{followers:req.body.id},
+                $addToSet:{connections:req.body.id},
             });
             await connections.findOneAndUpdate({user:req.body.id},{
                 $addToSet:{followings:req.data._id},
                 $addToSet:{followers:req.data._id},
+                $addToSet:{connections:req.data._id},
             });
             responseManagement.sendResponse(res,httpStatus.OK,'accepted',{});
+            console.log("asgrsdth");
         }
-        if(req.body.operation==='connect'){
+        else if(req.body.operation==='connect'){
             await connections.findOneAndUpdate({user:req.body.id},{
                 $addToSet:{requested:req.data._id}
             });
             responseManagement.sendResponse(res,httpStatus.OK,'connect request send',{});
+            console.log(req.body.operation);
         }else{
             responseManagement.sendResponse(res,httpStatus.NOT_ACCEPTABLE,'operation not acceptable',{});
         }
@@ -539,6 +542,17 @@ module.exports.getNotifications = async (req,res)=>{
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
+    }
+}
+
+module.exports.removeConnection = async (req,res)=>{
+    try {
+        var data = await connections.findByIdAndUpdate(req.data._id,{
+            
+        });
+    } catch (error) {
+        console.log(error.message);
+        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
     }
 }
 
