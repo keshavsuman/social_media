@@ -316,7 +316,7 @@ async function timelineposts(req,res){
                     {
                         $project:{
                             myuser:0,
-                            comments:-1,
+                            comments:0,
                             __v:0,
                             'user.hash':0,
                             'user.salt':0,
