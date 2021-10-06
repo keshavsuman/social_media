@@ -410,15 +410,18 @@ module.exports.followunfollow = async  (req,res)=>{
             responseManagement.sendResponse(res,httpStatus.OK,'followed',{});
         }else if(req.body.operation=='unfollow')
         {
-            console.log(req.body.id);
-            console.log(req.data._id)
-            var data = await connections.findByIdAndUpdate(req.body.id,{
+           
+            var data = await connections.updateOne({user:req.body.id},{
                 $pull:{followers:req.data._id},
                 $pull:{connections:req.data._id}
+            },{
+                new:true
             });
-            var data1 = await connections.findByIdAndUpdate(req.data._id,{
-                $pull:{followings:req.body.id},
+            var data1 = await connections.updateOne({user:req.data._id},{
+                $pull:{followings :req.body.id},
                 $pull:{connections:req.body.id}
+            },{
+                new:true
             });
             console.log(data);
             console.log(data1);
@@ -476,6 +479,7 @@ module.exports.connectAcceptReject = async (req,res)=>{
 module.exports.getPendingRequests = async (req,res)=>{
     try {
         var requests = await connections.find({user:req.data._id},{requested:1,_id:0}).populate({path:'requested',select:{profile_pic:1,first_name:1,last_name:1}});
+        console.log(requests);
         if(requests.length>0)
         {
             responseManagement.sendResponse(res,httpStatus.OK,'',requests[0].requested);

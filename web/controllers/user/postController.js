@@ -182,7 +182,7 @@ async function contents(req,res){
             admin_approved:true            
         };
         var message = 'user posts';
-        if(req.body.type!='all')
+        if(req.body.media_type!='all')
         {
             findBody.media_type=req.body.media_type   
         }
