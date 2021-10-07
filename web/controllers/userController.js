@@ -410,16 +410,13 @@ module.exports.followunfollow = async  (req,res)=>{
             responseManagement.sendResponse(res,httpStatus.OK,'followed',{});
         }else if(req.body.operation=='unfollow')
         {
-           
-            var data = await connections.findOneAndUpdate({user:req.body.id},{
-                $pullAll:{followers:[req.data._id]},
-                $pullAll:{connections:[req.data._id]}
+            await connections.updateOne({user:mongoose.Types.ObjectId(req.body.id)},{
+                $pullAll:{followers:[mongoose.Types.ObjectId(req.data._id)]},
             },{
                 new:true
             });
-            var data1 = await connections.findOneAndUpdate({user:req.data._id},{
-                $pullAll:{followings : [req.body.id]},
-                $pullAll:{connections:[req.body.id]}
+            await connections.updateOne({user:mongoose.Types.ObjectId(req.data._id)},{
+                $pullAll:{followings:[mongoose.Types.ObjectId(req.body.id)]},
             },{
                 new:true
             });
