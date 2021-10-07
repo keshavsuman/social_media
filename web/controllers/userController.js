@@ -411,20 +411,18 @@ module.exports.followunfollow = async  (req,res)=>{
         }else if(req.body.operation=='unfollow')
         {
            
-            var data = await connections.updateOne({user:req.body.id},{
-                $pull:{followers:req.data._id},
-                $pull:{connections:req.data._id}
+            var data = await connections.findOneAndUpdate({user:req.body.id},{
+                $pullAll:{followers:[req.data._id]},
+                $pullAll:{connections:[req.data._id]}
             },{
                 new:true
             });
-            var data1 = await connections.updateOne({user:req.data._id},{
-                $pull:{followings :req.body.id},
-                $pull:{connections:req.body.id}
+            var data1 = await connections.findOneAndUpdate({user:req.data._id},{
+                $pullAll:{followings : [req.body.id]},
+                $pullAll:{connections:[req.body.id]}
             },{
                 new:true
             });
-            console.log(data);
-            console.log(data1);
             responseManagement.sendResponse(res,httpStatus.OK,'unfollowed',{});
         }else {
             responseManagement.sendResponse(res,httpStatus.NOT_ACCEPTABLE,'operation not acceptable',{});
@@ -441,13 +439,13 @@ module.exports.connectAcceptReject = async (req,res)=>{
     try {
         if(req.body.operation==='reject'){
             await connections.findOneAndUpdate({user:req.data._id},{
-                $pull:{requested:req.body.id}
+                $pullAll:{requested:[req.body.id]}
             });
             responseManagement.sendResponse(res,httpStatus.OK,'rejected',{});
         }
         else if(req.body.operation==='accept'){
-            var data = await connections.findOneAndUpdate({user:req.data._id},{
-                $pull:{requested:req.body.id},
+            await connections.findOneAndUpdate({user:req.data._id},{
+                $pullAll:{requested:[req.body.id]},
                 $addToSet:{followings:req.body.id},
                 $addToSet:{followers:req.body.id},
                 $addToSet:{connections:req.body.id},
@@ -458,14 +456,12 @@ module.exports.connectAcceptReject = async (req,res)=>{
                 $addToSet:{connections:req.data._id},
             });
             responseManagement.sendResponse(res,httpStatus.OK,'accepted',{});
-            console.log("asgrsdth");
         }
         else if(req.body.operation==='connect'){
             await connections.findOneAndUpdate({user:req.body.id},{
                 $addToSet:{requested:req.data._id}
             });
             responseManagement.sendResponse(res,httpStatus.OK,'connect request send',{});
-            console.log(req.body.operation);
         }else{
             responseManagement.sendResponse(res,httpStatus.NOT_ACCEPTABLE,'operation not acceptable',{});
         }

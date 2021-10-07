@@ -98,7 +98,8 @@ async function reactOnPost(req,res){
                     reaction_type:req.body.type
                 });
                 var updateBody ={};
-                updateBody=[req.body.type]=userpost[req.body.type]+1;
+                updateBody[req.body.type]=userpost[req.body.type]+1;
+                updateBody['reaction_count']=userPosts['reaction_count']+1; 
                 await post.findByIdAndUpdate(userpost._id,{
                     $set:updateBody
                 });
@@ -111,6 +112,7 @@ async function reactOnPost(req,res){
                 });
                 var updateBody ={};
                 updateBody[req.body.type]=userpost[req.body.type]+1;
+                updateBody['reaction_count']=userPosts['reaction_count']-1; 
                 await post.findByIdAndUpdate(userpost._id,{
                     $set:updateBody
                 });
@@ -160,7 +162,7 @@ async function comment(req,res){
 
 async function replyOnComment(req,res){
     try{
-        var reply = comments.findOneAndUpdate({
+         comments.findOneAndUpdate({
             _id:req.body.id
         },{
             $addToSet:{reply:{
