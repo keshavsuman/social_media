@@ -401,11 +401,15 @@ module.exports.followunfollow = async  (req,res)=>{
     try {
         if(req.body.operation=='follow')
         {
-            await connections.findOneAndUpdate({user:mongoose.Types.ObjectId(req.body.id)},{
+            await connections.updateOne({user:mongoose.Types.ObjectId(req.body.id)},{
                 $addToSet:{followers:req.data._id}
+            },{
+                new:true
             });
-            await connections.findOneAndUpdate({user:mongoose.Types.ObjectId(req.data._id)},{
+            await connections.updateOne({user:mongoose.Types.ObjectId(req.data._id)},{
                 $addToSet:{followings:req.body.id}
+            },{
+                new:true
             });
             responseManagement.sendResponse(res,httpStatus.OK,'followed',{});
         }else if(req.body.operation=='unfollow')
