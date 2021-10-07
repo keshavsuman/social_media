@@ -400,17 +400,27 @@ module.exports.search = async (req,res) =>{
 module.exports.followunfollow = async  (req,res)=>{
     try {
         if(req.body.operation=='follow')
-        {
+        {   
+            // console.log(req.body.id);
+            // console.log(req.data._id);
+            // var data = await connections.find({user:req.body.id});
+            console.log('body data before',data);
             await connections.updateOne({user:mongoose.Types.ObjectId(req.body.id)},{
                 $addToSet:{followers:req.data._id}
             },{
                 new:true
             });
+            // var data1 = await connections.find({user:req.body.id});
+            // console.log('body data after',data1);
+            // var data = await connections.find({user:req.data._id});
+            // console.log(data);
             await connections.updateOne({user:mongoose.Types.ObjectId(req.data._id)},{
                 $addToSet:{followings:req.body.id}
             },{
                 new:true
             });
+            // var data1 = await connections.find({user:req.data._id});
+            // console.log(data1);
             responseManagement.sendResponse(res,httpStatus.OK,'followed',{});
         }else if(req.body.operation=='unfollow')
         {
