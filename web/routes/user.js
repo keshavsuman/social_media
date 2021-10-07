@@ -26,7 +26,7 @@ router.use('/college',collegeRoutes); //Add college or update college
 // add university and update university
 router.use('/batch',batchRoutes);
 
-router.post('/search',auth,user.search); // remove self from search result 
+router.post('/search',auth,user.search); 
 router.post('/login', userValidator.login, user.login);
 router.post('/signup', userValidator.registerUser, user.createUser);
 router.post('/socialLogin',userValidator.socialLogin, user.socialLogin);
