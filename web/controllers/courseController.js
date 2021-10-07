@@ -120,7 +120,7 @@ module.exports.searchCourses = async (req, res) => {
 module.exports.getCoursesList = async (req, res) => {
 	try {
 		let courses = await College.find({
-			_id:req.body.collegeId,
+			_id:req.params.collegeId,
 		},{course_id:1,_id:0}).populate({path:'course_id',select:{status:0,__v:0}});
 		responseManagement.sendResponse(res, httpStatus.OK, 'Courses list', courses[0].course_id);
 	} catch (error) {
