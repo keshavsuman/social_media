@@ -404,7 +404,7 @@ module.exports.followunfollow = async  (req,res)=>{
             // console.log(req.body.id);
             // console.log(req.data._id);
             // var data = await connections.find({user:req.body.id});
-            console.log('body data before',data);
+            // console.log('body data before',data);
             await connections.updateOne({user:mongoose.Types.ObjectId(req.body.id)},{
                 $addToSet:{followers:req.data._id}
             },{
