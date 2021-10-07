@@ -9,7 +9,7 @@ router.use(auth);
 
 /**
  * Header with authorization in required like 
- * Authorization:'Bearer ${authentication Token}'
+ * Authorization:'Bearer ${authentication  Token}'
  * 
  */
 router.get('/getSkills', UserSkillController.getSkills);
@@ -33,6 +33,6 @@ router.post('/createSkill',skilValidator.createSkill,UserSkillController.createS
  *  "id":"id of the skill"
  * }
  */
-router.post('/deleteSkill',skilValidator.createSkill,UserSkillController.deleteSkill);
+router.post('/deleteSkill',skilValidator.deleteSkill,UserSkillController.deleteSkill);
 
 module.exports = router;

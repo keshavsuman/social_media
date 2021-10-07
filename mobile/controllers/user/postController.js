@@ -16,7 +16,7 @@ async function createPost(req,res){
             visibility:req.body.visibility,
             media_url:req.body.media_url
         });
-        responseManagement.sendResponse(res,httpStatus.CREATED,"Post succesfully created",{});
+        responseManagement.sendResponse(res,httpStatus.CREATED,"Post successfully created",{});
     } catch (error) {
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
@@ -35,6 +35,7 @@ async function deletePost(req,res){
 
 async function updatePost(req,res){
     try {
+
         await post.findByIdAndUpdate(req.body.postId,req.body);
         responseManagement.sendResponse(res,httpStatus.OK,'Post updated successfully',{});
 
@@ -71,8 +72,8 @@ async function sharePost(req,res){
 
 async function uploadMedia(req,res){
     try {
-        req.file.path = req.protocol+'://13.127.217.154/'+req.file.path;
-        responseManagement.sendResponse(res,httpStatus.OK,'',req.file);
+        req.file.path = req.protocol+'://younigems.in/'+req.file.path;
+        responseManagement.sendResponse(res,httpStatus.OK,'File uploaded successfully',req.file);
     } catch (error) {
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
@@ -97,7 +98,8 @@ async function reactOnPost(req,res){
                     reaction_type:req.body.type
                 });
                 var updateBody ={};
-                updateBody=[req.body.type]=userpost[req.body.type]+1;
+                updateBody[req.body.type]=userpost[req.body.type]+1;
+                updateBody['reaction_count']=userPosts['reaction_count']+1; 
                 await post.findByIdAndUpdate(userpost._id,{
                     $set:updateBody
                 });
@@ -110,6 +112,7 @@ async function reactOnPost(req,res){
                 });
                 var updateBody ={};
                 updateBody[req.body.type]=userpost[req.body.type]+1;
+                updateBody['reaction_count']=userPosts['reaction_count']-1; 
                 await post.findByIdAndUpdate(userpost._id,{
                     $set:updateBody
                 });
@@ -159,7 +162,7 @@ async function comment(req,res){
 
 async function replyOnComment(req,res){
     try{
-        var reply = comments.findOneAndUpdate({
+         comments.findOneAndUpdate({
             _id:req.body.id
         },{
             $addToSet:{reply:{
@@ -176,11 +179,26 @@ async function replyOnComment(req,res){
 
 async function contents(req,res){
     try {
-        var posts = await post.find({
+        var findBody = {
             user:req.body.id,
-            media_type:req.body.type
-        }).populate({path:'user',select:{hash:0,salt:0}}).limit(50);
-        responseManagement.sendResponse(res,httpStatus.OK,'',posts);
+            admin_approved:true            
+        };
+        var message = 'user posts';
+        if(req.body.media_type!='all')
+        {
+            findBody.media_type=req.body.media_type   
+        }
+        if(req.data._id==req.body.id)
+        {   
+            message='my posts'
+        }else{
+            var connectionData = await connections.find({user:req.data._id});
+            if(!connectionData[0].connections.includes(req.body.id)||!connectionData[0].followers.includes(req.body.id)){
+                findBody.visibility='public'
+            }
+        }
+        var posts = await post.find(findBody).populate({path:'user',select:{hash:0,salt:0}}).limit(50);
+        responseManagement.sendResponse(res,httpStatus.OK,message,posts);
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
@@ -190,31 +208,100 @@ async function timelineposts(req,res){
     try {
         var timelineposts;
         var connectionDocument = await connections.find({user:req.data._id});
-        if(req.body.type=='ALL'){
-        timelineposts = await post.aggregate([
+        if(connectionDocument.length==0)
+        {
+            responseManagement.sendResponse(res,httpStatus.OK,'Connection document not found in database');
+        }else{
+            if(req.body.media_type=='all'){
+            timelineposts = await post.aggregate([
+                        {
+                        '$lookup': {
+                            'from': 'users', 
+                            'localField': 'user', 
+                            'foreignField': '_id', 
+                            'as': 'myuser'
+                        }
+                        }, {
+                        '$addFields': {
+                            'user':{
+                                $first:'$myuser'
+                            },
+                            'totalComments':{
+                                '$size':'$comments'
+                            }
+                        }
+                        }, {
+                        '$match': {
+                            $or:[
+                                {
+                                    'user._id':{
+                                        '$in':connectionDocument[0].connections
+                                    }                            },
+                                {
+                                    'user._id':{
+                                        '$in':connectionDocument[0].followers
+                                    }
+                                },
+                                {
+                                    'user.college': mongoose.Types.ObjectId(req.data.college)
+                                },
+                                {
+                                    'user._id':mongoose.Types.ObjectId(req.data._id)
+                                }
+                            ],
+                            admin_approved:true
+                        }
+                        },
+                        {
+                            $lookup: {
+                                'from': 'courses', 
+                                'localField': 'user.course', 
+                                'foreignField': '_id', 
+                                'as': 'course'
+                            },
+                        },
+                        {
+                            $sort:{
+                                createdAt: -1
+                            }
+                        },
+                        {
+                            $project:{
+                                myuser:0,
+                                comments:0,
+                                __v:0,
+                                'user.hash':0,
+                                'user.salt':0,
+                                'user.__v':0
+                            }
+                        }
+                ]);
+            }else{
+                timelineposts = await post.aggregate([
                     {
-                      '$lookup': {
+                    '$lookup': {
                         'from': 'users', 
                         'localField': 'user', 
                         'foreignField': '_id', 
                         'as': 'myuser'
-                      }
+                    }
                     }, {
-                      '$addFields': {
+                    '$addFields': {
                         'user':{
                             $first:'$myuser'
                         },
                         'totalComments':{
                             '$size':'$comments'
-                          }
-                      }
+                        }
+                    }
                     }, {
-                      '$match': {
+                    '$match': {
                         $or:[
                             {
-                                'user._id':{
-                                    '$in':connectionDocument[0].connections
-                                }                            },
+                            'user._id': {
+                                '$in': connectionDocument[0].connections
+                                }
+                            },
                             {
                                 'user._id':{
                                     '$in':connectionDocument[0].followers
@@ -227,17 +314,18 @@ async function timelineposts(req,res){
                                 'user._id':mongoose.Types.ObjectId(req.data._id)
                             }
                         ],
+                        media_type:req.body.media_type,
                         admin_approved:true
-                      }
+                    }
                     },
                     {
                         $lookup: {
-                               'from': 'courses', 
-                               'localField': 'user.course', 
-                               'foreignField': '_id', 
-                               'as': 'course'
-                           },
-                       },
+                            'from': 'courses', 
+                            'localField': 'user.course', 
+                            'foreignField': '_id', 
+                            'as': 'course'
+                        },
+                    },
                     {
                         $sort:{
                             createdAt: -1
@@ -254,74 +342,9 @@ async function timelineposts(req,res){
                         }
                     }
             ]);
-        }else{
-            timelineposts = await post.aggregate([
-                {
-                  '$lookup': {
-                    'from': 'users', 
-                    'localField': 'user', 
-                    'foreignField': '_id', 
-                    'as': 'myuser'
-                  }
-                }, {
-                  '$addFields': {
-                    'user':{
-                        $first:'$myuser'
-                    },
-                    'totalComments':{
-                        '$size':'$comments'
-                      }
-                  }
-                }, {
-                  '$match': {
-                    $or:[
-                        {
-                        'user._id': {
-                            '$in': connectionDocument[0].connections
-                            }
-                        },
-                        {
-                            'user._id':{
-                                '$in':connectionDocument[0].followers
-                            }
-                        },
-                        {
-                            'user.college': mongoose.Types.ObjectId(req.data.college)
-                        },
-                        {
-                            'user._id':mongoose.Types.ObjectId(req.data._id)
-                        }
-                    ],
-                    media_type:req.body.type,
-                    admin_approved:true
-                  }
-                },
-                {
-                    $lookup: {
-                           'from': 'courses', 
-                           'localField': 'user.course', 
-                           'foreignField': '_id', 
-                           'as': 'course'
-                       },
-                   },
-                {
-                    $sort:{
-                        createdAt: -1
-                    }
-                },
-                {
-                    $project:{
-                        myuser:0,
-                        comments:-1,
-                        __v:0,
-                        'user.hash':0,
-                        'user.salt':0,
-                        'user.__v':0
-                    }
-                }
-        ]);
+            }
+            responseManagement.sendResponse(res,httpStatus.OK,'',timelineposts);
         }
-         responseManagement.sendResponse(res,httpStatus.OK,'',timelineposts);
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});

@@ -11,7 +11,7 @@ module.exports.createPost = celebrate({
  
 module.exports.updatePost = celebrate({
     body: Joi.object().options({ abortEarly: false }).keys({
-        id:Joi.string().required(),
+        postId:Joi.string().required(),
         content: Joi.string().required(),
         media_type: Joi.string().required(),
         visibility: Joi.string().required(),
@@ -21,6 +21,6 @@ module.exports.updatePost = celebrate({
 
 module.exports.deletePost = celebrate({
     body: Joi.object().options({ abortEarly: false }).keys({
-        id:Joi.string().required()
+        postId:Joi.string().required()
     })
 });

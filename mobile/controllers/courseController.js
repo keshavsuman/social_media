@@ -2,9 +2,7 @@ const httpStatus = require("http-status-codes");
 const Course = require('../models/course');
 const global = require('../resources/lang/en/global');
 const responseManagement = require('../lib/responseManagement');
-const config = require('../config/config');
-const helper = require('../helper/helper');
-
+const College = require('../models/college');
 
 /**** Create Course ****/
 module.exports.createCourse = async (req, res) => {
@@ -121,10 +119,10 @@ module.exports.searchCourses = async (req, res) => {
 /**** Get Courses list ****/
 module.exports.getCoursesList = async (req, res) => {
 	try {
-		let courses = await Course.find({ status: true })  
-								  .collation({locale: "en" })
-								  .sort("name").lean();
-		responseManagement.sendResponse(res, httpStatus.OK, '', { courses });
+		let courses = await College.find({
+			_id:req.params.collegeId,
+		},{course_id:1,_id:0}).populate({path:'course_id',select:{status:0,__v:0}});
+		responseManagement.sendResponse(res, httpStatus.OK, 'Courses list', courses[0].course_id);
 	} catch (error) {
 		console.log(error);
 		responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);

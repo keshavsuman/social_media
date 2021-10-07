@@ -274,14 +274,13 @@ module.exports.editUser = async (req, res) => {
 module.exports.updateUser = async (req, res) => {
     try {
         const user = await User.findOne({ _id: req.data._id });
+        console.log(user);
         if (user) {
-            const result = await User.findByIdAndUpdate(req.data._id, req.body,{
-                new:true,
-            });
+            const result = await User.findByIdAndUpdate(req.data._id, req.body);
             if(result['college'] && result['course'] && result['start_date'] && result['end_date']){
                 await User.updateOne({_id:req.data._id},{profile_setup:true});
             }
-            responseManagement.sendResponse(res, httpStatus.OK, global.user_update_successful);
+            responseManagement.sendResponse(res, httpStatus.OK, global.profile_updated_successfully);
         } else {
             responseManagement.sendResponse(res, httpStatus.UNAUTHORIZED, global.internal_server_error);
         }
@@ -312,7 +311,10 @@ module.exports.updateUserStatus = async (req, res) => {
 module.exports.search = async (req,res) =>{
     try {
         var {filters} = req.body;
-        var filterBody = {}
+        var filterBody = {};
+        if(req.body.keyword.length<2){
+            responseManagement.sendResponse(res,httpStatus.NOT_ACCEPTABLE,"Keyword length is so small, it must have length of 2",{});
+        }else{
         if(filters){
             if(filters.includes('course') && user.course){
                 filterBody.course=user.course
@@ -332,7 +334,7 @@ module.exports.search = async (req,res) =>{
             {first_name:{$regex:req.body.keyword,$options:'i'}},
             {last_name:{$regex:req.body.keyword,$options:'i'}}
           ]
-        
+        filterBody._id = {$ne:mongoose.Types.ObjectId(req.data._id)};
         var searchResults = await User.aggregate([
             {
               '$match': filterBody
@@ -387,6 +389,8 @@ module.exports.search = async (req,res) =>{
             }
           ]);
         responseManagement.sendResponse(res,httpStatus.OK,'',searchResults);
+    }
+
         } catch (error) {
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
@@ -403,21 +407,23 @@ module.exports.followunfollow = async  (req,res)=>{
             await connections.findOneAndUpdate({user:req.data._id},{
                 $addToSet:{followings:req.body.id}
             });
-
-
-            // Need to write logic
             responseManagement.sendResponse(res,httpStatus.OK,'followed',{});
-
         }else if(req.body.operation=='unfollow')
         {
-            await connections.findOneAndUpdate({user:req.body.id},{
-                $pull:{followers:req.data._id},
-                $pull:{connections:req.data._id}
+           
+            var data = await connections.findOneAndUpdate({user:req.body.id},{
+                $pullAll:{followers:[req.data._id]},
+                $pullAll:{connections:[req.data._id]}
+            },{
+                new:true
             });
-            await connections.findOneAndUpdate({user:req.data._id},{
-                $pull:{followings:req.body.id},
-                $pull:{connections:req.body.id}
+            var data1 = await connections.findOneAndUpdate({user:req.data._id},{
+                $pullAll:{followings : [req.body.id]},
+                $pullAll:{connections:[req.body.id]}
+            },{
+                new:true
             });
+            responseManagement.sendResponse(res,httpStatus.OK,'unfollowed',{});
         }else {
             responseManagement.sendResponse(res,httpStatus.NOT_ACCEPTABLE,'operation not acceptable',{});
         }
@@ -433,24 +439,25 @@ module.exports.connectAcceptReject = async (req,res)=>{
     try {
         if(req.body.operation==='reject'){
             await connections.findOneAndUpdate({user:req.data._id},{
-                $pull:{requested:req.body.id}
+                $pullAll:{requested:[req.body.id]}
             });
             responseManagement.sendResponse(res,httpStatus.OK,'rejected',{});
         }
-        if(req.body.operation==='accept'){
+        else if(req.body.operation==='accept'){
             await connections.findOneAndUpdate({user:req.data._id},{
-                $pull:{requested:req.body.id},
-                $addToSet:{connections:req.body.id},
+                $pullAll:{requested:[req.body.id]},
                 $addToSet:{followings:req.body.id},
                 $addToSet:{followers:req.body.id},
+                $addToSet:{connections:req.body.id},
             });
             await connections.findOneAndUpdate({user:req.body.id},{
                 $addToSet:{followings:req.data._id},
                 $addToSet:{followers:req.data._id},
+                $addToSet:{connections:req.data._id},
             });
             responseManagement.sendResponse(res,httpStatus.OK,'accepted',{});
         }
-        if(req.body.operation==='connect'){
+        else if(req.body.operation==='connect'){
             await connections.findOneAndUpdate({user:req.body.id},{
                 $addToSet:{requested:req.data._id}
             });
@@ -468,7 +475,13 @@ module.exports.connectAcceptReject = async (req,res)=>{
 module.exports.getPendingRequests = async (req,res)=>{
     try {
         var requests = await connections.find({user:req.data._id},{requested:1,_id:0}).populate({path:'requested',select:{profile_pic:1,first_name:1,last_name:1}});
-        responseManagement.sendResponse(res,httpStatus.OK,'',requests[0].requested);
+        console.log(requests);
+        if(requests.length>0)
+        {
+            responseManagement.sendResponse(res,httpStatus.OK,'',requests[0].requested);
+        }else{
+            responseManagement.sendResponse(res,httpStatus.NOT_FOUND,'oops...Someone deleted the Connection document from database',{});
+        }
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
@@ -511,10 +524,10 @@ module.exports.myconnections = async (req,res)=>{
                     // }
                
         ]); 
-        if(myconnections){
+        if(myconnections.length>0){
             responseManagement.sendResponse(res, httpStatus.OK,'',myconnections[0]);
         }else{
-            responseManagement.sendResponse(res, httpStatus.OK,'Connections not found',{});
+            responseManagement.sendResponse(res, httpStatus.OK,'Connections not found in the database',{});
         }
     } catch (error) {
         console.log(error.message);
@@ -525,10 +538,21 @@ module.exports.myconnections = async (req,res)=>{
 module.exports.getNotifications = async (req,res)=>{
     try {
         var notifications = await notification.find({user:req.data._id}).sort({createdAt:-1}).limit(20);
-        responseManagement.sendResponse(res,httpStatus.OK,'',notifications);
+        responseManagement.sendResponse(res,httpStatus.OK,'User notification',notifications);
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
+    }
+}
+
+module.exports.removeConnection = async (req,res)=>{
+    try {
+        var data = await connections.findByIdAndUpdate(req.data._id,{
+            
+        });
+    } catch (error) {
+        console.log(error.message);
+        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
     }
 }
 
