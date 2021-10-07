@@ -545,8 +545,9 @@ module.exports.getNotifications = async (req,res)=>{
 module.exports.removeConnection = async (req,res)=>{
     try {
         var data = await connections.findByIdAndUpdate(req.data._id,{
-            
+            $pullAll:{connections:mongoose.Types.ObjectId(req.body.id)}
         });
+        responseManagement.sendResponse(res,httpStatus.OK,'disconnected',{});
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
