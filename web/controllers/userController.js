@@ -471,8 +471,12 @@ module.exports.connectAcceptReject = async (req,res)=>{
 
 module.exports.getPendingRequests = async (req,res)=>{
     try {
-        var requests = await connections.find({user:req.data._id},{requested:1,_id:0}).populate({path:'requested',select:{profile_pic:1,first_name:1,last_name:1}});
-        console.log(requests);
+        var requests = await connections.find({user:req.data._id},{requested:1,_id:0})
+        .populate(
+            {path:'requested',
+            select:{profile_pic:1,first_name:1,last_name:1,course:1},
+            populate:{path:'course'}
+        })
         if(requests.length>0)
         {
             responseManagement.sendResponse(res,httpStatus.OK,'',requests[0].requested);
