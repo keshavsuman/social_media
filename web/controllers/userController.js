@@ -490,7 +490,7 @@ module.exports.getPendingRequests = async (req,res)=>{
             {path:'requested',
             select:{profile_pic:1,first_name:1,last_name:1,course:1},
             populate:{path:'course'}
-        })
+        });
         if(requests.length>0)
         {
             responseManagement.sendResponse(res,httpStatus.OK,'',requests[0].requested);
@@ -529,14 +529,14 @@ module.exports.myconnections = async (req,res)=>{
                         _id:0
                       }
                     },
-                    //  {
-                    //   '$lookup': {
-                    //     'from': 'courses', 
-                    //     'localField': 'connections.course', 
-                    //     'foreignField': '_id', 
-                    //     'as': 'courses'
-                    //   }
-                    // }
+                     {
+                      '$lookup': {
+                        'from': 'courses', 
+                        'localField': 'connections.course', 
+                        'foreignField': '_id', 
+                        'as': 'courses'
+                      }
+                    }
                
         ]); 
         if(myconnections.length>0){
