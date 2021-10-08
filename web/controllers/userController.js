@@ -537,10 +537,23 @@ module.exports.myconnections = async (req,res)=>{
                         'as': 'courses'
                       }
                     }
-               
         ]); 
+        var data = [];
+        for (var i=0;i<myconnections[0].connections.length;i++)
+        {
+                var d={
+                    "_id": myconnections[0].connections[i]._id,
+                    "profile_pic": myconnections[0].connections[i].profile_pic,
+                    "start_date": myconnections[0].connections[i].start_date,
+                    "end_date": myconnections[0].connections[i].end_date,
+                    "first_name": myconnections[0].connections[i].first_name,
+                    "last_name": myconnections[0].connections[i].last_name,
+                    "course": myconnections[0].course[i]
+                }
+                data.push(d);
+        };
         if(myconnections.length>0){
-            responseManagement.sendResponse(res, httpStatus.OK,'',myconnections[0]);
+            responseManagement.sendResponse(res, httpStatus.OK,'',data);
         }else{
             responseManagement.sendResponse(res, httpStatus.OK,'Connections not found in the database',{});
         }
