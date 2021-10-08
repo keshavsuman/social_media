@@ -350,6 +350,9 @@ async function timelineposts(req,res){
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
     }
 }
+async function likeComment(){
+    
+}
 
 module.exports = {
     getPosts,
@@ -363,5 +366,6 @@ module.exports = {
     replyOnComment,
     getComments,
     contents,
-    timelineposts
+    timelineposts,
+    likeComment
 }

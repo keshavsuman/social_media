@@ -576,7 +576,7 @@ module.exports.getNotifications = async (req,res)=>{
 module.exports.removeConnection = async (req,res)=>{
     try {
         await connections.findByIdAndUpdate(req.data._id,{
-            $pullAll:{connections:mongoose.Types.ObjectId(req.body.id)}
+            $pullAll:{connections:[mongoose.Types.ObjectId(req.body.id)]}
         });
         responseManagement.sendResponse(res,httpStatus.OK,'disconnected',{});
     } catch (error) {
@@ -584,4 +584,6 @@ module.exports.removeConnection = async (req,res)=>{
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
     }
 }
-
+module.exports.peopleYouMayKnow = async (req,res)=>{
+    
+}
