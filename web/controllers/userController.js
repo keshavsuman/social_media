@@ -449,19 +449,19 @@ module.exports.followunfollow = async  (req,res)=>{
 module.exports.connectAcceptReject = async (req,res)=>{
     try {
         if(req.body.operation==='reject'){
-            await connections.findOneAndUpdate({user:req.data._id},{
+            await connections.findOneAndUpdate({user:mongoose.Types.ObjectId(req.data._id)},{
                 $pullAll:{requested:[req.body.id]}
             });
             responseManagement.sendResponse(res,httpStatus.OK,'rejected',{});
         }
         else if(req.body.operation==='accept'){
-            await connections.findOneAndUpdate({user:req.data._id},{
+            await connections.findOneAndUpdate({user:mongoose.Types.ObjectId(req.data._id)},{
                 $pullAll:{requested:[req.body.id]},
                 $addToSet:{followings:req.body.id},
                 $addToSet:{followers:req.body.id},
                 $addToSet:{connections:req.body.id},
             });
-            await connections.findOneAndUpdate({user:req.body.id},{
+            await connections.findOneAndUpdate({user:mongoose.Types.ObjectId(req.body.id)},{
                 $addToSet:{followings:req.data._id},
                 $addToSet:{followers:req.data._id},
                 $addToSet:{connections:req.data._id},
@@ -469,7 +469,7 @@ module.exports.connectAcceptReject = async (req,res)=>{
             responseManagement.sendResponse(res,httpStatus.OK,'accepted',{});
         }
         else if(req.body.operation==='connect'){
-            await connections.findOneAndUpdate({user:req.body.id},{
+            await connections.findOneAndUpdate({user:mongoose.Types.ObjectId(req.body.id)},{
                 $addToSet:{requested:req.data._id}
             });
             responseManagement.sendResponse(res,httpStatus.OK,'connect request send',{});
@@ -562,7 +562,7 @@ module.exports.getNotifications = async (req,res)=>{
 
 module.exports.removeConnection = async (req,res)=>{
     try {
-        var data = await connections.findByIdAndUpdate(req.data._id,{
+        await connections.findByIdAndUpdate(req.data._id,{
             $pullAll:{connections:mongoose.Types.ObjectId(req.body.id)}
         });
         responseManagement.sendResponse(res,httpStatus.OK,'disconnected',{});

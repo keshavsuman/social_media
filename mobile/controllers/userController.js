@@ -557,8 +557,8 @@ module.exports.getNotifications = async (req,res)=>{
 
 module.exports.removeConnection = async (req,res)=>{
     try {
-        var data = await connections.findByIdAndUpdate(req.data._id,{
-            
+        await connections.findByIdAndUpdate(req.data._id,{
+            $pullAll:{connections:mongoose.Types.ObjectId(req.body.id)}
         });
     } catch (error) {
         console.log(error.message);
