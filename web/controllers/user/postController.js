@@ -6,6 +6,7 @@ const comments = require('../../models/comment');
 const connections = require('../../models/connections');
 const mongoose = require('mongoose');
 const reactions = require('../../models/reactions');
+const notifications = require('../../models/notifications');
 
 async function createPost(req,res){
     try {
@@ -82,7 +83,7 @@ async function uploadMedia(req,res){
 
 async function reactOnPost(req,res){
     try {
-        var userpost = await post.findById(req.body.post_id);
+        var userpost = await post.findById(req.body.post_id).populate('user');
         if(userpost)
         {
             var userReaction = await reactions.find({post_id:req.body.post_id,user:req.data._id});
@@ -116,6 +117,12 @@ async function reactOnPost(req,res){
                 await post.findByIdAndUpdate(userpost._id,{
                     $set:updateBody
                 });
+                await notifications.create({
+                    title:`${userpost.user.first_name} ${userpost.user.last_name} has reacted on your post`,
+                    type:"REACTED",
+                    description:"",
+                    user:userpost.user._id
+                });
                 responseManagement.sendResponse(res,httpStatus.OK,'reaction successfull',{});
             }
         }else{
@@ -142,14 +149,20 @@ async function getComments(req,res){
 }
 async function comment(req,res){
     try {
-        var postToUpdate = post.findById(req.body.post_id);
+        var postToUpdate = post.findById(req.body.post_id).populate('user');
         if(postToUpdate){
             var comment = await comments.create({
                 post_id:req.body.post_id,
                 comment:req.body.comment,
                 user:req.data._id
             });
-            await post.updateOne({_id:req.body.post_id},{$addToSet:{comments:comment._id}})
+            await post.updateOne({_id:req.body.post_id},{$addToSet:{comments:comment._id}});
+            await notifications.create({
+                title:`${postToUpdate.user.first_name} ${postToUpdate.user.last_name} has commented on your post`,
+                type:"COMMENTED",
+                description:req.body.comment,
+                user:postToUpdate.user._id
+            });
             responseManagement.sendResponse(res,httpStatus.OK,'Comment added',{});
         }else{
             responseManagement.sendResponse(res,httpStatus.OK,'post not found',{});
@@ -162,6 +175,7 @@ async function comment(req,res){
 
 async function replyOnComment(req,res){
     try{
+        var comment = await comments.findById(req.body.id).populate('user');
          comments.findOneAndUpdate({
             _id:req.body.id
         },{
@@ -170,6 +184,12 @@ async function replyOnComment(req,res){
                 'user':req.data._id,
             }}
         });
+        await notifications.create({
+            title:`${comment.user.first_name} replied to your comment`,
+            description:req.body.comment,
+            type:'COMMENT_REPLY',
+            user:comment.user._id
+        })
         responseManagement.sendResponse(res,httpStatus.OK,'Reply added',{});
     }catch(error){
         console.log(error);

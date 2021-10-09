@@ -401,26 +401,23 @@ module.exports.followunfollow = async  (req,res)=>{
     try {
         if(req.body.operation=='follow')
         {   
-            // console.log(req.body.id);
-            // console.log(req.data._id);
-            // var data = await connections.find({user:req.body.id});
-            // console.log('body data before',data);
             await connections.updateOne({user:mongoose.Types.ObjectId(req.body.id)},{
                 $addToSet:{followers:req.data._id}
             },{
                 new:true
             });
-            // var data1 = await connections.find({user:req.body.id});
-            // console.log('body data after',data1);
-            // var data = await connections.find({user:req.data._id});
-            // console.log(data);
             await connections.updateOne({user:mongoose.Types.ObjectId(req.data._id)},{
                 $addToSet:{followings:req.body.id}
             },{
                 new:true
             });
-            // var data1 = await connections.find({user:req.data._id});
-            // console.log(data1);
+            var user = await User.findById(req.data._id);
+            await notification.create({
+                title:`${user.first_name} ${user.last_name} started following you`,
+                description:'',
+                type:'FOLLOWED',
+                user:req.body.id
+            });
             responseManagement.sendResponse(res,httpStatus.OK,'followed',{});
         }else if(req.body.operation=='unfollow')
         {
@@ -466,11 +463,25 @@ module.exports.connectAcceptReject = async (req,res)=>{
                 $addToSet:{followers:req.data._id},
                 $addToSet:{connections:req.data._id},
             });
+            var user = await User.findById(req.data._id,{first_name:1,last_name:1});
+            await notification.create({
+                title:`${user.first_name} ${user.last_name} has requested to connect`,
+                type:"CONNECTION_ACCEPTED",
+                description:"",
+                user:req.body.id
+            });
             responseManagement.sendResponse(res,httpStatus.OK,'accepted',{});
         }
         else if(req.body.operation==='connect'){
             await connections.findOneAndUpdate({user:mongoose.Types.ObjectId(req.body.id)},{
                 $addToSet:{requested:req.data._id}
+            });
+            var user = await User.findById(req.data._id,{first_name:1,last_name:1});
+            await notification.create({
+                title:`${user.first_name} ${user.last_name} has requested you for connection`,
+                type:"CONNECTION_REQUEST",
+                description:"",
+                user:req.body.id
             });
             responseManagement.sendResponse(res,httpStatus.OK,'connect request send',{});
         }else{
@@ -585,5 +596,46 @@ module.exports.removeConnection = async (req,res)=>{
     }
 }
 module.exports.peopleYouMayKnow = async (req,res)=>{
-    
+    try {
+        var user = await User.findById(req.data._id,{
+            course:1,
+            college:1,
+            home_town:1,
+            _id:0
+        });
+        var users = await User.aggregate([{
+            $match:{
+                $or:[
+                    {course:user.course},
+                    {college:user.college},
+                    {home_town:user.home_town}
+                ]
+            }
+            },
+            {
+                $project:{
+                    first_name:1,
+                    last_name:1,
+                    email:1,
+                    profile_pic:1,
+                    start_date:1,
+                    end_date:1
+                }
+            }
+        ]);
+        responseManagement.sendResponse(res,httpStatus.OK,'people you may know list',users);
+    } catch (error) {
+        console.log(error);
+        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
+    }
+}
+
+module.exports.getFollowersList = async (req,res)=>{
+    try{
+        var followers = await connections.findById(req.body.id).populate('followers',{first_name:1,last_name:1,email:1,profile_pic:1});
+        responseManagement.sendResponse(res,httpStatus.OK,'Followers list',followers);
+    }catch(e){
+        console.log(error);
+        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
+    }
 }

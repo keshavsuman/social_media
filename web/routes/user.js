@@ -66,6 +66,7 @@ router.post('/getConnectionRequests',auth,user.getPendingRequests);
 router.post('/myconnections',auth,user.myconnections);
 router.post('/removeConnection',auth,user.removeConnection);
 router.post('/peopleYouMayKnow',auth,user.peopleYouMayKnow);
+router.post('/getFollowersList',auth,user.getFollowersList);
 router.post('/notifications',auth,user.getNotifications);
 
 module.exports = router;
