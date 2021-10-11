@@ -199,7 +199,7 @@ async function replyOnComment(req,res){
 async function contents(req,res){
     try {
         var findBody = {
-            user:req.body.id,
+            user:mongoose.Types.ObjectId(req.body.id),
             admin_approved:true            
         };
         var message = 'user posts';
@@ -216,7 +216,43 @@ async function contents(req,res){
                 findBody.visibility='public'
             }
         }
-        var posts = await post.find(findBody).populate({path:'user',select:{hash:0,salt:0}}).limit(50);
+        var posts = await post.aggregate([{
+            $match:findBody
+        },
+        {
+        '$lookup': {
+            'from': 'users', 
+            'localField': 'user', 
+            'foreignField': '_id', 
+            'as': 'user'
+        }
+        },
+        {
+            '$addFields': {
+                'totalComments':{
+                    '$size':'$comments'
+                }
+            }
+        },{
+            $lookup: {
+                'from': 'courses', 
+                'localField': 'user.course', 
+                'foreignField': '_id', 
+                'as': 'user.course'
+            },
+        },
+        {
+            $project:{
+                myuser:0,
+                comments:0,
+                __v:0,
+                'user.hash':0,
+                'user.salt':0,
+                'user.__v':0
+            }
+        }
+    ]); 
+
         responseManagement.sendResponse(res,httpStatus.OK,message,posts);
     } catch (error) {
         console.log(error.message);

@@ -217,7 +217,6 @@ async function contents(req,res){
                 findBody.visibility='public'
             }
         }
-        console.log(findBody);
         var posts = await post.aggregate([{
             $match:findBody
         },
