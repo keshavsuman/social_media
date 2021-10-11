@@ -23,21 +23,6 @@ if(config.environment=='development')
 }else{
    uri = `mongodb+srv://${db[config.environment].user}:${db[config.environment].password}@${db[config.environment].host}/${db[config.environment].database}?retryWrites=true&w=majority`
 }
-// mongoose.connect(uri, {
-//   // auth: {
-//   //   user: db[config.environment].user,
-//   //   password: db[config.environment].password
-//   // },
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-//   useCreateIndex: true
-// })
-//   .then(() => {
-//     console.log("Successfully connect to MongoDB.");
-//   })
-//   .catch(err => {
-//     console.error("Connection error", err);
-//   });
 
 
 
@@ -69,8 +54,8 @@ app.use(express.urlencoded({ extended: 'false' }));
 app.use(express.json());
 app.use(require('./routes'));
 app.use(errors());
-app.use('/uploads',express.static('uploads'));
-app.use('/static',express.static('static'));
+app.use('/uploads',express.static(path.join(__dirname+'/../uploads')));
+// app.use('/static',express.static('static'));
 
 
 // app.use(/^((?!(api)).)*/, (req, res) => {

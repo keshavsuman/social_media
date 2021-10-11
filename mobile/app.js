@@ -69,8 +69,7 @@ app.use(express.urlencoded({ extended: 'false' }));
 app.use(express.json());
 app.use(require('./routes'));
 app.use(errors());
-app.use('/uploads',express.static('uploads'));
-app.use('/static',express.static('static'));
+app.use('/uploads',express.static(path.join(__dirname+'/../uploads')));
 
 
 // app.use(/^((?!(api)).)*/, (req, res) => {

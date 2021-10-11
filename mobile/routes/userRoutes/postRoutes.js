@@ -6,7 +6,7 @@ const postValidator = require('../../validators/postValidators');
 const multer  = require('multer');
 
 const upload = multer({storage: multer.diskStorage({
-    destination: 'uploads',
+    destination: '../uploads',
     filename:(req,file,cb)=>{
         var ext = file.originalname.split('.').pop();
         cb(null,Date.now()+'.'+ext);
