@@ -241,7 +241,8 @@ async function contents(req,res){
                 'totalComments':{
                     '$size':'$comments'
                 },
-                'course':{$first:'$course'}
+                'course':{$first:'$course'},
+                'user':{$first:'$user'}
             }
         },
         {
