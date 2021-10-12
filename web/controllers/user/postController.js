@@ -13,7 +13,7 @@ async function createPost(req,res){
         await post.create({
             user:req.data._id,
             content:req.body.content,
-            media_type:req.body.media_type,
+            media_type:req.body.media_type.toLowerCase(),
             visibility:req.body.visibility,
             media_url:req.body.media_url
         });
@@ -73,7 +73,7 @@ async function sharePost(req,res){
 
 async function uploadMedia(req,res){
     try {
-        req.file.path = req.protocol+'://younigems.in/'+req.file.path;
+        req.file.path = req.protocol+'://younigems.in/uploads/'+req.file.fileName;
         responseManagement.sendResponse(res,httpStatus.OK,'File uploaded successfully',req.file);
     } catch (error) {
         console.log(error);
@@ -271,7 +271,7 @@ async function timelineposts(req,res){
         {
             responseManagement.sendResponse(res,httpStatus.OK,'Connection document not found in database');
         }else{
-            if(req.body.media_type=='all'){
+            if(req.body.media_type.toLowerCase()=='all'){
             timelineposts = await post.aggregate([
                         {
                         '$lookup': {
@@ -318,6 +318,13 @@ async function timelineposts(req,res){
                                 'foreignField': '_id', 
                                 'as': 'course'
                             },
+                        },
+                        {
+                        '$addFields': {
+                            'course':{
+                                    $first:'$course'
+                                },
+                            }
                         },
                         {
                             $sort:{
