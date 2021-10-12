@@ -229,18 +229,20 @@ async function contents(req,res){
         }
         },
         {
-            '$addFields': {
-                'totalComments':{
-                    '$size':'$comments'
-                }
-            }
-        },{
             $lookup: {
                 'from': 'courses', 
                 'localField': 'user.course', 
                 'foreignField': '_id', 
-                'as': 'user.course'
+                'as': 'course'
             },
+        },
+        {
+            '$addFields': {
+                'totalComments':{
+                    '$size':'$comments'
+                },
+                'course':{$first:'$course'}
+            }
         },
         {
             $project:{
