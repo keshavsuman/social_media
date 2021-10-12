@@ -6,6 +6,7 @@ const comments = require('../../models/comment');
 const connections = require('../../models/connections');
 const mongoose = require('mongoose');
 const reactions = require('../../models/reactions');
+const notifications = require('../../models/notifications');
 
 async function createPost(req,res){
     try {
@@ -112,7 +113,7 @@ async function reactOnPost(req,res){
                 });
                 var updateBody ={};
                 updateBody[req.body.type]=userpost[req.body.type]+1;
-                updateBody['reaction_count']=userPosts['reaction_count']-1; 
+                updateBody['reaction_count']=userPost['reaction_count']-1; 
                 await post.findByIdAndUpdate(userpost._id,{
                     $set:updateBody
                 });
