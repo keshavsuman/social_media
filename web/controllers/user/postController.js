@@ -73,7 +73,8 @@ async function sharePost(req,res){
 
 async function uploadMedia(req,res){
     try {
-        req.file.path = req.protocol+'://younigems.in/uploads/'+req.file.fileName;
+        console.log(req.file);
+        req.file.path = req.protocol+'://younigems.in/uploads/'+req.file.filename;
         responseManagement.sendResponse(res,httpStatus.OK,'File uploaded successfully',req.file);
     } catch (error) {
         console.log(error);
