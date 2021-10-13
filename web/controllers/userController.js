@@ -183,45 +183,6 @@ module.exports.resetPassword = async (req, res) => {
 module.exports.searchusers = async (req, res) => {
     try {
         var limit  = req.body.limit || 50;
-        // const { start, length, columns, order, search, draw, start_date, end_date, state } = req.body;
-        // const sortColumn = columns[order[0].column].data;
-        // const sortOrder = order[0].dir;
-        // const searchValue = search.value;
-        // var search_query = [];
-        // let filter1 = {};
-        // let filter2 = {};
-        // let filter3 = {};
-        // if (start_date) {
-        //     filter1 = { "createdAt": { $gte: new Date(start_date) } }
-        // }
-        // if (end_date) {
-        //     filter2 = { "createdAt": { $lte: new Date(end_date) } }
-        // }
-        // if (state) {
-        //     filter3 = { "state": state }
-        // }
-
-        // for (var i = 0; i < columns.length; i++) {
-        //     if (columns[i].searchable) {
-        //         var key = columns[i]['name']
-        //         search_query.push({
-        //             [key]: { '$regex': searchValue, '$options': 'i' }
-        //         });
-        //     }
-        // }
-        // var sort_q = {
-        //     [sortColumn]: sortOrder
-        // }
-        // var query1;
-        // if (searchValue) {
-        //     query1 = { $or: search_query };
-        // } else {
-        //     query1 = {};
-        // }
-        // const users = await User.find({ $and: [query1, filter1, filter2, filter3] }, {}, { sort: sort_q, skip: start, limit: length });
-        // const total = await User.countDocuments();
-        // const stotal = await User.countDocuments({ $and: [query1, filter1, filter2, filter3] });
-        // res.send({ status: httpStatus.OK, users: users, draw: draw, recordsTotal: total, recordsFiltered: stotal })
         var users  = await User.find({
             $or:[
                 {first_name:{ '$regex': req.body.searchValue, '$options': 'i' }},
@@ -600,7 +561,7 @@ module.exports.removeConnection = async (req,res)=>{
 }
 module.exports.peopleYouMayKnow = async (req,res)=>{
     try {
-        var connects = connections.find({user:req.data._id});
+        var connects = await connections.find({user:req.data._id});
         var user = await User.findById(req.data._id,{
             course:1,
             college:1,
@@ -678,8 +639,23 @@ module.exports.peopleYouMayKnow = async (req,res)=>{
 
 module.exports.getFollowersList = async (req,res)=>{
     try{
-        var followers = await connections.findById(req.body.id).populate('followers',{first_name:1,last_name:1,email:1,profile_pic:1});
-        responseManagement.sendResponse(res,httpStatus.OK,'Followers list',followers);
+        if(!req.body.id){
+            responseManagement.sendResponse(res,httpStatus.OK,'Please Provide user-ID',[]);
+        }
+        var followers = await connections.find({user:req.body.id},{followers:1}).populate('followers',{first_name:1,last_name:1,email:1,profile_pic:1});
+        responseManagement.sendResponse(res,httpStatus.OK,'Followers list',followers[0].followers);
+    }catch(e){
+        console.log(error);
+        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
+    }
+}
+module.exports.getFollowingList = async (req,res)=>{
+    try{
+        if(!req.body.id){
+            responseManagement.sendResponse(res,httpStatus.OK,'Please Provide user-ID',[]);
+        }
+        var followings = await connections.find({user:req.body.id},{followings:1}).populate('followings',{first_name:1,last_name:1,email:1,profile_pic:1});
+        responseManagement.sendResponse(res,httpStatus.OK,'Followings list',followings[0].followings);
     }catch(e){
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});

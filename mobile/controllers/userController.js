@@ -605,7 +605,7 @@ module.exports.removeConnection = async (req,res)=>{
 
 module.exports.peopleYouMayKnow = async (req,res)=>{
     try {
-        var connects = connections.find({user:req.data._id});
+        var connects = await connections.find({user:req.data._id});
         var user = await User.findById(req.data._id,{
             course:1,
             college:1,
@@ -683,8 +683,23 @@ module.exports.peopleYouMayKnow = async (req,res)=>{
 
 module.exports.getFollowersList = async (req,res)=>{
     try{
-        var followers = await connections.findById(req.body.id).populate('followers',{first_name:1,last_name:1,email:1,profile_pic:1});
-        responseManagement.sendResponse(res,httpStatus.OK,'Followers list',followers);
+        if(!req.body.id){
+            responseManagement.sendResponse(res,httpStatus.OK,'Please Provide user-ID',[]);
+        }
+        var followers = await connections.find({user:req.body.id},{followers:1}).populate('followers',{first_name:1,last_name:1,email:1,profile_pic:1});
+        responseManagement.sendResponse(res,httpStatus.OK,'Followers list',followers[0].followers);
+    }catch(e){
+        console.log(error);
+        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
+    }
+}
+module.exports.getFollowingList = async (req,res)=>{
+    try{
+        if(!req.body.id){
+            responseManagement.sendResponse(res,httpStatus.OK,'Please Provide user-ID',[]);
+        }
+        var followings = await connections.find({user:req.body.id},{followings:1}).populate('followings',{first_name:1,last_name:1,email:1,profile_pic:1});
+        responseManagement.sendResponse(res,httpStatus.OK,'Followings list',followings[0].followings);
     }catch(e){
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
