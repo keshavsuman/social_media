@@ -600,6 +600,7 @@ module.exports.removeConnection = async (req,res)=>{
 }
 module.exports.peopleYouMayKnow = async (req,res)=>{
     try {
+        var connects = connections.find({user:req.data._id});
         var user = await User.findById(req.data._id,{
             course:1,
             college:1,
@@ -612,7 +613,9 @@ module.exports.peopleYouMayKnow = async (req,res)=>{
                     {course:user.course},
                     {college:user.college},
                     {home_town:user.home_town}
-                ]
+                ],
+                $nin:connects[0].connections,
+                $nin:connects[0].followers
             }
             },{
                 '$lookup': {

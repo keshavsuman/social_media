@@ -214,8 +214,9 @@ async function contents(req,res){
             message='my posts'
         }else{
             var connectionData = await connections.find({user:req.data._id});
-            if(!connectionData[0].connections.includes(req.body.id)||!connectionData[0].followers.includes(req.body.id)){
-                findBody.visibility='public'
+            if(connectionData[0].connections.includes(req.body.id))
+            {
+                findBody.visibility='private'
             }
         }
         var posts = await post.aggregate([{
@@ -417,6 +418,7 @@ async function timelineposts(req,res){
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
     }
 }
+
 async function likeComment(){
     
 }
