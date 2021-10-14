@@ -303,9 +303,7 @@ async function timelineposts(req,res){
                                         '$in':connectionDocument[0].followers
                                     }
                                 },
-                                {
-                                    'user.college': mongoose.Types.ObjectId(req.data.college)
-                                },
+                                
                                 {
                                     'user._id':mongoose.Types.ObjectId(req.data._id)
                                 }
@@ -375,9 +373,7 @@ async function timelineposts(req,res){
                                     '$in':connectionDocument[0].followers
                                 }
                             },
-                            {
-                                'user.college': mongoose.Types.ObjectId(req.data.college)
-                            },
+                            
                             {
                                 'user._id':mongoose.Types.ObjectId(req.data._id)
                             }
