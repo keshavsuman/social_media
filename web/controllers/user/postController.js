@@ -114,7 +114,7 @@ async function reactOnPost(req,res){
                 });
                 var updateBody ={};
                 updateBody[req.body.type]=userpost[req.body.type]+1;
-                updateBody['reaction_count']=userPosts['reaction_count']-1; 
+                updateBody['reaction_count']=userPost['reaction_count']-1; 
                 await post.findByIdAndUpdate(userpost._id,{
                     $set:updateBody
                 });
@@ -393,6 +393,13 @@ async function timelineposts(req,res){
                             'foreignField': '_id', 
                             'as': 'course'
                         },
+                    },
+                    {
+                    '$addFields': {
+                        'course':{
+                                $first:'$course'
+                            },
+                        }
                     },
                     {
                         $sort:{
