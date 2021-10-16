@@ -422,7 +422,11 @@ async function timelineposts(req,res){
 }
 
 async function likeComment(){
-    
+    try {
+        
+    } catch (error) {
+        
+    }   
 }
 
 module.exports = {

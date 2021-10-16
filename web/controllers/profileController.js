@@ -72,6 +72,7 @@ module.exports.setProfile = async (req, res) => {
 /**** other user profile ****/
 module.exports.otherUserProfile = async (req, res) => {
     try {
+        let my = await User.findById(req.data._id);
         let user = await User.findOne({ _id: req.params.id },{salt:0,hash:0}).populate({path:'college'}).populate({path:'course'});
         let connections = await connection.find({user:req.params.id});        
         if(!user){
@@ -119,7 +120,7 @@ module.exports.otherUserProfile = async (req, res) => {
         }else{
             data.isRequested=false;
         }
-        responseManagement.sendResponse(res, httpStatus.OK, "profile data",data);
+        responseManagement.sendResponse(res, httpStatus.OK, "profile data",{myData,data});
     } catch (error) {
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);

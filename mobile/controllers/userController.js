@@ -614,13 +614,14 @@ module.exports.peopleYouMayKnow = async (req,res)=>{
         });
         var users = await User.aggregate([{
             $match:{
+                '_id':{$nin:connects[0].connections},
+                '_id':{$nin:connects[0].followers},
+                '_id':{$ne:mongoose.Types.ObjectId(req.data._id)},
                 $or:[
                     {course:user.course},
                     {college:user.college},
                     {home_town:user.home_town}
                 ],
-                $nin:connects[0].connections,
-                $nin:connects[0].followers
             }
             },{
                 '$lookup': {
