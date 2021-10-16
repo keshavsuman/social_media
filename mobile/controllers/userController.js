@@ -582,7 +582,7 @@ module.exports.myconnections = async (req,res)=>{
 
 module.exports.getNotifications = async (req,res)=>{
     try {
-        var notifications = await notification.find({user:req.data._id}).sort({createdAt:-1}).limit(20);
+        var notifications = await notification.find({user:req.data._id}).sort({createdAt:-1}).limit(20).populate('notificationFrom',{hash:0,salt:0});
         responseManagement.sendResponse(res,httpStatus.OK,'User notification',notifications);
     } catch (error) {
         console.log(error.message);
