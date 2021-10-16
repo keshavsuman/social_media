@@ -80,6 +80,7 @@ module.exports.otherUserProfile = async (req, res) => {
         }
 
         var data = {
+            _id:user._id,
             profile_pic:user.profile_pic,
             state:user.state,
             home_town:user.home_town,
