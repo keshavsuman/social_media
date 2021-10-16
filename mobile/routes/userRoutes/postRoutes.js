@@ -27,6 +27,5 @@ router.post('/react',postController.reactOnPost);
 router.post('/comment',postController.comment);
 router.post('/getComments',postController.getComments);
 router.post('/replyOnComment',postController.replyOnComment);
-router.post('/share',postController.sharePost)
 router.post('/timelinepost',postController.timelineposts);
 module.exports = router;
