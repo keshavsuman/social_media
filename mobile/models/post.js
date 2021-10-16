@@ -8,6 +8,8 @@ var Schema = new mongoose.Schema({
     media_url: [{ type: String }],
     admin_approved: {type: Boolean, default:false},
     comments:[{type:mongoose.Schema.Types.ObjectId,ref:'comments'}],
+    mode:{type:String,default:'create'},
+    shareFrom:{type:mongoose.Schema.Types.ObjectId,ref:'users'},
     LIKE:{type:Number,default:0},
     DISLIKE:{type:Number,default:0},
     SAD:{type:Number,default:0},

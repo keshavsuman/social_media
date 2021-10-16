@@ -15,7 +15,9 @@ async function createPost(req,res){
             content:req.body.content,
             media_type:req.body.media_type.toLowerCase(),
             visibility:req.body.visibility,
-            media_url:req.body.media_url
+            media_url:req.body.media_url,
+            mode:req.body.mode,
+            shareFrom:req.body.shareFrom
         });
         responseManagement.sendResponse(res,httpStatus.CREATED,"Post successfully created",{});
     } catch (error) {
