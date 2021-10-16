@@ -412,7 +412,8 @@ module.exports.followunfollow = async  (req,res)=>{
                 title:`${user.first_name} ${user.last_name} started following you`,
                 description:'',
                 type:'FOLLOWED',
-                user:req.body.id
+                user:req.body.id,
+                notificationFrom:req.data._id
             });
             await connections.updateOne({user:mongoose.Types.ObjectId(req.data._id)},{
                 $addToSet:{followings:req.body.id}
@@ -469,7 +470,8 @@ module.exports.connectAcceptReject = async (req,res)=>{
                 title:`${user.first_name} ${user.last_name} has requested to connect`,
                 type:"CONNECTION_ACCEPTED",
                 description:"",
-                user:req.body.id
+                user:req.body.id,
+                notificationFrom:req.data._id
             });
             responseManagement.sendResponse(res,httpStatus.OK,'accepted',{});
         }
@@ -482,7 +484,8 @@ module.exports.connectAcceptReject = async (req,res)=>{
                 title:`${user.first_name} ${user.last_name} has requested you for connection`,
                 type:"CONNECTION_REQUEST",
                 description:"",
-                user:req.body.id
+                user:req.body.id,
+                notificationFrom:req.data._id
             });
             responseManagement.sendResponse(res,httpStatus.OK,'connect request send',{});
         }else{

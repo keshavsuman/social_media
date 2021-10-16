@@ -98,6 +98,7 @@ module.exports.otherUserProfile = async (req, res) => {
             mobile:user.mobile,
             college:user.college,
             course:user.course,
+            myData:myData
         };
         data.connection_count = connections[0].connections.length;
         data.follower_count = connections[0].followers.length;
@@ -120,7 +121,7 @@ module.exports.otherUserProfile = async (req, res) => {
         }else{
             data.isRequested=false;
         }
-        responseManagement.sendResponse(res, httpStatus.OK, "profile data",{myData,user});
+        responseManagement.sendResponse(res, httpStatus.OK, "profile data",data);
     } catch (error) {
         console.log(error)
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);

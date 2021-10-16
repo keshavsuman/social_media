@@ -63,16 +63,6 @@ async function getPosts(req,res){
     }
 }
 
-async function sharePost(req,res){
-    try{
-        // need to complete
-    }catch(error){
-        console.log(error);
-        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
-    }
-}
-
-
 async function uploadMedia(req,res){
     try {
         req.file.path = req.protocol+'://younigems.in/uploads/'+req.file.filename;
@@ -98,7 +88,8 @@ async function reactOnPost(req,res){
                 await reactions.create({
                     post_id:req.body.post_id,
                     user:req.data._id,
-                    reaction_type:req.body.type
+                    reaction_type:req.body.type,
+                    notificationFrom:req.data._id
                 });
                 var updateBody ={};
                 updateBody[req.body.type]=userpost[req.body.type]+1;
@@ -111,7 +102,8 @@ async function reactOnPost(req,res){
                 await reactions.create({
                     post_id:req.body.post_id,
                     user:req.data._id,
-                    reaction_type:req.body.type
+                    reaction_type:req.body.type,
+                    notificationFrom:req.data._id
                 });
                 var updateBody ={};
                 updateBody[req.body.type]=userpost[req.body.type]+1;
@@ -123,7 +115,8 @@ async function reactOnPost(req,res){
                     title:`${userpost.user.first_name} ${userpost.user.last_name} has reacted on your post`,
                     type:"REACTED",
                     description:"",
-                    user:userpost.user._id
+                    user:userpost.user._id,
+                    notificationFrom:req.data._id
                 });
                 responseManagement.sendResponse(res,httpStatus.OK,'reaction successfull',{});
             }
@@ -163,7 +156,8 @@ async function comment(req,res){
                 title:`${postToUpdate.user.first_name} ${postToUpdate.user.last_name} has commented on your post`,
                 type:"COMMENTED",
                 description:req.body.comment,
-                user:postToUpdate.user._id
+                user:postToUpdate.user._id,
+                notificationFrom:req.data._id
             });
             responseManagement.sendResponse(res,httpStatus.OK,'Comment added',{});
         }else{
@@ -190,7 +184,8 @@ async function replyOnComment(req,res){
             title:`${comment.user.first_name} replied to your comment`,
             description:req.body.comment,
             type:'COMMENT_REPLY',
-            user:comment.user._id
+            user:comment.user._id,
+            notificationFrom:req.data._id
         })
         responseManagement.sendResponse(res,httpStatus.OK,'Reply added',{});
     }catch(error){
@@ -429,7 +424,6 @@ module.exports = {
     createPost,
     updatePost,
     deletePost,
-    sharePost,
     uploadMedia,
     reactOnPost,
     comment,
