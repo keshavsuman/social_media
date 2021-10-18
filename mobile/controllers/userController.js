@@ -709,3 +709,12 @@ module.exports.getFollowingList = async (req,res)=>{
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
     }
 }
+module.exports.deleteNotification = async (req,res)=>{
+    try{
+        await notification.findByIdAndDelete(req.body.id);
+        responseManagement.sendResponse(res,httpStatus.OK,'User notification deleted');
+    }catch(error){
+        console.log(error.message);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
+    }
+}

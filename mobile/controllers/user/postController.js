@@ -144,7 +144,7 @@ async function getComments(req,res){
 }
 async function comment(req,res){
     try {
-        var postToUpdate = post.findById(req.body.post_id).populate('user');
+        var postToUpdate = await post.findById(req.body.post_id).populate('user');
         if(postToUpdate){
             var comment = await comments.create({
                 post_id:req.body.post_id,
@@ -153,7 +153,7 @@ async function comment(req,res){
             });
             await post.updateOne({_id:req.body.post_id},{$addToSet:{comments:comment._id}});
             await notifications.create({
-                title:`${postToUpdate.user.first_name} ${postToUpdate.user.last_name} has commented on your post`,
+                title:`commented on your post`,
                 type:"COMMENTED",
                 description:req.body.comment,
                 user:postToUpdate.user._id,
@@ -418,7 +418,15 @@ async function timelineposts(req,res){
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
     }
 }
-
+async function getCommentsReply(req,res){
+    try {
+        var replies = await comments.findById(req.body.commentId,{reply:1,_id:0});
+        responseManagement.sendResponse(res,httpStatus.OK,'',replies.reply);
+    } catch (error) {
+        console.log(error.message);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
+    }
+}
 module.exports = {
     getPosts,
     createPost,
@@ -428,6 +436,7 @@ module.exports = {
     reactOnPost,
     comment,
     replyOnComment,
+    getCommentsReply,
     getComments,
     contents,
     timelineposts
