@@ -419,7 +419,7 @@ async function timelineposts(req,res){
 }
 async function getCommentsReply(req,res){
     try {
-        var replies = await comments.findById(req.body.commentId,{reply:1,_id:0});
+        var replies = await comments.findById(req.body.commentId,{reply:1,_id:0}).populate({path:'reply.user',select:{first_name:1,last_name:1,profile_pic:1}});
         responseManagement.sendResponse(res,httpStatus.OK,'',replies.reply);
     } catch (error) {
         console.log(error.message);

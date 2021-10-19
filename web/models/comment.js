@@ -4,7 +4,7 @@ const replySchema = mongoose.Schema({
         reply:{type:String},
         user:{  
                 type:mongoose.Schema.Types.ObjectId,
-                ref:'users',
+                ref:'user',
             },
         time:{type:Date,default:Date.now()}
 });
