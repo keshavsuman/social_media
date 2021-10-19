@@ -7,6 +7,7 @@ const connections = require('../../models/connections');
 const mongoose = require('mongoose');
 const reactions = require('../../models/reactions');
 const notifications = require('../../models/notifications');
+const replySchema = require('../../models/comment');
 
 async function createPost(req,res){
     try {
@@ -170,22 +171,22 @@ async function comment(req,res){
 
 async function replyOnComment(req,res){
     try{
+        
         var comment = await comments.findById(req.body.id).populate('user');
-         comments.findOneAndUpdate({
-            _id:req.body.id
-        },{
+         var data = await comments.findByIdAndUpdate(req.body.id
+        ,{
             $addToSet:{reply:{
-                'reply':req.body.comment,
-                'user':req.data._id,
+                reply:req.body.reply,
+                user:req.data._id
             }}
         });
         await notifications.create({
-            title:`${comment.user.first_name} replied to your comment`,
+            title:`${comment.user?.first_name} replied to your comment`,
             description:req.body.comment,
             type:'COMMENT_REPLY',
             user:comment.user._id,
             notificationFrom:req.data._id
-        })
+        });
         responseManagement.sendResponse(res,httpStatus.OK,'Reply added',{});
     }catch(error){
         console.log(error);

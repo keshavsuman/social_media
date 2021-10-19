@@ -4,7 +4,7 @@ const replySchema = mongoose.Schema({
         reply:{type:String},
         user:{  
                 type:mongoose.Schema.Types.ObjectId,
-                ref:'user',
+                ref:'users',
             },
         time:{type:Date,default:Date.now()}
 });
@@ -17,4 +17,3 @@ const commentsSchema = mongoose.Schema({
 },{timestamps:true});
 
 module.exports = mongoose.model('comments',commentsSchema);
-// module.exports = replySchema;
