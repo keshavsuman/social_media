@@ -7,6 +7,7 @@ const connections = require('../../models/connections');
 const mongoose = require('mongoose');
 const reactions = require('../../models/reactions');
 const notifications = require('../../models/notifications');
+const bookmark = require('../../models/bookmarks');
 
 async function createPost(req,res){
     try {
@@ -426,6 +427,46 @@ async function getCommentsReply(req,res){
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
     }
 }
+async function bookmark(req,res){
+    try {
+        await bookmark.findOneAndUpdate({
+            _id:mongoose.Types.ObjectId(req.data._id)
+        },{
+            $addToSet:{posts:mongoose.Types.ObjectId(req.body.id)}
+        });
+        responseManagement.sendResponse(res,httpStatus.OK,'Bookmark saved',{});
+    } catch (error) {
+        console.log(error.message);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
+    }
+}
+
+async function getBookmarks(req,res){
+    try {
+        var posts = await bookmark.findOne({
+            _id:mongoose.Types.ObjectId(req.data._id)
+        }).populate({path:'posts'});
+
+        responseManagement.sendResponse(res,httpStatus.OK,'Bookmarks list',posts);
+    } catch (error) {
+        console.log(error.message);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
+    }
+}
+
+async function removebookmark(req,res){
+    try {
+        await bookmark.findOneAndUpdate({
+            _id:mongoose.Types.ObjectId(req.data._id)
+        },{
+            $pull:{posts:mongoose.Types.ObjectId(req.body.id)}
+        });
+        responseManagement.sendResponse(res,httpStatus.OK,'Bookmark removed',{});
+    } catch (error) {
+        console.log(error.message);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
+    }
+}
 module.exports = {
     getPosts,
     createPost,
@@ -438,5 +479,8 @@ module.exports = {
     getCommentsReply,
     getComments,
     contents,
-    timelineposts
+    timelineposts,
+    bookmark,
+    getBookmarks,
+    removebookmark
 }

@@ -29,4 +29,7 @@ router.post('/getComments',postController.getComments);
 router.post('/replyOnComment',postController.replyOnComment);
 router.post('/getCommentsReply',postController.getCommentsReply);
 router.post('/timelinepost',postController.timelineposts);
+router.post('/bookmark',postController.bookmark);
+router.get('/getbookmarks',postController.getBookmarks);
+router.post('/removebookmark',postController.removebookmark);
 module.exports = router;

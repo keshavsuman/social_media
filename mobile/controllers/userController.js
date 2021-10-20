@@ -14,6 +14,7 @@ const jwt =require('jsonwebtoken');
 const notification =  require('../models/notifications');
 const userToken = require('../models/user_token');
 const mongoose = require('mongoose');
+const bookmarks = require('../models/bookmarks');
 
 /****** Login ****/
 module.exports.login = async (req, res) => {
@@ -108,7 +109,11 @@ module.exports.createUser = async (req, res) => {
                 followings:[],
                 requests:[],
                 connections:[]
-            })
+            });
+            await bookmarks.create({
+                user:newuser._id,
+                posts:[]
+            });
             // const password_reset_link = config.userResetPasswordLink + token;
             // const html = await ejs.renderFile(path.join(__dirname, '../helper/email_templates/password_reset.html'), { password_reset_link });
             // const to = [email];
