@@ -426,7 +426,7 @@ async function getCommentsReply(req,res){
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
     }
 }
-async function bookmark(req,res){
+async function bookmarkPost(req,res){
     try {
         await bookmark.findOneAndUpdate({
             _id:mongoose.Types.ObjectId(req.data._id)
@@ -480,7 +480,7 @@ module.exports = {
     getCommentsReply,
     contents,
     timelineposts,
-    bookmark,
+    bookmarkPost,
     getBookmarks,
     removebookmark
 }
