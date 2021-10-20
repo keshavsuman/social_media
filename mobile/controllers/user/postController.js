@@ -447,7 +447,7 @@ async function getBookmarks(req,res){
             user:mongoose.Types.ObjectId(req.data._id)
         }).populate({path:'posts'});
 
-        responseManagement.sendResponse(res,httpStatus.OK,'Bookmarks list',posts);
+        responseManagement.sendResponse(res,httpStatus.OK,'Bookmarks list',posts.posts);
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
