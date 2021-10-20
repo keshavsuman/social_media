@@ -429,7 +429,7 @@ async function getCommentsReply(req,res){
 async function bookmarkPost(req,res){
     try {
         await bookmark.findOneAndUpdate({
-            _id:mongoose.Types.ObjectId(req.data._id)
+            user:mongoose.Types.ObjectId(req.data._id)
         },{
             $addToSet:{posts:mongoose.Types.ObjectId(req.body.id)}
         });
@@ -443,7 +443,7 @@ async function bookmarkPost(req,res){
 async function getBookmarks(req,res){
     try {
         var posts = await bookmark.findOne({
-            _id:mongoose.Types.ObjectId(req.data._id)
+            user:mongoose.Types.ObjectId(req.data._id)
         }).populate({path:'posts'});
 
         responseManagement.sendResponse(res,httpStatus.OK,'Bookmarks list',posts);
@@ -456,7 +456,7 @@ async function getBookmarks(req,res){
 async function removebookmark(req,res){
     try {
         await bookmark.findOneAndUpdate({
-            _id:mongoose.Types.ObjectId(req.data._id)
+            user:mongoose.Types.ObjectId(req.data._id)
         },{
             $pull:{posts:mongoose.Types.ObjectId(req.body.id)}
         });
