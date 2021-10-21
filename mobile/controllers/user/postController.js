@@ -432,7 +432,7 @@ async function bookmarkPost(req,res){
         await bookmark.findOneAndUpdate({
             user:mongoose.Types.ObjectId(req.data._id)
         },{
-            $addToSet:{posts:mongoose.Types.ObjectId(req.body.id)}
+            $addToSet:{post_id:req.body.id}
         });
         responseManagement.sendResponse(res,httpStatus.OK,'Bookmark saved',{});
     } catch (error) {
@@ -445,9 +445,8 @@ async function getBookmarks(req,res){
     try {
         var posts = await bookmark.findOne({
             user:mongoose.Types.ObjectId(req.data._id)
-        }).populate({path:'posts'});
-
-        responseManagement.sendResponse(res,httpStatus.OK,'Bookmarks list',posts.posts);
+        }).populate({path:'post_id',populate:{path:'user'}});
+        responseManagement.sendResponse(res,httpStatus.OK,'Bookmarks list',posts.post_id);
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
