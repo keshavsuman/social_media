@@ -398,6 +398,9 @@ async function timelineposts(req,res){
                         }
                     },
                     {
+                        $limit:50
+                    },
+                    {
                         $project:{
                             myuser:0,
                             comments:0,
@@ -409,7 +412,29 @@ async function timelineposts(req,res){
                     }
             ]);
             }
-            responseManagement.sendResponse(res,httpStatus.OK,'',timelineposts);
+            var postIds = []; 
+            timelineposts.forEach(t=>{
+                postIds.push(t._id);
+            });
+            var reaction = await reactions.find({
+                user:mongoose.Types.ObjectId(req.data._id),
+                post_id:{$in:postIds}
+            });
+            var reactedPost = [];
+            reaction.forEach(tp=>{
+                if(postIds.includes(tp._id)){
+                    reactedPost.push(tp._id);
+                }
+            });
+            var timelinepost = [];
+            timelineposts.forEach(tp=>{
+                var isReacted = false;
+                if(reactedPost.includes(tp)){
+                    isReacted = true;
+                }
+                timelinepost.push({...tp,isReacted:isReacted});
+            });
+            responseManagement.sendResponse(res,httpStatus.OK,'',timelinepost);
         }
     } catch (error) {
         console.log(error.message);
