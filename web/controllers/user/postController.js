@@ -26,7 +26,15 @@ async function createPost(req,res){
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
     }
 }
-
+async function post_details(req,res){
+    try {
+        var post_details = await post.findById(req.body.post_id).populate({path:'user',select:{hash:0,salt:0}});
+        responseManagement.sendResponse(res,httpStatus.OK,'',post_details);
+    } catch (error) {
+        console.log(error);
+        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
+    }
+}
 async function deletePost(req,res){
     try {
         await post.findByIdAndDelete(req.body.postId);
@@ -469,7 +477,7 @@ async function getBookmarks(req,res){
     try {
         var posts = await bookmark.findOne({
             user:mongoose.Types.ObjectId(req.data._id)
-        }).populate({path:'posts'});
+        }).populate({path:'post_id',populate:{path:'user'}})
 
         responseManagement.sendResponse(res,httpStatus.OK,'Bookmarks list',posts.posts);
     } catch (error) {
@@ -507,5 +515,7 @@ module.exports = {
     timelineposts,
     bookmarkPost,
     getBookmarks,
-    removebookmark
+    removebookmark,
+    post_details
+
 }

@@ -17,6 +17,7 @@ router.use(auth);
 
 
 router.get('/getPost',postController.getPosts);
+router.post('/post_details',postController.post_details);
 router.post('/content',postController.contents);
 router.post('/createPost',postValidator.createPost,postController.createPost);
 router.post('/updatePost',postValidator.updatePost,postController.updatePost);
