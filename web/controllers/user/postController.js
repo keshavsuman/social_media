@@ -476,8 +476,8 @@ async function bookmarkPost(req,res){
 async function getBookmarks(req,res){
     try {
         var posts = await bookmark.findOne({
-            user:mongoose.Types.ObjectId(req.data._id)
-        }).populate({path:'post_id',populate:{path:'user'}})
+            user:mongoose.Types.ObjectId(req.data._id) 
+        }).populate({path:'post_id',populate:{path:'user',select:{hash:0,salt:0},populate:'course'}});
 
         responseManagement.sendResponse(res,httpStatus.OK,'Bookmarks list',posts.posts);
     } catch (error) {

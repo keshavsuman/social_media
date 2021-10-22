@@ -264,7 +264,7 @@ async function contents(req,res){
         }
     ]); 
 
-        responseManagement.sendResponse(res,httpStatus.OK,message,posts);
+    responseManagement.sendResponse(res,httpStatus.OK,message,posts);
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
@@ -441,6 +441,7 @@ async function timelineposts(req,res){
                 }
                 timelinepost.push({...tp,isReacted:isReacted});
             });
+            
             responseManagement.sendResponse(res,httpStatus.OK,'',timelinepost);
         }
     } catch (error) {
@@ -475,7 +476,7 @@ async function getBookmarks(req,res){
     try {
         var posts = await bookmark.findOne({
             user:mongoose.Types.ObjectId(req.data._id) 
-        }).populate({path:'post_id',populate:{path:'user'}});
+        }).populate({path:'post_id',populate:{path:'user',select:{hash:0,salt:0},populate:'course'}});
         responseManagement.sendResponse(res,httpStatus.OK,'Bookmarks list',posts.post_id);
     } catch (error) {
         console.log(error.message);

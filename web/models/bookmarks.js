@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const bookmarkSchema = mongoose.Schema({
-    posts:[{type:mongoose.Schema.Types.ObjectId,ref:'post',required:true}],
+    post_id:[{type:mongoose.Schema.Types.ObjectId,ref:'post',required:true}],
     user:{type:mongoose.Schema.Types.ObjectId,ref:'user',required:true}
 },{timestamps:true});
 
