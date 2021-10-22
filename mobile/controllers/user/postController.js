@@ -425,23 +425,19 @@ async function timelineposts(req,res){
             timelineposts.forEach(t=>{
                 postIds.push(t._id);
             });
-            console.log(postIds);
             var reaction = await reactions.find({
                 user:mongoose.Types.ObjectId(req.data._id),
                 post_id:{$in:postIds}
             });
             reaction.forEach(tp=>{
-                console.log(postIds.includes(mongoose.Types.ObjectId(tp.post_id)));
-                console.log(tp.post_id);
-                if(postIds.includes(tp.post_id)){
+                if(postIds.some(p=>p._id.equals(tp.post_id))){
                     reactedPost.push(tp.post_id);
                 }
             });
-            console.log(reactedPost);
             var timelinepost = [];
             timelineposts.forEach(tp=>{
                 var isReacted = false;
-                if(reactedPost.includes(tp)){
+                if(reactedPost.some(p=>p.equals(tp._id))){
                     isReacted = true;
                 }
                 timelinepost.push({...tp,isReacted:isReacted});

@@ -116,7 +116,7 @@ async function reactOnPost(req,res){
                 });
                 var updateBody ={};
                 updateBody[req.body.type]=userpost[req.body.type]+1;
-                updateBody['reaction_count']=userPost['reaction_count']-1; 
+                updateBody['reaction_count']=userpost['reaction_count']-1; 
                 await post.findByIdAndUpdate(userpost._id,{
                     $set:updateBody
                 });
@@ -420,7 +420,10 @@ async function timelineposts(req,res){
                     }
             ]);
             }
+
             var postIds = []; 
+            var reactedPost = [];
+
             timelineposts.forEach(t=>{
                 postIds.push(t._id);
             });
@@ -428,16 +431,15 @@ async function timelineposts(req,res){
                 user:mongoose.Types.ObjectId(req.data._id),
                 post_id:{$in:postIds}
             });
-            var reactedPost = [];
             reaction.forEach(tp=>{
-                if(postIds.includes(tp._id)){
-                    reactedPost.push(tp._id);
+                if(postIds.some(p=>p._id.equals(tp.post_id))){
+                    reactedPost.push(tp.post_id);
                 }
             });
             var timelinepost = [];
             timelineposts.forEach(tp=>{
                 var isReacted = false;
-                if(reactedPost.includes(tp)){
+                if(reactedPost.some(p=>p.equals(tp._id))){
                     isReacted = true;
                 }
                 timelinepost.push({...tp,isReacted:isReacted});
