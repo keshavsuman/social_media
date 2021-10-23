@@ -221,7 +221,7 @@ async function contents(req,res){
             var connectionData = await connections.find({user:req.data._id});
             if(connectionData[0].connections.some(c=>c.equals(req.body.id)))
             {
-                findBody.visibility='private'
+                delete findBody.visibility;
             }
         }
         var posts = await post.aggregate([{
