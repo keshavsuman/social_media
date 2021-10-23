@@ -206,7 +206,8 @@ async function contents(req,res){
     try {
         var findBody = {
             user:mongoose.Types.ObjectId(req.body.id),
-            admin_approved:true            
+            admin_approved:true,
+            visibility:'public'            
         };
         var message = 'user posts';
         if(req.body.media_type!='all')

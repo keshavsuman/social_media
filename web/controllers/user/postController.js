@@ -206,7 +206,8 @@ async function contents(req,res){
     try {
         var findBody = {
             user:mongoose.Types.ObjectId(req.body.id),
-            admin_approved:true            
+            admin_approved:true,
+            visibility:'public'            
         };
         var message = 'user posts';
         if(req.body.media_type!='all')
@@ -218,7 +219,7 @@ async function contents(req,res){
             message='my posts'
         }else{
             var connectionData = await connections.find({user:req.data._id});
-            if(connectionData[0].connections.includes(req.body.id))
+            if(connectionData[0].connections.some(c=>c.equals(req.body.id)))
             {
                 findBody.visibility='private'
             }
@@ -262,7 +263,6 @@ async function contents(req,res){
             }
         }
     ]); 
-        // var posts = await post.find(findBody).populate({path:'user',select:{hash:0,salt:0},populate:{path:"course"}}).limit(50);
         responseManagement.sendResponse(res,httpStatus.OK,message,posts);
     } catch (error) {
         console.log(error.message);
