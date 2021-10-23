@@ -107,7 +107,9 @@ async function reactOnPost(req,res){
                 await post.findByIdAndUpdate(userpost._id,{
                     $set:updateBody
                 });
-                responseManagement.sendResponse(res,httpStatus.OK,'reaction successfull',{});
+                responseManagement.sendResponse(res,httpStatus.OK,'reaction successfull',{
+                    reactionCount:updateBody['reaction_count']
+                });
             }else{
                 await reactions.create({
                     post_id:req.body.post_id,
@@ -127,7 +129,9 @@ async function reactOnPost(req,res){
                     user:userpost.user._id,
                     notificationFrom:req.data._id
                 });
-                responseManagement.sendResponse(res,httpStatus.OK,'reaction successfull',{});
+                responseManagement.sendResponse(res,httpStatus.OK,'reaction successfull',{
+                    reactionCount:updateBody['reaction_count']
+                });
             }
         }else{
             responseManagement.sendResponse(res,httpStatus.UNPROCESSABLE_ENTITY,'post doesn\'t exits',{});        }
@@ -433,16 +437,18 @@ async function timelineposts(req,res){
             });
             reaction.forEach(tp=>{
                 if(postIds.some(p=>p._id.equals(tp.post_id))){
-                    reactedPost.push(tp.post_id);
+                    reactedPost.push({_id:tp.post_id,type:tp.type});
                 }
             });
             var timelinepost = [];
             timelineposts.forEach(tp=>{
                 var isReacted = false;
-                if(reactedPost.some(p=>p.equals(tp._id))){
+                var type;
+                if(reactedPost.some(p=>p._id.equals(tp._id))){
                     isReacted = true;
+                    type = p.type;
                 }
-                timelinepost.push({...tp,isReacted:isReacted});
+                timelinepost.push({...tp,isReacted:isReacted,reactionType:type});
             });
             responseManagement.sendResponse(res,httpStatus.OK,'',timelinepost);
         }
