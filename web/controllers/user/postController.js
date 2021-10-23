@@ -304,7 +304,7 @@ async function timelineposts(req,res){
                                     }                            },
                                 {
                                     'user._id':{
-                                        '$in':connectionDocument[0].followers
+                                        '$in':connectionDocument[0].followings
                                     }
                                 },
                                 {
@@ -373,7 +373,7 @@ async function timelineposts(req,res){
                             },
                             {
                                 'user._id':{
-                                    '$in':connectionDocument[0].followers
+                                    '$in':connectionDocument[0].followings
                                 }
                             },
                             
