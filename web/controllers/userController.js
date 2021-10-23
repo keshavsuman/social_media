@@ -639,7 +639,7 @@ module.exports.peopleYouMayKnow = async (req,res)=>{
                     'college': 1, 
                     'course': 1,
                     'isConnected': 1, 
-                    'isFollowing': 1, 
+                    'isFollowed': 1, 
                     'isRequested': 1
                 }
             }
