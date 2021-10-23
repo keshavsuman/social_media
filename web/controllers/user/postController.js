@@ -15,7 +15,7 @@ async function createPost(req,res){
             user:req.data._id,
             content:req.body.content,
             media_type:req.body.media_type.toLowerCase(),
-            visibility:req.body.visibility,
+            visibility:req.body.visibility.toLowerCase(),
             media_url:req.body.media_url,
             mode:req.body.mode,
             shareFrom:req.body.shareFrom

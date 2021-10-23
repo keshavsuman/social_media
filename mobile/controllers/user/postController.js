@@ -15,7 +15,7 @@ async function createPost(req,res){
             user:req.data._id,
             content:req.body.content,
             media_type:req.body.media_type.toLowerCase(),
-            visibility:req.body.visibility,
+            visibility:req.body.visibility.toLowerCase(),
             media_url:req.body.media_url,
             mode:req.body.mode,
             shareFrom:req.body.shareFrom
@@ -218,7 +218,7 @@ async function contents(req,res){
             message='my posts'
         }else{
             var connectionData = await connections.find({user:req.data._id});
-            if(connectionData[0].connections.includes(req.body.id))
+            if(connectionData[0].connections.some(c=>c.equals(req.body.id)))
             {
                 findBody.visibility='private'
             }
