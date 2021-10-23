@@ -220,7 +220,8 @@ async function contents(req,res){
         }
         if(req.data._id==req.body.id)
         {   
-            message='my posts'
+            message='my posts';
+            delete findBody.visibility;
         }else{
             var connectionData = await connections.find({user:req.data._id});
             if(connectionData[0].connections.some(c=>c.equals(req.body.id)))
