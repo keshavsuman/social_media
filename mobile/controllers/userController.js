@@ -651,9 +651,9 @@ module.exports.peopleYouMayKnow = async (req,res)=>{
                       new ObjectId(req.data._id), '$connections.connections'
                     ]
                   }, 
-                  'isFollowing': {
+                  'isFollowed': {
                     '$in': [
-                      new ObjectId(req.data._id), '$connections.followings'
+                      new ObjectId(req.data._id), '$connections.followers'
                     ]
                   }, 
                   'isRequested': {
