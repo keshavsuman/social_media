@@ -427,7 +427,6 @@ async function timelineposts(req,res){
 
             var postIds = []; 
             var reactedPost = [];
-
             timelineposts.forEach(t=>{
                 postIds.push(t._id);
             });
@@ -437,17 +436,19 @@ async function timelineposts(req,res){
             });
             reaction.forEach(tp=>{
                 if(postIds.some(p=>p._id.equals(tp.post_id))){
-                    reactedPost.push({_id:tp.post_id,type:tp.type});
+                    reactedPost.push({_id:tp.post_id,type:tp.reaction_type});
                 }
             });
             var timelinepost = [];
             timelineposts.forEach(tp=>{
                 var isReacted = false;
                 var type;
-                if(reactedPost.some(p=>p._id.equals(tp._id))){
-                    isReacted = true;
-                    type = p.type;
-                }
+                reactedPost.forEach(rp=>{
+                    if(rp._id.equals(tp._id)){
+                        isReacted = true;
+                        type = rp.type;
+                    }
+                })
                 timelinepost.push({...tp,isReacted:isReacted,reactionType:type});
             });
             responseManagement.sendResponse(res,httpStatus.OK,'',timelinepost);
