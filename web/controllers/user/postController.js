@@ -506,7 +506,7 @@ async function removebookmark(req,res){
         await bookmark.findOneAndUpdate({
             user:mongoose.Types.ObjectId(req.data._id)
         },{
-            $pull:{post_id:mongoose.Types.ObjectId(req.body.id)}
+            $pull:{post_id:mongoose.Types.ObjectId(req.body.post_id)}
         });
         responseManagement.sendResponse(res,httpStatus.OK,'Bookmark removed',{});
     } catch (error) {
