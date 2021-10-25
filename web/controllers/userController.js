@@ -753,7 +753,7 @@ module.exports.getFollowingList = async (req,res)=>{
             {
                 limit:req.body.limit??20
             },{
-                skip:req.bosy.skip??0
+                skip:req.body.skip??0
             } 
           ]);
         responseManagement.sendResponse(res,httpStatus.OK,'Followings list',followings[0].followings);

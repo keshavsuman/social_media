@@ -791,13 +791,13 @@ module.exports.getFollowingList = async (req,res)=>{
             {
                 limit:req.body.limit??20
             },{
-                skip:req.bosy.skip??0
+                skip:req.body.skip??0
             } 
           ]);
         responseManagement.sendResponse(res,httpStatus.OK,'Followings list',followings[0].followings);
     }catch(e){
-        console.log(error);
-        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
+        console.log(e);
+        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,e.message,{});
     }
 }
 module.exports.deleteNotification = async (req,res)=>{
