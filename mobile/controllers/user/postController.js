@@ -267,6 +267,10 @@ async function contents(req,res){
                 'user.salt':0,
                 'user.__v':0
             }
+        },{
+            limit:req.body.limit??20
+        },{
+            skip:req.body.skip??0
         }
     ]); 
 
@@ -451,7 +455,6 @@ async function timelineposts(req,res){
                 })
                 timelinepost.push({...tp,isReacted:isReacted,reactionType:type});
             });
-            
             responseManagement.sendResponse(res,httpStatus.OK,'',timelinepost);
         }
     } catch (error) {

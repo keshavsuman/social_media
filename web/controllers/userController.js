@@ -656,23 +656,123 @@ module.exports.getFollowersList = async (req,res)=>{
     try{
         if(!req.body.id){
             responseManagement.sendResponse(res,httpStatus.OK,'Please Provide user-ID',[]);
+            return;
         }
-        var followers = await connections.find({user:req.body.id},{followers:1}).populate('followers',{first_name:1,last_name:1,email:1,profile_pic:1});
+        const connection = await connections.find({user:req.data._id});
+        var followers = await connections.aggregate([
+            {
+                $match:{
+                    user:mongoose.Types.ObjectId(req.data._id)
+                }
+            },
+            {
+              '$project': {
+                'followers': 1, 
+                '_id': 0
+              }
+            }, {
+              '$lookup': {
+                'from': 'users', 
+                'localField': 'followers', 
+                'foreignField': '_id', 
+                'as': 'followers', 
+                'pipeline': [
+                  {
+                    '$project': {
+                      'first_name': 1, 
+                      'last_name': 1, 
+                      'profile_pic': 1
+                    },
+                },
+                {
+                    $addFields:{
+                        isConnected:{$in:['$_id',connection[0].connections]},
+                        isRequested:{$in:['$_id',connection[0].requested]},
+                        isfollowing:{$in:['$_id',connection[0].followings]},
+                        isfollowed:{$in:['$_id',connection[0].followers]},
+                    }
+                }
+            ]
+              }
+            },{
+                limit:req.body.limit??20
+            },
+            {
+                skip:req.body.after??0
+            } 
+          ]);
         responseManagement.sendResponse(res,httpStatus.OK,'Followers list',followers[0].followers);
     }catch(e){
-        console.log(error);
-        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
+        console.log(e);
+        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,e.message,{});
     }
 }
 module.exports.getFollowingList = async (req,res)=>{
     try{
         if(!req.body.id){
             responseManagement.sendResponse(res,httpStatus.OK,'Please Provide user-ID',[]);
+            return;
         }
-        var followings = await connections.find({user:req.body.id},{followings:1}).populate('followings',{first_name:1,last_name:1,email:1,profile_pic:1});
+        const connection = await connections.find({user:req.data._id});
+        var followings = await connections.aggregate([
+            {
+                $match:{
+                    user:mongoose.Types.ObjectId(req.data._id)
+                }
+            },
+            {
+              '$project': {
+                'followings': 1, 
+                '_id': 0
+              }
+            }, {
+              '$lookup': {
+                'from': 'users', 
+                'localField': 'followings', 
+                'foreignField': '_id', 
+                'as': 'followings', 
+                'pipeline': [
+                  {
+                    '$project': {
+                      'first_name': 1, 
+                      'last_name': 1, 
+                      'profile_pic': 1
+                    },
+                },
+                {
+                    $addFields:{
+                        isConnected:{$in:['$_id',connection[0].connections]},
+                        isRequested:{$in:['$_id',connection[0].requested]},
+                        isfollowing:{$in:['$_id',connection[0].followings]},
+                        isfollowed:{$in:['$_id',connection[0].followers]},
+                    }
+                }
+            ]
+              }
+            },
+            {
+                limit:req.body.limit??20
+            },{
+                skip:req.bosy.skip??0
+            } 
+          ]);
         responseManagement.sendResponse(res,httpStatus.OK,'Followings list',followings[0].followings);
     }catch(e){
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
+    }
+}
+
+
+module.exports.cancelRequest = async (req,res)=>{
+    try {
+        await connections.findOneAndUpdate({user:req.data._id},{
+            $pullAll:{requested:[mongoose.Types.ObjectId(req.body.id)]}
+        });
+        responseManagement.sendResponse(res,httpStatus.OK,'Request canceled',{});
+
+    } catch (error) {
+        console.log(error.message);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
     }
 }

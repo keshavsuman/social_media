@@ -266,6 +266,11 @@ async function contents(req,res){
                 'user.salt':0,
                 'user.__v':0
             }
+        },{
+            limit:req.body.limit??20
+        },
+        {
+            skip:req.body.skip??0
         }
     ]); 
         responseManagement.sendResponse(res,httpStatus.OK,message,posts);
