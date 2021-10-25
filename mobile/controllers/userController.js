@@ -733,10 +733,10 @@ module.exports.getFollowersList = async (req,res)=>{
             ]
               }
             },{
-                limit:req.body.limit??20
+                $limit:req.body.limit??20
             },
             {
-                skip:req.body.after??0
+                $skip:req.body.after??0
             } 
           ]);
         responseManagement.sendResponse(res,httpStatus.OK,'Followers list',followers[0].followers);
@@ -789,9 +789,10 @@ module.exports.getFollowingList = async (req,res)=>{
               }
             },
             {
-                limit:req.body.limit??20
-            },{
-                skip:req.body.skip??0
+                $limit:req.body.limit??20
+            }
+            ,{
+                $skip:req.body.skip??0
             } 
           ]);
         responseManagement.sendResponse(res,httpStatus.OK,'Followings list',followings[0].followings);
