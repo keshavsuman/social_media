@@ -121,6 +121,10 @@ module.exports.otherUserProfile = async (req, res) => {
             data.isRequested=true;
         }else{
             data.isRequested=false;
+        }if(connections[0].requested.includes(req.data._id)){
+            data.isRequesting=true;
+        }else{
+            data.isRequesting=false;
         }
         responseManagement.sendResponse(res, httpStatus.OK, "profile data",data);
     } catch (error) {
