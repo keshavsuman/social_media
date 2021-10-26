@@ -21,7 +21,7 @@ router.post('/post_details',postController.post_details);
 router.post('/content',postController.contents);
 router.post('/createPost',postValidator.createPost,postController.createPost);
 router.post('/updatePost',postValidator.updatePost,postController.updatePost);
-router.delete('/deletePost',postValidator.deletePost,postController.deletePost);
+router.post('/deletePost',postValidator.deletePost,postController.deletePost);
 router.put('/generateMediaUploadUrl',upload.single('file'),postController.uploadMedia);
 router.post('/react',postController.reactOnPost);
 router.post('/comment',postController.comment);

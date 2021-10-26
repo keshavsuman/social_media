@@ -28,7 +28,8 @@ var UserSchema = new mongoose.Schema({
     hash: { type: String},
     salt: { type: String},
     status: { type: Boolean, default: true },
-    profile_setup: { type: Boolean, default: false }
+    profile_setup: { type: Boolean, default: false },
+    sentRequests:[{type:mongoose.Schema.Types.ObjectId,ref:'user'}]
 }, { timestamps: true });
 
 UserSchema.plugin(uniqueValidator, { message: 'is already taken.' });

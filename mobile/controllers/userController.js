@@ -472,7 +472,7 @@ module.exports.connectAcceptReject = async (req,res)=>{
             });
             var user = await User.findById(req.data._id,{first_name:1,last_name:1});
             await notification.create({
-                title:`${user.first_name} ${user.last_name} has requested to connect`,
+                title:`has requested to connect`,
                 type:"CONNECTION_ACCEPTED",
                 description:"",
                 user:req.body.id,
@@ -484,9 +484,11 @@ module.exports.connectAcceptReject = async (req,res)=>{
             await connections.findOneAndUpdate({user:req.body.id},{
                 $addToSet:{requested:req.data._id}
             });
-            var user = await User.findById(req.data._id,{first_name:1,last_name:1});
+            await User.findByIdAndUpdate(req.data._id,{
+                $push:req.body.id
+            });
             await notification.create({
-                title:`${user.first_name} ${user.last_name} has requested you for connection`,
+                title:`has requested you for connection`,
                 type:"CONNECTION_REQUEST",
                 description:"",
                 user:req.body.id,
