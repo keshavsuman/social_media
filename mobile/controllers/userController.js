@@ -818,7 +818,22 @@ module.exports.cancelRequest = async (req,res)=>{
         await connections.findOneAndUpdate({user:req.data._id},{
             $pullAll:{requested:[mongoose.Types.ObjectId(req.body.id)]}
         });
+        await User.findById(req.data._id,{
+            $pullAll:{sentRequests:[mongoosse.Types.ObjectId(req.body.id)]}
+        });
         responseManagement.sendResponse(res,httpStatus.OK,'Request canceled',{});
+
+    } catch (error) {
+        console.log(error.message);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
+    }
+}
+module.exports.getUserRequests = async (req,res)=>{
+    try {
+        var requests = await User.findById(req.data._id,{
+            sentRequests:1
+        }).populate({path:'sentRequests',select:{salt:0,hash:0}});
+        responseManagement.sendResponse(res,httpStatus.OK,'Request canceled',requests.sentRequests);
 
     } catch (error) {
         console.log(error.message);

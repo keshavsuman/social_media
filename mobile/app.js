@@ -47,7 +47,7 @@ mongoose.connect(uri, {
   useFindAndModify:false
   // reconnectTries: 60,
   // reconnectInterval: 2000,
-})
+});
 
 mongoose.connection.on('error', (err) => console.log(err))
 mongoose.connection.on('open', () => console.log("Connected"))
