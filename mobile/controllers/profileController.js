@@ -121,7 +121,7 @@ module.exports.otherUserProfile = async (req, res) => {
             data.isRequested=true;
         }else{
             data.isRequested=false;
-        }if(myData.sentRequests.includes(req.params.id)){
+        }if(user.sentRequests.includes(req.data._id)){
             data.isRequesting=true;
         }else{
             data.isRequesting=false;
