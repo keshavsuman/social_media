@@ -819,7 +819,7 @@ module.exports.cancelRequest = async (req,res)=>{
             $pullAll:{requested:[mongoose.Types.ObjectId(req.body.id)]}
         });
         await User.findById(req.data._id,{
-            $pullAll:{sentRequests:[mongoosse.Types.ObjectId(req.body.id)]}
+            $pullAll:{sentRequests:[mongoose.Types.ObjectId(req.body.id)]}
         });
         responseManagement.sendResponse(res,httpStatus.OK,'Request canceled',{});
 
