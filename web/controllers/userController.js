@@ -764,7 +764,7 @@ module.exports.getFollowingList = async (req,res)=>{
 
 module.exports.cancelRequest = async (req,res)=>{
     try {
-        await connections.findOneAndUpdate({user:req.data._id},{
+        await connections.findOneAndUpdate({user:mongoose.Types.ObjectId(req.data._id)},{
             $pullAll:{requested:[mongoose.Types.ObjectId(req.body.id)]}
         });
         responseManagement.sendResponse(res,httpStatus.OK,'Request canceled',{});

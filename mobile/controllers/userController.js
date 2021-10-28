@@ -811,7 +811,7 @@ module.exports.deleteNotification = async (req,res)=>{
 
 module.exports.cancelRequest = async (req,res)=>{
     try {
-        await connections.findOneAndUpdate({user:req.data._id},{
+        await connections.findOneAndUpdate({user:mongoose.Types.ObjectId(req.data._id)},{
             $pullAll:{requested:[mongoose.Types.ObjectId(req.body.id)]}
         });
         await User.findByIdAndUpdate(req.data._id,{
