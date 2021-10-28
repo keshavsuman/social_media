@@ -527,57 +527,53 @@ module.exports.getPendingRequests = async (req,res)=>{
 
 module.exports.myconnections = async (req,res)=>{
     try {
-        var myconnections =  await connections.aggregate([
-                    {
-                      '$match': {
-                        'user': mongoose.Types.ObjectId(req.data._id)
-                      }
-                    }, {
-                      '$lookup': {
-                        'from': 'users', 
-                        'localField': 'connections', 
-                        'foreignField': '_id', 
-                        'as': 'connections'
-                      }
-                    }, {
-                      '$project': {
-                        'connections._id':1,
-                        'connections.first_name': 1, 
-                        'connections.last_name': 1, 
-                        'connections.start_date': 1, 
-                        'connections.end_date': 1, 
-                        'connections.profile_pic': 1, 
-                        'connections.course': 1,
-                        _id:0
-                      }
-                    },
-                     {
-                        '$lookup': {
-                            'from': 'courses', 
-                            'localField': 'connections.course', 
-                            'foreignField': '_id', 
-                            'as': 'course'
-                          }
-                    }
-               
-        ]);
-        var data = [];
-        for (var i=0;i<myconnections[0].connections.length;i++)
-        {
-                var d={
-                    "_id": myconnections[0].connections[i]._id,
-                    "profile_pic": myconnections[0].connections[i].profile_pic,
-                    "start_date": myconnections[0].connections[i].start_date,
-                    "end_date": myconnections[0].connections[i].end_date,
-                    "first_name": myconnections[0].connections[i].first_name,
-                    "last_name": myconnections[0].connections[i].last_name,
-                    "course": myconnections[0].course[i]
+        var connection  = await connections.find({user:req.data._id});
+        
+        var myconnections = await connections.aggregate([
+            {
+                $match:{
+                    user:mongoose.Types.ObjectId(req.data._id)
                 }
-                data.push(d);
-        };
-        // console.log(data);
+            },
+            {
+              '$project': {
+                'connections': 1, 
+                '_id': 0
+              }
+            }, {
+              '$lookup': {
+                'from': 'users', 
+                'localField': 'connections', 
+                'foreignField': '_id', 
+                'as': 'connections', 
+                'pipeline': [
+                  {
+                    '$project': {
+                      'first_name': 1, 
+                      'last_name': 1, 
+                      'profile_pic': 1
+                    },
+                },
+                {
+                    $addFields:{
+                        isConnected:{$in:['$_id',connection[0].connections]},
+                        isRequested:{$in:['$_id',connection[0].requested]},
+                        isfollowing:{$in:['$_id',connection[0].followings]},
+                        isfollowed:{$in:['$_id',connection[0].followers]},
+                    }
+                }
+            ]
+              }
+            },{
+                $limit:req.body.limit??20
+            },
+            {
+                $skip:req.body.after??0
+            } 
+          ]);
+  
         if(myconnections.length>0){
-            responseManagement.sendResponse(res, httpStatus.OK,'',data);
+            responseManagement.sendResponse(res, httpStatus.OK,'My Connections',myconnections);
         }else{
             responseManagement.sendResponse(res, httpStatus.OK,'Connections not found in the database',{});
         }

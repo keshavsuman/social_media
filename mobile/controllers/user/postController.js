@@ -88,7 +88,10 @@ async function reactOnPost(req,res){
     try {
         var userpost = await post.findById(req.body.post_id).populate('user');
         if(userpost)
-        {
+        {   
+            if(req.body.type==='none'){
+                
+            }
             var userReaction = await reactions.find({post_id:req.body.post_id,user:req.data._id});
             if(userReaction.length>0 && userReaction[0].reaction_type==req.body.type)
             {
