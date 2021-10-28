@@ -528,7 +528,7 @@ module.exports.myconnections = async (req,res)=>{
           ]);
   
         if(myconnections.length>0){
-            responseManagement.sendResponse(res, httpStatus.OK,'',data);
+            responseManagement.sendResponse(res, httpStatus.OK,'',myconnections[0].connections);
         }else{
             responseManagement.sendResponse(res, httpStatus.OK,'Connections not found in the database',{});
         }

@@ -528,7 +528,7 @@ module.exports.getPendingRequests = async (req,res)=>{
 module.exports.myconnections = async (req,res)=>{
     try {
         var connection  = await connections.find({user:req.data._id});
-        
+
         var myconnections = await connections.aggregate([
             {
                 $match:{
@@ -573,7 +573,7 @@ module.exports.myconnections = async (req,res)=>{
           ]);
   
         if(myconnections.length>0){
-            responseManagement.sendResponse(res, httpStatus.OK,'My Connections',myconnections);
+            responseManagement.sendResponse(res, httpStatus.OK,'My Connections',myconnections[0].connections);
         }else{
             responseManagement.sendResponse(res, httpStatus.OK,'Connections not found in the database',{});
         }
