@@ -7,6 +7,8 @@ const path = require('path');
 const compression = require('compression');
 const { errors } = require('celebrate');
 const cors = require('cors')
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
 
 const config = require('./config/config');
 const db = require('./config/database.json');
@@ -43,7 +45,7 @@ app.use(helmet());
 app.use(logger('dev'));
 app.use(cors());
 app.use(express.json());
-
+app.use('/docs',swaggerUi.serve,swaggerUi.setup(swaggerDocument));
 app.use(mongoSanitize({
   onSanitize: ({ req, key }) => {
     console.warn(`This request[${key}] is sanitized`, req);
