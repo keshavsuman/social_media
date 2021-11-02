@@ -6,7 +6,7 @@ const chatController = require('./chatController');
 
 const httpServer = http.createServer();  
 const io  = new socketio.Server(httpServer,{
-    cors: {
+        cors: {
         origin: "*",
         methods: ["GET", "POST"],
         transports : ["websocket"],
@@ -34,7 +34,7 @@ mongoose.connection.on('open', async () =>{
 
 io.use(chatController.authToken);
 
-io.on('connection',(socket)=>{
+io.of('socket.io').on('connection',(socket)=>{
     socket.on('connect',()=>{
         console.log('user connected');
     });
