@@ -1,20 +1,297 @@
 {
-  "title": "Sample Pet Store App",
-  "description": "This is a sample server for a pet store.",
-  "version": "1.0.1",
-  "servers": [
-    {
-      "url": "https://younigems.in/api/web/v1",
-      "description": "Web server APIs"
-    },
-    {
-      "url": "https://younigems.in/api/web/v1",
-      "description": "App server APIs"
-    },
-    {
-      "url": "https://api.gigantic-server.com/v1",
-      "description": "Production server"
+  "swagger": "2.0",
+  "info": {
+  "description": "This is a sample server Petstore server.  You can find out more about     Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).      For this sample, you can use the api key `special-key` to test the authorization     filters.",
+  "version": "1.0.0",
+  "title": "Younigems.in",
+  "contact": {
+    "email": "younigems.in"
+  }
+},
+"host": "younigems.in",
+"basePath":"/v1",
+"schemes": [
+  "https",
+  "http"
+],
+"paths": {
+  "/login": {
+    "post": {
+      "tags": [
+        "User"
+      ],
+      "summary": "Login to existing user and generate Token",
+      "description": "",
+      "operationId": "addPet",
+      "consumes": [
+        "application/json"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "parameters": [
+        {
+          "in": "body",
+          "name": "body",
+          "description": "",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/User"
+          }
+        }
+      ],
+      "responses": {
+        "405": {
+          "description": "Invalid input"
+        },
+        "200":{
+          "description":"Login successfull"
+        }
+      },
+      "security": [
+        {
+          "petstore_auth": [
+            "write:pets",
+            "read:pets"
+          ]
+        }
+      ]
     }
-  ],
-  "swagger": "2.0"
+  },
+  "/signup":{
+    "post": {
+      "tags": [
+        "User"
+      ],
+      "summary": "Register a new User",
+      "description": "",
+      "operationId": "addPet",
+      "consumes": [
+        "application/json"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "parameters": [
+        {
+          "in": "body",
+          "name": "body",
+          "description": "Pet object that needs to be added to the store",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/User"
+          }
+        }
+      ],
+      "responses": {
+        "500": {
+          "description": "Internal server error"
+        },
+        "200":{
+          "description":"Register successfull"
+        }
+      },
+      "security": [
+        {
+          "petstore_auth": [
+            "write:pets",
+            "read:pets"
+          ]
+        }
+      ]
+    }
+  },
+  "/updateUser":{
+    "post": {
+      "tags": [
+        "User"
+      ],
+      "summary": "Register a new User",
+      "description": "",
+      "operationId": "addPet",
+      "consumes": [
+        "application/json"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "parameters": [
+        {
+          "in": "body",
+          "name": "body",
+          "description": "Pet object that needs to be added to the store",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/User"
+          }
+        }
+      ],
+      "responses": {
+        "500": {
+          "description": "Internal server error"
+        },
+        "200":{
+          "description":"Register successfull"
+        }
+      },
+      "security": [
+        {
+          "petstore_auth": [
+            "write:pets",
+            "read:pets"
+          ]
+        }
+      ]
+    }
+  },
+  "/profile/:id":{
+    "post": {
+      "tags": [
+        "User"
+      ],
+      "summary": "Register a new User",
+      "description": "",
+      "operationId": "addPet",
+      "consumes": [
+        "application/json"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "parameters": [
+        {
+          "in": "body",
+          "name": "body",
+          "description": "Pet object that needs to be added to the store",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/User"
+          }
+        }
+      ],
+      "responses": {
+        "500": {
+          "description": "Internal server error"
+        },
+        "200":{
+          "description":"Register successfull"
+        }
+      },
+      "security": [
+        {
+          "petstore_auth": [
+            "write:pets",
+            "read:pets"
+          ]
+        }
+      ]
+    }
+  },
+  "/profile":{
+    "post": {
+      "tags": [
+        "User"
+      ],
+      "summary": "Register a new User",
+      "description": "",
+      "operationId": "addPet",
+      "consumes": [
+        "application/json"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "parameters": [
+        {
+          "in": "body",
+          "name": "body",
+          "description": "Pet object that needs to be added to the store",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/User"
+          }
+        }
+      ],
+      "responses": {
+        "500": {
+          "description": "Internal server error"
+        },
+        "200":{
+          "description":"Register successfull"
+        }
+      },
+      "security": [
+        {
+          "petstore_auth": [
+            "write:pets",
+            "read:pets"
+          ]
+        }
+      ]
+    }
+  },
+  "/timeline":{
+    "post": {
+      "tags": [
+        "User"
+      ],
+      "summary": "Register a new User",
+      "description": "",
+      "operationId": "addPet",
+      "consumes": [
+        "application/json"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "parameters": [
+        {
+          "in": "body",
+          "name": "body",
+          "description": "Pet object that needs to be added to the store",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/User"
+          }
+        }
+      ],
+      "responses": {
+        "500": {
+          "description": "Internal server error"
+        },
+        "200":{
+          "description":"Register successfull"
+        }
+      },
+      "security": [
+        {
+          "petstore_auth": [
+            "write:pets",
+            "read:pets"
+          ]
+        }
+      ]
+    }
+  }
+},
+"definitions":{
+  "User":{
+    "type": "object",
+    "properties":{
+      "id":{
+        "type": "string",
+        "format": "mongoose objectId"
+      },
+      "username":{
+        "type": "string"
+      },
+      "Name":{
+        "type":"string"
+      },
+      "email":{
+        "type":"string"
+      }
+    }
+  }
+}
 }

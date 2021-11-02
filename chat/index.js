@@ -24,11 +24,12 @@ mongoose.connect(uri, {
 mongoose.connection.on('error', (err) => console.log(err))
 mongoose.connection.on('open', async () =>{
     console.log("Connected")
-    
-        var model = await chatModel.findById('617400aa020959a908ea3aad');
-        console.log(model);
+        // var model = await chatModel.findById('6180dbb71bcaddff7e5c9c5b');
+        // console.log(model);
 });
-    
+
+io.use(chatController.authToken);
+
 io.on('connection',(socket)=>{
     
     socket.on('typing',(senderId,recieverId)=>{
@@ -44,9 +45,10 @@ io.on('connection',(socket)=>{
     });
 
     socket.on('fetchMessage',(numberOfMessage,senderId)=>{
-
+        // chatModel.find({user:})  
+        socket.emit('newMessages',[]);
     });
-
+    
 });
 
 httpServer.listen(8000,()=>{
