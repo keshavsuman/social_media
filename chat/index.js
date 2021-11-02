@@ -8,7 +8,9 @@ const httpServer = http.createServer();
 const io  = new socketio.Server(httpServer,{
     cors: {
         origin: "*",
-        methods: ["GET", "POST"]
+        methods: ["GET", "POST"],
+        transports : ["websocket"],
+        credentials:true
       }
 });
 
