@@ -9,7 +9,7 @@ const io  = new socketio.Server(httpServer,{
     cors: {
         origin: "*",
         methods: ["GET", "POST"],
-        transports : ["websocket"],
+        // transports : ["websocket"],
         credentials:true
       }
 });
