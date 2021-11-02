@@ -50,9 +50,9 @@ io.on('connection',(socket)=>{
 
     });
 
-    socket.on('fetchMessage',(numberOfMessage,senderId)=>{
+    socket.on('fetchMessages',(numberOfMessage,senderId)=>{
         // chatModel.find({user:})  
-        socket.emit('newMessages',[]);
+        socket.emit('allMessages',[]);
     });
     
 });
