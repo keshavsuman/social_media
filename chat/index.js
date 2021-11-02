@@ -9,9 +9,10 @@ const io  = new socketio.Server(httpServer,{
     cors: {
         origin: "*",
         methods: ["GET", "POST"],
-        // transports : ["websocket"],
-        // credentials:true
+        transports : ["websocket"],
+        credentials:true,
       }
+    
 });
 
 const uri = 'mongodb://younity:younity123@13.127.217.154:27017/social-media?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false';
