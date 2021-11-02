@@ -6,11 +6,12 @@ const chatController = require('./chatController');
 
 const httpServer = http.createServer();  
 const io  = new socketio.Server(httpServer,{
+    path:'/',
     cors: {
         origin: "*",
         methods: ["GET", "POST"],
         transports : ["websocket"],
-        credentials:true,
+        // credentials:true,
       }
     
 });
@@ -27,7 +28,7 @@ mongoose.connect(uri, {
   
 mongoose.connection.on('error', (err) => console.log(err))
 mongoose.connection.on('open', async () =>{
-    // console.log("Connected")
+    console.log("database Connected")
         // var model = await chatModel.findById('6180dbb71bcaddff7e5c9c5b');
         // console.log(model);
 });
@@ -36,6 +37,9 @@ io.use(chatController.authToken);
 
 io.on('connection',(socket)=>{
     console.log("connected");   
+    socket.on('connect',()=>{
+        console.log('user connected');
+    });
     socket.on('typing',(senderId,recieverId)=>{
 
     });
