@@ -6,7 +6,7 @@ const chatController = require('./chatController');
 
 const httpServer = http.createServer();  
 const io  = new socketio.Server(httpServer,{
-    path:'/',
+    path:'/socket.io',
     cors: {
         origin: "*",
         methods: ["GET", "POST"],
