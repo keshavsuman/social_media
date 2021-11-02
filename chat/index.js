@@ -34,7 +34,7 @@ mongoose.connection.on('open', async () =>{
 
 io.use(chatController.authToken);
 
-io.of('socket.io').on('connection',(socket)=>{
+io.on('connection',(socket)=>{
     socket.on('connect',()=>{
         console.log('user connected');
     });
