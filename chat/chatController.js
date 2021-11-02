@@ -1,4 +1,6 @@
-export function authToken(socket,next){
+const jwt = require('jsonwebtoken');
+
+function authToken(socket,next){
     try {
         const token  = socket.handshake.auth.token;
         const data = jwt.verify(token, 'SXYUASDSDETLVFRPDSEA');
@@ -8,11 +10,16 @@ export function authToken(socket,next){
     }
 }
 
-export function addMessage(recieverId,senderId){
+function addMessage(recieverId,senderId){
     try {
         
     } catch (error) {
         console.log(error);
 
     }
+}
+
+module.exports ={
+    authToken,
+    addMessage
 }

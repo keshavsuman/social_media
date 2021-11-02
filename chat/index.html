@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.socket.io/4.3.2/socket.io.min.js" integrity="sha384-KAZ4DtjNhLChOB/hxXuKqhMLYvx3b5MlT55xPEiNmREKRzeEm+RVPlTnAn0ajQNs" crossorigin="anonymous"></script>
+</head>
+<body>
+    
+</body>
+<script>
+    const socket = io('http://localhost:8000',{
+        auth:{
+            token:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTczYWI1ZTRmY2VkNDk1YTQyZTVlZGIiLCJjb2xsZWdlIjoiNjE1NWEwYWU4NjNjNmYyNDAxZWIxYzRkIiwiaWF0IjoxNjM0OTg5MzEyfQ.SU_7gWZfVb7sOlLUCyVCa33KIWZVaHyIQ61WoDs4LBU'
+        }
+    });
+    socket.connect();
+    socket.on('connect', function(){
+        console.log('connected to server');
+    });
+</script>
+</html>

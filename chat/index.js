@@ -2,6 +2,7 @@ const http = require('http');
 const socketio = require('socket.io');
 const mongoose = require('mongoose');
 const chatModel = require('./chatModel');
+const chatController = require('./chatController');
 
 const httpServer = http.createServer();  
 const io  = new socketio.Server(httpServer,{
@@ -23,7 +24,7 @@ mongoose.connect(uri, {
   
 mongoose.connection.on('error', (err) => console.log(err))
 mongoose.connection.on('open', async () =>{
-    console.log("Connected")
+    // console.log("Connected")
         // var model = await chatModel.findById('6180dbb71bcaddff7e5c9c5b');
         // console.log(model);
 });
@@ -31,7 +32,7 @@ mongoose.connection.on('open', async () =>{
 io.use(chatController.authToken);
 
 io.on('connection',(socket)=>{
-    
+    console.log("connected");   
     socket.on('typing',(senderId,recieverId)=>{
 
     });
@@ -52,5 +53,5 @@ io.on('connection',(socket)=>{
 });
 
 httpServer.listen(8000,()=>{
-    console.log("server is running on 5000");
+    console.log("server is running on 8000");
 });
