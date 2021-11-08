@@ -21,8 +21,7 @@ function addMessage(recieverId,senderId){
 
 async function saveMessage(chatId,recieverId,senderId,message){
     try {
-
-        if(chatId && recieverId && senderId && message){
+        if(recieverId && senderId && message){
             const chat = await chatModel.findById(chatId);
             if(chat){
                 chat.lastMessage = message;
@@ -45,11 +44,9 @@ async function saveMessage(chatId,recieverId,senderId,message){
                     senderId:senderId,
                     recieverId:recieverId,
                 });
-                // newChat._id
             }
         }else{
-            console.log(error);
-            return error;
+            return 'validation failed';
         }
     } catch (error) {
         console.log(error);

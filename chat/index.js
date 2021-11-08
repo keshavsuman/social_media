@@ -74,7 +74,7 @@ io.on('connection',(socket)=>{
     });
 
     socket.on('recentChats',async (userId,numberOfChats)=>{
-        console.log(typeof userId);
+        console.log(userId);
         var chats = await chatModel.findById({
             users:{$in:[mongoose.Types.ObjectId(userId)]},
         }).sort({
