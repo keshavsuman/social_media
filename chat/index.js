@@ -35,24 +35,43 @@ mongoose.connection.on('open', async () =>{
 io.use(chatController.authToken);
 
 io.on('connection',(socket)=>{
+
     socket.on('connect',()=>{
         console.log('user connected');
     });
+
+    socket.on('isOnline',(data)=>{
+
+    });
+    
     socket.on('typing',(senderId,recieverId)=>{
 
     });
 
-    socket.on('message',(message,mode,senderId,recieverId)=>{
+    socket.on('message',(chatId,senderId,recieverId,message)=>{
+        chatController.saveMessage(chatId,senderId,recieverId,message).then(()=>{
+            socket.emit('message-ok');
+        }).catch((err)=>{
+            socket.emit('error',err);
+        });
+    });
+
+    socket.on('delete',(messageId)=>{
 
     });
 
-    socket.on('delete',(senderId,recieverId)=>{
-
-    });
-
-    socket.on('fetchMessages',(numberOfMessage,senderId)=>{
-        // chatModel.find({user:})  
+    socket.on('fetchMessages',async (numberOfMessage,chatId)=>{
+        chatModel.findById(chatId)  
         socket.emit('allMessages',[]);
+    });
+
+    socket.on('recentChats',async (userId,numberOfChats)=>{
+        var chats = await chatModel.findById({
+            users:{$in:[userId]},
+        }).sort({
+            lastActive:-1
+        }).limit(numberOfChats);
+        socket.emit('recentChats',chats);
     });
     
 });

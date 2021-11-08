@@ -72,4 +72,6 @@ router.post('/peopleYouMayKnow',auth,user.peopleYouMayKnow);
 router.post('/getFollowersList',auth,user.getFollowersList);
 router.post('/getFollowingsList',auth,user.getFollowingList);
 router.post('/deletenotification',auth,user.deleteNotification);
+router.post('/recentChats',user.recentChats);
+// router.post('/createChat',user.createChat);
 module.exports = router;

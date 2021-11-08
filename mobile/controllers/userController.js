@@ -836,3 +836,13 @@ module.exports.getUserRequests = async (req,res)=>{
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
     }
 }
+
+module.exports.recentChats = async (req, res) => {
+    try {
+        const chats = await chatModel.find({ user:{$in:[req.data._id]}}).sort({createdAt:-1}).limit(15).populate({path:'user',select:{salt:0,hash:0}});
+        responseManagement.sendResponse(res, httpStatus.OK, 'Recents chats',chats);
+    } catch (error) {
+        console.log(error);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
+    }
+};
