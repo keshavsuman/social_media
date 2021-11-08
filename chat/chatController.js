@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const chatModel = require('./chatModel');
+const messageModel = require('./messageModel');
 
 function authToken(socket,next){
     try {
