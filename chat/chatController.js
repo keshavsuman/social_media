@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const mongoose = equire('mongoose');
 
 function authToken(socket,next){
     try {
