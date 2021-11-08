@@ -74,9 +74,8 @@ io.on('connection',(socket)=>{
     });
 
     socket.on('recentChats',async (userId,numberOfChats)=>{
-        console.log(userId);
-        var chats = await chatModel.findById({
-            users:{$in:[ new mongoose.Types.ObjectId(userId)]},
+        var chats = await chatModel.find({
+            users:{$in:[new mongoose.Types.ObjectId(userId) ]},
         }).sort({
             lastActive:-1
         }).limit(numberOfChats);
