@@ -50,7 +50,7 @@ io.on('connection',(socket)=>{
 
     socket.on('message',(chatId,senderId,recieverId,message)=>{
         chatController.saveMessage(chatId,senderId,recieverId,message).then(()=>{
-            socket.emit('message-ok');
+            socket.emit('message-ok',true);
         }).catch((err)=>{
             socket.emit('error',err);
         });
@@ -74,6 +74,7 @@ io.on('connection',(socket)=>{
     });
 
     socket.on('recentChats',async (userId,numberOfChats)=>{
+        console.log(typeof userId);
         var chats = await chatModel.findById({
             users:{$in:[mongoose.Types.ObjectId(userId)]},
         }).sort({
