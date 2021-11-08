@@ -45,7 +45,7 @@ io.on('connection',(socket)=>{
     });
     
     socket.on('typing',(senderId,recieverId)=>{
-
+        
     });
 
     socket.on('message',(chatId,senderId,recieverId,message)=>{
@@ -57,12 +57,20 @@ io.on('connection',(socket)=>{
     });
 
     socket.on('delete',(messageId)=>{
-
+        chatController.deleteMessage(messageId).then(()=>{
+            socket.emit('delete-ok');
+        }).catch((err)=>{
+            socket.emit('error',err);
+        });
     });
 
     socket.on('fetchMessages',async (numberOfMessage,chatId)=>{
-        chatModel.findById(chatId)  
-        socket.emit('allMessages',[]);
+        try{
+            const messages = await chatController.fetchMessages(numberOfMessage,chatId);
+            socket.emit('fetch-messages-ok',messages);
+        }catch(err){
+            socket.emit('error',err);
+        }
     });
 
     socket.on('recentChats',async (userId,numberOfChats)=>{

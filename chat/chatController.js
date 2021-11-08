@@ -56,9 +56,36 @@ async function saveMessage(chatId,recieverId,senderId,message){
         return error;
     }
 }
+async function deleteMessage(messageId){
+    try {
+        if(messageId){
+            const message = await messageModel.findByIdAndUpdate(messageId,{
+                isDeleted:true,
+            });
+            return true;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+async function fetchMessages(numberOfMessages,chatId){
+    try {
+        if(chatId){
+            const messages = await messageModel.find({
+                chatId:chatId,
+                isDeleted:false,
+            }).sort({createdAt:-1}).limit(numberOfMessages);
+            return messages;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 module.exports ={
     authToken,
     addMessage,
-    saveMessage
+    saveMessage,
+    deleteMessage,
+    fetchMessages,
 }
