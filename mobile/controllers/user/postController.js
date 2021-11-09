@@ -94,6 +94,7 @@ async function reactOnPost(req,res){
                 await reactions.findByIdAndDelete(userReaction[0]._id);
                 var updateBody ={};
                 updateBody[userReaction[0].reaction_type]=userpost[userReaction[0].reaction_type]-1;
+                updateBody['reaction_count']=userpost['reaction_count']-1; 
                 await post.findByIdAndUpdate(userpost._id,{
                     $set:updateBody
                 });
