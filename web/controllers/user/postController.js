@@ -91,7 +91,11 @@ async function reactOnPost(req,res){
             var userReaction = await reactions.find({post_id:req.body.post_id,user:req.data._id});
             if(req.body.type==='NONE'){
                 await reactions.findByIdAndDelete(userReaction[0]._id);
-
+                var updateBody ={};
+                updateBody[userReaction[0].reaction_type]=userpost[userReaction[0].reaction_type]-1;
+                await post.findByIdAndUpdate(userpost._id,{
+                    $set:updateBody
+                });
             }   
             if(userReaction.length>0 && userReaction[0].reaction_type==req.body.type)
             {
