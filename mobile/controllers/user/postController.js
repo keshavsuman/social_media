@@ -99,7 +99,7 @@ async function reactOnPost(req,res){
                     $set:updateBody
                 });
                 responseManagement.sendResponse(res,httpStatus.OK,'Reaction removed',{
-                    reaction_count:userpost['reaction_count']-1,
+                    reactionCount:userpost['reaction_count']-1,
                     reactionType:'NONE'
                 });
                 return;
