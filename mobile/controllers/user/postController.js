@@ -142,7 +142,8 @@ async function reactOnPost(req,res){
                     notificationFrom:req.data._id
                 });
                 responseManagement.sendResponse(res,httpStatus.OK,'reaction successfull',{
-                    reactionCount:updateBody['reaction_count']
+                    reactionCount:updateBody['reaction_count'],
+                    type:req.body.type
                 });
             }
         }else{
