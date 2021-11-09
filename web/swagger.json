@@ -1,260 +1,201 @@
 {
-  "swagger": "2.0",
+  "openapi": "3.0.0",
   "info": {
-  "description": "This is a sample server Petstore server.  You can find out more about     Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).      For this sample, you can use the api key `special-key` to test the authorization     filters.",
-  "version": "1.0.0",
-  "title": "Younigems.in",
-  "contact": {
-    "email": "younigems.in"
-  }
-},
-"host": "younigems.in",
-"basePath":"/v1",
-"schemes": [
-  "https",
-  "http"
-],
-"paths": {
-  "/login": {
-    "post": {
-      "tags": [
-        "User"
-      ],
-      "summary": "Login to existing user and generate Token",
-      "description": "",
-      "consumes": [
-        "application/json"
-      ],
-      "produces": [
-        "application/json"
-      ],
-      "parameters": [
-        {
-          "in": "body",
-          "name": "body",
-          "description": "",
+    "description": "This is a sample se",
+    "version": "1.0.0",
+    "title": "Younigems.in",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://younigems.in/api/web/v1/user",
+      "description": "Production server"
+    }
+  ],
+  "paths": {
+    "/signup": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Signup",
+        "description": "Api for signup a new user",
+        "requestBody": {
           "required": true,
-          "schema": {
-            "first_name":{
-              "type":"string"
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "first_name",
+                  "last_name",
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "first_name": {
+                    "type": "string"
+                  },
+                  "last_name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "mobile": {
+                    "type": "number"
+                  },
+                  "home_town": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "string"
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "gender": {
+                    "type": "string"
+                  },
+                  "profile_pic": {
+                    "type": "string"
+                  },
+                  "dob": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "first_name": "keshav",
+                  "last_name": "suman",
+                  "email": "keshavsuman96@gmail.com",
+                  "password": 123456789
+                }
+              }
             },
-            "last_name":{
-              "type":"string"
-            },
-            "email":{
-              "type":"string"
-            },
-            "password":{
-              "type":"string"
+            "text/plain": {
+              "schema": {
+                "type": "string"
+              }
             }
           }
-        }
-      ],
-      "responses": {
-        "500": {
-          "description": "Internal server error"
         },
-        "200":{
-          "description":"Login successfull"
-        }
-      },
-      "security": [
-        {
-          "petstore_auth": [
-            "write:pets",
-            "read:pets"
-          ]
-        }
-      ]
-    }
-  },
-  "/signup":{
-    "post": {
-      "tags": [
-        "User"
-      ],
-      "summary": "Register a new User",
-      "description": "",
-      "consumes": [
-        "application/json"
-      ],
-      "produces": [
-        "application/json"
-      ],
-      "parameters": [
-        {
-          "in": "body",
-          "name": "body",
-          "description": "Register a new User",
-          "required": true,
-          "schema": {
-            "$ref": "#/definitions/User"
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "400": {
+            "description": "User already exists"
+          },
+          "500": {
+            "description": "Server side error"
           }
         }
-      ],
-      "responses": {
-        "500": {
-          "description": "Internal server error"
-        },
-        "200":{
-          "description":"Register successfull"
-        }
-      },
-      "security": [
-        {
-          "petstore_auth": [
-            "write:pets",
-            "read:pets"
-          ]
-        }
-      ]
-    }
-  },
-  "/updateUser":{
-    "post": {
-      "tags": [
-        "User"
-      ],
-      "summary": "Update User",
-      "description": "",
-      "consumes": [
-        "application/json"
-      ],
-      "produces": [
-        "application/json"
-      ],
-      "parameters": [
-        {
-          "in": "body",
-          "name": "body",
-          "description": "update user",
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "User login",
+        "requestBody": {
           "required": true,
-          "schema": {
-            "$ref": "#/definitions/User"
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "email": "keshavsuman96@gmail.com",
+                  "password": 123456789
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User loggedin successfully"
           }
         }
-      ],
-      "responses": {
-        "500": {
-          "description": "Internal server error"
-        },
-        "200":{
-          "description":"Register successfull"
-        }
-      },
-      "security": [
-        {
-          "petstore_auth": [
-            "write:pets",
-            "read:pets"
-          ]
-        }
-      ]
-    }
-  },
-  "/profile/:id":{
-    "post": {
-      "tags": [
-        "User"
-      ],
-      "summary": "profile Data",
-      "description": "",
-      "consumes": [
-        "application/json"
-      ],
-      "produces": [
-        "application/json"
-      ],
-      "parameters": [
-        {
-          "in": "body",
-          "name": "body",
-          "description": "profile data of user",
+      }
+    },
+    "/updateProfile": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Update user profile",
+        "requestBody": {
           "required": true,
-          "schema": {
-            "$ref": "#/definitions/User"
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "example": null
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ae"
           }
         }
-      ],
-      "responses": {
-        "500": {
-          "description": "Internal server error"
-        },
-        "200":{
-          "description":"Register successfull"
-        }
-      },
-      "security": [
-        {
-          "petstore_auth": [
-            "write:pets",
-            "read:pets"
-          ]
-        }
-      ]
-    }
-  },
-  "/timeline":{
-    "post": {
-      "tags": [
-        "User"
-      ],
-      "summary": "User timeline",
-      "description": "",
-      "consumes": [
-        "application/json"
-      ],
-      "produces": [
-        "application/json"
-      ],
-      "parameters": [
-        {
-          "in": "body",
-          "name": "body",
-          "description": "Pet object that needs to be added to the store",
-          "required": true,
-          "schema": {
-            "$ref": "#/definitions/User"
+      }
+    },
+    "/profile/{userId}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get user profile",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ae"
           }
         }
-      ],
-      "responses": {
-        "500": {
-          "description": "Internal server error"
-        },
-        "200":{
-          "description":"Register successfull"
-        }
-      },
-      "security": [
-        {
-          "petstore_auth": [
-            "write:pets",
-            "read:pets"
-          ]
-        }
-      ]
-    }
-  }
-},
-"definitions":{
-  "User":{
-    "type": "object",
-    "properties":{
-      "id":{
-        "type": "string",
-        "format": "mongoose objectId"
-      },
-      "username":{
-        "type": "string"
-      },
-      "Name":{
-        "type":"string"
-      },
-      "email":{
-        "type":"string"
       }
     }
   }
-}
 }

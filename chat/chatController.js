@@ -12,15 +12,6 @@ function authToken(socket,next){
     }
 }
 
-function addMessage(recieverId,senderId){
-    try {
-        
-    } catch (error) {
-        console.log(error);
-
-    }
-}
-
 async function saveMessage(chatId,recieverId,senderId,message){
     try {
         if(recieverId && senderId && message){
