@@ -97,6 +97,11 @@ async function reactOnPost(req,res){
                 await post.findByIdAndUpdate(userpost._id,{
                     $set:updateBody
                 });
+                responseManagement.sendResponse(res,httpStatus.OK,'Reaction removed',{
+                    reaction_count:userpost['reaction_count']-1,
+                    reactionType:'NONE'
+                });
+                return;
             }   
             if(userReaction.length>0 && userReaction[0].reaction_type==req.body.type)
             {
