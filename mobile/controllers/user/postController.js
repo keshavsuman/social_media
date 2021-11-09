@@ -88,11 +88,12 @@ async function reactOnPost(req,res){
     try {
         var userpost = await post.findById(req.body.post_id).populate('user');
         if(userpost)
-        {   
-            if(req.body.type==='none'){
-                
-            }
+        {
             var userReaction = await reactions.find({post_id:req.body.post_id,user:req.data._id});
+            if(req.body.type==='none'){
+                await reactions.findByIdAndDelete(userReaction[0]._id);
+
+            }   
             if(userReaction.length>0 && userReaction[0].reaction_type==req.body.type)
             {
                 responseManagement.sendResponse(res,httpStatus.PRECONDITION_FAILED,'reaction already exits',{});
@@ -107,15 +108,15 @@ async function reactOnPost(req,res){
                 });
                 var updateBody ={};
                 updateBody[req.body.type]=userpost[req.body.type]+1;
-                updateBody['reaction_count']=userpost['reaction_count']+1; 
+                updateBody[userReaction[0].reaction_type]=userpost[userReaction[0].reaction_type]-1;
                 await post.findByIdAndUpdate(userpost._id,{
                     $set:updateBody
                 });
                 responseManagement.sendResponse(res,httpStatus.OK,'reaction successfull',{
-                    reactionCount:updateBody['reaction_count'],
+                    reactionCount:userpost['reaction_count'],
                     type:req.body.type
                 });
-            }else{
+            }else if(userReaction.length==0){
                 await reactions.create({
                     post_id:req.body.post_id,
                     user:req.data._id,
@@ -124,7 +125,7 @@ async function reactOnPost(req,res){
                 });
                 var updateBody ={};
                 updateBody[req.body.type]=userpost[req.body.type]+1;
-                updateBody['reaction_count']=userpost['reaction_count']-1; 
+                updateBody['reaction_count']=userpost['reaction_count']+1; 
                 await post.findByIdAndUpdate(userpost._id,{
                     $set:updateBody
                 });
