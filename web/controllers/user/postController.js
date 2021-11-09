@@ -89,7 +89,7 @@ async function reactOnPost(req,res){
         if(userpost)
         {
             var userReaction = await reactions.find({post_id:req.body.post_id,user:req.data._id});
-            if(req.body.type==='none'){
+            if(req.body.type==='NONE'){
                 await reactions.findByIdAndDelete(userReaction[0]._id);
 
             }   
