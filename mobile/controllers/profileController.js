@@ -10,6 +10,7 @@ const College = require('../models/college');
 const Interest = require('../models/interest');
 const Skill = require('../models/skill');
 const connection = require('../models/connections');
+const chats = require('../models/chats');
 
 /**** setup user profile ****/
 module.exports.setProfile = async (req, res) => {
@@ -78,7 +79,9 @@ module.exports.otherUserProfile = async (req, res) => {
         if(!user){
             responseManagement.sendResponse(res, httpStatus.NOT_FOUND, "User doesn't exits",{});
         }
-
+        const chatId = await chats.findOne({
+            users: {$in: [req.data._id,req.params.id]}
+        });
         var data = {
             _id:user._id,
             profile_pic:user.profile_pic,

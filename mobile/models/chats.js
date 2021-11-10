@@ -1,29 +1,13 @@
 const mongoose = require('mongoose');
 
-const messageSchema = mongoose.Schema({
-    message:{
-        type:String
-    },
-    sender:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'user'
-    },
-    isDeleted:{
-        type:Boolean,
-    }
-},{
-    timestamp:true
-});
-
 const chatSchema = mongoose.Schema({
-    users:{
-        type: [mongoose.Schema.Types.ObjectId],
-        ref:'user'
+    users:[{type:mongoose.Schema.Types.ObjectId, ref:'User'}],
+    lastMessage:{type:String, default:''},
+    lastActive:{
+        type:Date,
     },
-    messages:[{
-        type: messageSchema
-    }]
-    
+},{
+    timestamps:true
 });
 
-export default mongoose.model('chat',chatSchema);
+module.exports = mongoose.model('chat',chatSchema);

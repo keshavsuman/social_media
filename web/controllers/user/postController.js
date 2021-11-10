@@ -11,15 +11,30 @@ const bookmark = require('../../models/bookmarks');
 
 async function createPost(req,res){
     try {
-        await post.create({
-            user:req.data._id,
-            content:req.body.content,
-            media_type:req.body.media_type.toLowerCase(),
-            visibility:req.body.visibility.toLowerCase(),
-            media_url:req.body.media_url,
-            mode:req.body.mode,
-            shareFrom:req.body.shareFrom
-        });
+        if( req.data._id != req.body.post_id){
+            responseManagement.sendResponse(res,httpStatus.EXPECTATION_FAILED,"You can't Share your post",{});
+        }
+        if(req.body.mode==='create'){
+            await post.create({
+                user:req.data._id,
+                content:req.body.content,
+                media_type:req.body.media_type.toLowerCase(),
+                visibility:req.body.visibility.toLowerCase(),
+                media_url:req.body.media_url,
+                mode:req.body.mode,
+            });
+        }else if(req.body.mode==='share'){
+            const mypost = await post.findById(req.body.post_id);
+            await post.create({
+                user:req.data._id,
+                content:req.body.content,
+                media_type:mypost.media_type,
+                visibility:mypost.visibility,
+                media_url:mypost.media_url,
+                mode:req.body.mode,
+                shareFrom:req.data._id
+            });
+        }
         responseManagement.sendResponse(res,httpStatus.CREATED,"Post successfully created",{});
     } catch (error) {
         console.log(error);
