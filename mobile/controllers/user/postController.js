@@ -36,7 +36,7 @@ async function createPost(req,res){
                 visibility:mypost.visibility,
                 media_url:mypost.media_url,
                 mode:req.body.mode,
-                shareFrom:req.data._id
+                shareFrom:mypost.user
             });
             responseManagement.sendResponse(res,httpStatus.CREATED,"Post successfully shared",{});
         }
