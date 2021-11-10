@@ -32,5 +32,6 @@ router.post('/getCommentsReply',postController.getCommentsReply);
 router.post('/timelinepost',postController.timelineposts);
 router.post('/bookmark',postController.bookmarkPost);
 router.get('/getbookmarks',postController.getBookmarks);
+router.get('/shareList',postController.shareList);
 router.post('/removebookmark',postController.removebookmark);
 module.exports = router;

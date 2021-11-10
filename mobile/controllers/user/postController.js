@@ -528,6 +528,19 @@ async function removebookmark(req,res){
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
     }
 }
+async function shareList(req,res){
+    try {
+        var posts = await post.find({
+            user:mongoose.Types.ObjectId(req.data._id),
+            mode:'public',
+        });
+        responseManagement.sendResponse(res,httpStatus.OK,'Shared list',posts);
+    } catch (error) {
+        console.log(error.message);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
+    }
+}
+
 module.exports = {
     getPosts,
     createPost,
@@ -544,5 +557,6 @@ module.exports = {
     bookmarkPost,
     getBookmarks,
     removebookmark,
-    post_details
+    post_details,
+    shareList
 }
