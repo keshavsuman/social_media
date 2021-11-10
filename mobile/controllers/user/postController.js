@@ -532,7 +532,7 @@ async function shareList(req,res){
     try {
         var posts = await post.find({
             user:mongoose.Types.ObjectId(req.data._id),
-            mode:'public',
+            mode:'share',
         });
         responseManagement.sendResponse(res,httpStatus.OK,'Shared list',posts);
     } catch (error) {
