@@ -552,7 +552,7 @@ async function shareList(req,res){
         var posts = await post.find({
             user:mongoose.Types.ObjectId(req.data._id),
             mode:'share',
-        }).populate({path:'user',select:{hash:0,salt:0},populate:'course'});
+        }).populate({path:'user',select:{hash:0,salt:0},populate:'course'}).populate({path:'shareFrom',select:{hash:0,salt:0}});
         responseManagement.sendResponse(res,httpStatus.OK,'Shared list',posts);
     } catch (error) {
         console.log(error.message);
