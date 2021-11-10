@@ -13,6 +13,7 @@ async function createPost(req,res){
     try {
         if( req.data._id == req.body.post_id){
             responseManagement.sendResponse(res,httpStatus.EXPECTATION_FAILED,"You can't Share your post",{});
+            return;
         }
         if(req.body.mode==='create'){
             await post.create({
@@ -23,6 +24,8 @@ async function createPost(req,res){
                 media_url:req.body.media_url,
                 mode:req.body.mode,
             });
+            responseManagement.sendResponse(res,httpStatus.CREATED,"Post successfully created",{});
+            return;
         }else if(req.body.mode==='share'){
             const mypost = await post.findById(req.body.post_id);
             await post.create({
@@ -34,8 +37,8 @@ async function createPost(req,res){
                 mode:req.body.mode,
                 shareFrom:req.data._id
             });
+            responseManagement.sendResponse(res,httpStatus.CREATED,"Post successfully shared",{});
         }
-            responseManagement.sendResponse(res,httpStatus.CREATED,"Post successfully created",{});
     } catch (error) {
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
