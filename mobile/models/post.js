@@ -9,7 +9,7 @@ var Schema = new mongoose.Schema({
     admin_approved: {type: Boolean, default:false},
     comments:[{type:mongoose.Schema.Types.ObjectId,ref:'comments'}],
     mode:{type:String,default:'create'},
-    shareFrom:{type:mongoose.Schema.Types.ObjectId,ref:'users'},
+    shareFrom:{type:mongoose.Schema.Types.ObjectId,ref:'user'},
     LIKE:{type:Number,default:0},
     DISLIKE:{type:Number,default:0},
     SAD:{type:Number,default:0},
