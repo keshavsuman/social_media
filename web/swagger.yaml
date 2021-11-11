@@ -1,6 +1,6 @@
-openapi: 3.0
+openapi: 3.0.0
 info:
-  description: This is a sample se
+  description: Younigems backend API documentation 
   version: 1.0.0
   title: Younigems.in 
   license:
@@ -130,4 +130,292 @@ paths:
             type: string
       responses:
         '200':
-          description: ae        
+          description: Description
+  /updateUser:
+    post:
+      tags: 
+      - Users
+      summary: Update user profile
+      responses:
+        '200':
+          description: Updated user profile
+        '500':
+          description: server side error  
+  /post/createPost:
+    post:
+      tags:
+       - Posts
+      summary: Create a new Post
+      responses:
+        '200':
+          description: Post created Successfully
+        '500':
+          description: server side error  
+  /post/getPost/:
+    get:
+      tags:
+       - Posts
+      summary: Get users all post
+      responses:
+        '200':
+          description: sfhg
+        '500':
+          description: server side error  
+  /post/react:
+    post:
+      tags:
+        - Posts
+      summary: add a reaction(LIKE,DISLIKE,SAD,ANGRY) to post
+      responses:
+        '200':
+          description: reaction added successfully
+        '500':
+          description: server side error  
+  /post/updatePost:
+    post:
+      tags:
+       - Posts
+      summary: update user post
+      responses:
+        '200':
+          description: post updated successfully
+        '500':
+          description: server side error  
+  /post/deletePost:
+    delete:
+      tags:
+       - Posts
+      summary: delete user post
+      responses:
+        '200':
+          description: post deleted successfully
+        '500':
+          description: server side error  
+  /college/addCollege:
+    post:
+      tags:
+       - College
+      summary: add college of user
+      responses:
+        '200':
+          description: college added successfully
+        '500':
+          description: server side error  
+  /college/updateCollege:
+    post:
+      tags:
+       - College
+      summary: update college of user
+      responses:
+        '200':
+          description: college updated successfully 
+        '500':
+          description: server side error  
+  /university/addUniversity:
+    post:
+      tags:
+       - University
+      summary: add university of user
+      responses:
+        '200':
+          description: university added successfully
+        '500':
+          description: server side error  
+  /university/updateUniversity:
+    post:
+      tags:
+       - University
+      summary: update university of user
+      responses:
+        '200':
+          description: university updated successfully 
+        '500':
+          description: server side error  
+  /skill/getSkills:
+    post:
+      tags:
+       - Skill
+      summary: get skills of user
+      responses:
+        '200':
+          description: get all skills od user
+        '500':
+          description: server side error  
+  /skill/createSkill:
+    post:
+      tags:
+        - Skill
+      summary: create new skill for user
+      responses:
+        '201':
+          description: skill created successfully 
+        '500':
+          description: server side error  
+  /skill/deleteSkill:
+    delete:
+      tags:
+        - Skill
+      summary: delete skill of user
+      responses:
+        '200':
+          description: skill deleted successfully
+        '500':
+          description: server side error  
+  /interest/getInterest:
+    post:
+      tags:
+        - Interest
+      summary: get Interests
+      responses:
+        '200':
+          description: interest list
+        '500':
+          description: server side error  
+  /searchSkill/{skillName}:
+    post:
+      tags:
+        - Search
+      summary: search skills name
+      parameters:
+        - name: skillName
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: skills
+        '500':
+          description: server side error  
+  /searchCourse/{courseName}:
+    post:
+      tags:
+        - Search
+      summary: search course
+      parameters:
+        - name: courseName
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: courses
+        '500':
+          description: server side error  
+  /searchCollege/{collegeName}:
+    post:
+      tags:
+        - Search
+      summary: collegeName
+      parameters:
+        - name: collegeName
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: colleges 
+        '500':
+          description: server side error  
+  /searchInterests/{interestName}:
+    post:
+      tags:
+        - Search
+      summary: search interests
+      parameters:
+        - name: interestName
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: interests
+        '500':
+          description: server side error  
+  /searchUniversity/{universityName}:
+    post:
+      tags:
+        - Search
+      summary: search university
+      parameters:
+        - name: universityName
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: universities
+        '500':
+          description: server side error  
+  /countries/{countryName}:
+    post:
+      tags:
+        - Search
+      summary: search countries
+      parameters:
+        - name: countryName
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: countries
+        '500':
+          description: server side error  
+  /{countryId}/states/{state-name}:
+    post:
+      tags:
+        - Search
+      summary: search states
+      parameters:
+        - name: countryId
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string
+        - name: state-name
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string    
+      responses:
+        '200':
+          description: states
+        '500':
+          description: server side error  
+  /cities/{stateId}/{cityName}:
+    post:
+      tags:
+        - Search
+      summary: search cities
+      parameters:
+        - name: stateId
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string
+        - name: cityName
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string    
+      responses:
+        '200':
+          description: cities
+        '500':
+          description: server side error  
