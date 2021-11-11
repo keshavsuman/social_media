@@ -429,7 +429,7 @@ module.exports.connectAcceptReject = async (req,res)=>{
                 $addToSet:{connections:req.data._id},
             });
             await User.findByIdAndUpdate(req.data._id,{
-                $pullAll:{sentRequests:[mongoose.Types.ObjectId(req.body.id)]}
+                $pullAll:{sentRequests:[req.body.id]}
             });
             await notification.create({
                 title:`connection accepted`,
@@ -440,15 +440,19 @@ module.exports.connectAcceptReject = async (req,res)=>{
             responseManagement.sendResponse(res,httpStatus.OK,'accepted',{});
         }
         else if(req.body.operation==='connect'){
-            await connections.findOneAndUpdate({user:mongoose.Types.ObjectId(req.body.id)},{
+            await connections.findOneAndUpdate({user:req.body.id},{
                 $addToSet:{requested:req.data._id}
             });
-            var user = await User.findById(req.data._id,{first_name:1,last_name:1});
+            await User.findByIdAndUpdate(req.data._id,{
+                $push:{sentRequests:req.body.id}
+            });
+            
             await notification.create({
-                title:`${user.first_name} ${user.last_name} has requested you for connection`,
+                title:`has requested you for connection`,
                 type:"CONNECTION_REQUEST",
                 description:"",
-                user:req.body.id
+                user:req.body.id,
+                notificationFrom:req.data._id
             });
             responseManagement.sendResponse(res,httpStatus.OK,'connect request send',{});
         }else{

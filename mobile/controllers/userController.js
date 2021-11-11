@@ -470,7 +470,7 @@ module.exports.connectAcceptReject = async (req,res)=>{
                 $addToSet:{connections:req.data._id},
             });
             await User.findByIdAndUpdate(req.data._id,{
-                $pullAll:{sentRequests:[mongoose.Types.ObjectId(req.body.id)]}
+                $pullAll:{sentRequests:[req.body.id]}
             });
             await notification.create({
                 title:`has requested to connect`,
