@@ -469,8 +469,8 @@ module.exports.connectAcceptReject = async (req,res)=>{
                 $addToSet:{followers:req.data._id},
                 $addToSet:{connections:req.data._id},
             });
-            await User.findByIdAndUpdate(req.data._id,{
-                $pullAll:{sentRequests:[req.body.id]}
+            await User.findByIdAndUpdate(req.body.id,{
+                $pullAll:{sentRequests:[req.data._id]}
             });
             await notification.create({
                 title:`has requested to connect`,
