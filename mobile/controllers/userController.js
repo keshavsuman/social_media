@@ -412,9 +412,8 @@ module.exports.followunfollow = async  (req,res)=>{
             },{
                 new:true
             });
-            var user = await User.findById(req.data._id);
             await notification.create({
-                title:`${user.first_name} ${user.last_name} started following you`,
+                title:`started following you`,
                 description:'',
                 type:'FOLLOWED',
                 user:req.body.id,
@@ -464,13 +463,15 @@ module.exports.connectAcceptReject = async (req,res)=>{
                 $addToSet:{followers:req.body.id},
                 $addToSet:{connections:req.body.id},
             });
-           
+            
             await connections.findOneAndUpdate({user:req.body.id},{
                 $addToSet:{followings:req.data._id},
                 $addToSet:{followers:req.data._id},
                 $addToSet:{connections:req.data._id},
             });
-            var user = await User.findById(req.data._id,{first_name:1,last_name:1});
+            await User.findByIdAndUpdate(req.data._id,{
+                $pullAll:{sentRequests:[mongoose.Types.ObjectId(req.body.id)]}
+            });
             await notification.create({
                 title:`has requested to connect`,
                 type:"CONNECTION_ACCEPTED",
