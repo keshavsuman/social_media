@@ -46,7 +46,7 @@ router.get('/searchUniversity/:university',auth,university.searchUniversities);
 
 router.get('/getSkillsList', auth, skill.getSkillsList);
 router.get('/getUniversitiesList', auth, university.getUniversitiesList);
-router.get('/getCoursesList/:collegeId/:h',  course.getCoursesList);
+router.get('/getCoursesList/:collegeId/:courseName',  course.getCoursesList);
 router.get('/getInterestsList', auth, interest.getInterestsList);
 router.get('/getCollegesList', auth, college.getCollegesList);
 
