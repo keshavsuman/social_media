@@ -317,6 +317,7 @@ module.exports.search = async (req,res) =>{
     try {
         var {filters} = req.body;
         var filterBody = {};
+        const user = await User.findById(req.data._id);
         if(req.body.keyword.length<2){
             responseManagement.sendResponse(res,httpStatus.NOT_ACCEPTABLE,"Keyword length is so small, it must have length of 2",{});
         }else{
@@ -395,7 +396,6 @@ module.exports.search = async (req,res) =>{
           ]);
         responseManagement.sendResponse(res,httpStatus.OK,'',searchResults);
     }
-
         } catch (error) {
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});

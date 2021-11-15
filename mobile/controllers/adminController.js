@@ -4,7 +4,6 @@ const Admin = require('../models/admin');
 const AdminToken = require('../models/admin_token');
 const AdminPWDToken = require('../models/admin_password_token');
 const Role = require('../models/role');
-const ObjectId = require('mongoose').Types.ObjectId;
 const global = require('../resources/lang/en/global');
 const helper = require('../helper/helper');
 const ejs = require('ejs');
