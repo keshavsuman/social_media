@@ -14,6 +14,7 @@ function authToken(socket,next){
 
 async function saveMessage(chatId,senderId,recieverId,message){
     try {
+        console.log(chatId,senderId,recieverId,message);
         if(recieverId && senderId && message){
             const chat = await chatModel.findById(chatId);
             console.log(chat);
