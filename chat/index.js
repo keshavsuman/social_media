@@ -50,6 +50,7 @@ io.on('connection',(socket)=>{
     });
 
     socket.on('message',(chatId,senderId,recieverId,message)=>{
+        console.log(message);
         chatController.saveMessage(chatId,senderId,recieverId,message).then(()=>{
             socket.emit('message-ok',true);
         }).catch((err)=>{
