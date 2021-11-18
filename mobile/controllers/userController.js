@@ -454,6 +454,9 @@ module.exports.connectAcceptReject = async (req,res)=>{
             await connections.findOneAndUpdate({user:req.data._id},{
                 $pullAll:{requested:[req.body.id]}
             });
+            await User.findByIdAndUpdate(req.body.id,{
+                $pullAll:{sentRequests:[req.data._id]}
+            });
             responseManagement.sendResponse(res,httpStatus.OK,'rejected',{});
         }
         else if(req.body.operation==='accept'){
