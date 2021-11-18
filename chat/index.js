@@ -3,6 +3,7 @@ const socketio = require('socket.io');
 const mongoose = require('mongoose');
 const chatModel = require('./chatModel');
 const chatController = require('./chatController');
+const userModel = require('./userModel');
 
 const httpServer = http.createServer();  
 const io  = new socketio.Server(httpServer,{
@@ -76,10 +77,10 @@ io.on('connection',(socket)=>{
     socket.on('recentChats',async (userId,numberOfChats)=>{
         var chats = await chatModel.find({
             users:{$in:[new mongoose.Types.ObjectId(userId) ]},
-        }).populate('users').sort({
+        }).populate({path:'users',select:{first_name:1,last_name:1,profile_pic:1}}).sort({
             lastActive:-1
         }).limit(numberOfChats);
-        socket.emit('recentChats',chats);
+        socket.emit('recentChats',chats); 
     });
     
 });
