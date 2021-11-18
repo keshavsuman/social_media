@@ -12,7 +12,7 @@ function authToken(socket,next){
     }
 }
 
-async function saveMessage(chatId,recieverId,senderId,message){
+async function saveMessage(chatId,senderId,recieverId,message){
     try {
         if(recieverId && senderId && message){
             const chat = await chatModel.findById(chatId);
