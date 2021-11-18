@@ -58,13 +58,12 @@ async function deleteMessage(messageId){
         console.log(error);
     }
 }
-async function fetchMessages(numberOfMessages,chatId){
+async function fetchMessages(chatId,skip){
     try {
         if(chatId){
             const messages = await messageModel.find({
                 chatId:chatId,
-                isDeleted:false,
-            }).sort({createdAt:-1}).limit(numberOfMessages);
+            }).sort({createdAt:-1}).limit(20).skip(skip);
             return messages;
         }
     } catch (error) {

@@ -16,6 +16,7 @@ const messageSchema = mongoose.Schema({
     },
     isDeleted:{
         type:Boolean,
+        default:false
     },
     isDelivered:{
         type:Boolean,

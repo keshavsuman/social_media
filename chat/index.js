@@ -67,7 +67,7 @@ io.on('connection',(socket)=>{
 
     socket.on('fetchMessages',async (chatId,skip)=>{
         try{
-            const messages = await chatController.fetchMessages(numberOfMessage,chatId);
+            const messages = await chatController.fetchMessages(chatId);
             socket.emit('fetch-messages-ok',messages);
         }catch(err){
             socket.emit('error',err);
