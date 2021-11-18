@@ -74,7 +74,6 @@ async function fetchMessages(numberOfMessages,chatId){
 
 module.exports ={
     authToken,
-    addMessage,
     saveMessage,
     deleteMessage,
     fetchMessages,

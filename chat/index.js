@@ -64,7 +64,7 @@ io.on('connection',(socket)=>{
         });
     });
 
-    socket.on('fetchMessages',async (numberOfMessage,chatId)=>{
+    socket.on('fetchMessages',async (chatId,skip)=>{
         try{
             const messages = await chatController.fetchMessages(numberOfMessage,chatId);
             socket.emit('fetch-messages-ok',messages);
@@ -76,7 +76,7 @@ io.on('connection',(socket)=>{
     socket.on('recentChats',async (userId,numberOfChats)=>{
         var chats = await chatModel.find({
             users:{$in:[new mongoose.Types.ObjectId(userId) ]},
-        }).sort({
+        }).populate('users').sort({
             lastActive:-1
         }).limit(numberOfChats);
         socket.emit('recentChats',chats);

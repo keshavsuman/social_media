@@ -16,6 +16,12 @@ const messageSchema = mongoose.Schema({
     },
     isDeleted:{
         type:Boolean,
+    },
+    isDelivered:{
+        type:Boolean,
+    },
+    isRead:{
+        type:Boolean,
     }
 },{
     timestamp:true
