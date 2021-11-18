@@ -29,7 +29,7 @@ async function saveMessage(chatId,senderId,recieverId,message){
             }else{
                 const newChat = await chatModel.create({
                     users:[senderId,recieverId],
-                    lastMessage:'',
+                    lastMessage:message,
                 });
                 await messageModel.create({
                     chatId:newChat._id,
