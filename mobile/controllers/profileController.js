@@ -207,9 +207,10 @@ module.exports.states = async (req, res) => {
 /**** city list ****/
 module.exports.cities = async (req, res) => {
     try {
+        console.log(req.params.stateId);
         let cities = await Cities.find({
             'state_id':req.params.stateId,
-            // 'name': {'$regex': req.params.city, '$options': 'i'}
+            'name': {'$regex': req.params.city, '$options': 'i'}
         });
         responseManagement.sendResponse(res, httpStatus.OK, "",cities);
     } catch (error) {
