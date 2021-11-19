@@ -7,4 +7,4 @@ var Schema = new mongoose.Schema({
 
 
 
-module.exports = mongoose.model('states', Schema);
+module.exports = mongoose.model('state', Schema);

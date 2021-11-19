@@ -15,7 +15,7 @@ var UserSchema = new mongoose.Schema({
     gender: { type: String },
     bio: { type: String },
     profile_pic: { type: String, default: null },
-    state: { type: String, default: null },
+    state: { type: String, default: null,ref:'state' },
     home_town: { type: mongoose.Schema.Types.ObjectId, ref: 'cities',default: null },
     country: { type: String, default: null },
     skills: [{ type: mongoose.Schema.Types.ObjectId, ref: 'skill' }],
