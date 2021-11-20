@@ -9,6 +9,13 @@ info:
 servers:
   - url: http://younigems.in/api/web/v1/user
     description: Production server
+components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT     
+    
 paths:
   /signup:
     post:
