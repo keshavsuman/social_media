@@ -11,7 +11,7 @@ const bookmark = require('../../models/bookmarks');
 
 async function createPost(req,res){
     try {
-        if( req.data._id != req.body.post_id){
+        if( req.data._id == req.body.post_id){
             responseManagement.sendResponse(res,httpStatus.EXPECTATION_FAILED,"You can't Share your post",{});
         }
         if(req.body.mode==='create'){
