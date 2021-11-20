@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  description: Younigems backend API documentation 
+  description: Younigems backend API documentation
   version: 1.0.0
   title: Younigems.in 
   license:
@@ -88,34 +88,10 @@ paths:
                     type: string
               example:
                 email: keshavsuman96@gmail.com
-                password: 123456789
+                password: '123456789'
       responses:
         '200':
           description: User loggedin successfully
-  /updateProfile:
-    post:
-      tags:
-        - Users
-      summary: Update user profile
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: 
-                - email
-                - password
-              properties:
-                email:
-                  type: string
-                password:
-                  type: string
-              example:
-                
-      responses:
-        '200':
-          description: ae
   /profile/{userId}:
     get:
       tags:
@@ -128,6 +104,7 @@ paths:
           required: true
           schema:
             type: string
+            
       responses:
         '200':
           description: Description
@@ -137,51 +114,48 @@ paths:
       - Users
       summary: Update user profile
       requestBody:
-        # description: Optional description in *Markdown*
         required: true
-        content:
+        content: 
           application/json:
             schema:
               type: object
-              required:
-                - first_name
-                - last_name
-                - email
-                - password
               properties:
-                  first_name:          
-                    type: string
-                  last_name:    
-                    type: string
-                  email:
-                    type: string
-                  password:
-                    type: string
-                  mobile: 
-                    type: number
-                  home_town:
-                    type: string
-                  state:
-                    type: string
-                  country:
-                    type: string
-                  gender:
-                    type: string
-                  profile_pic:
-                    type: string
-                  dob:
-                    type: string
+                status:
+                  type: string
+                  description: status for
+                country:
+                  type: string
+                home_town:
+                  type: string
+                profile_pic:
+                  type: string
+                bio:
+                  type: string
+                college_id:
+                  type: string
+                course_id:
+                  type: string
+                start_date:
+                  type: string
+                end_date:
+                  type: string
               example:
                 first_name: keshav
                 last_name: suman
-                email: keshavsuman96@gmail.com
-                password: 123456789
-                
-          text/plain:
-            schema:
-              type: string
+                status: true
+                country: 612b233eb24ea86984216b01
+                home_town: 6197a38918241d8c1be6c6e5
+                profile_pic: https://image.shutterstock.com/image-vector/social-member-vector-icon-person-260nw-1139787308.jpg
+                bio: 'My bio'
+                gender: 'male'
+                university_id: 6155a023863c6f2401eb1c46
+                college_id: 6155a0ae863c6f2401eb1c4d
+                course_id: 6155a069863c6f2401eb1c48
+                start_date: 
+                end_date:
       responses:
         '200':
+          
           description: Updated user profile
         '500':
           description: server side error  
@@ -190,6 +164,24 @@ paths:
       tags:
        - Posts
       summary: Create a new Post
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  description: status for
+                country:
+                  type: string
+                home_town:
+                  type: string
+                profile_pic:
+                  type: string
+              example:
+                
       responses:
         '200':
           description: Post created Successfully
@@ -202,7 +194,7 @@ paths:
       summary: Get users all post
       responses:
         '200':
-          description: All posts get successfully
+          description: sfhg
         '500':
           description: server side error  
   /post/react:
@@ -240,6 +232,18 @@ paths:
       tags:
        - College
       summary: add college of user
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: college name
+              example:
+                name: MBA
       responses:
         '200':
           description: college added successfully
@@ -250,6 +254,18 @@ paths:
       tags:
        - College
       summary: update college of user
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: college name
+              example:
+                name: MBA
       responses:
         '200':
           description: college updated successfully 
@@ -260,6 +276,18 @@ paths:
       tags:
        - University
       summary: add university of user
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: university name
+              example:
+                name: Delhi University
       responses:
         '200':
           description: university added successfully
@@ -270,6 +298,18 @@ paths:
       tags:
        - University
       summary: update university of user
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: university name
+              example:
+                name: Delhi University
       responses:
         '200':
           description: university updated successfully 
@@ -290,6 +330,20 @@ paths:
       tags:
         - Skill
       summary: create new skill for user
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: array
+                  items:
+                    type: string
+                  description: Skills list
+              example:
+                name: ['6155a11c863c6f2401eb1c50','6155a127863c6f2401eb1c51']
       responses:
         '201':
           description: skill created successfully 

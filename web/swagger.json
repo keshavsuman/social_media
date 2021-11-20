@@ -124,7 +124,7 @@
                 },
                 "example": {
                   "email": "keshavsuman96@gmail.com",
-                  "password": 123456789
+                  "password": "123456789"
                 }
               }
             }
@@ -133,42 +133,6 @@
         "responses": {
           "200": {
             "description": "User loggedin successfully"
-          }
-        }
-      }
-    },
-    "/updateProfile": {
-      "post": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Update user profile",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "email",
-                  "password"
-                ],
-                "properties": {
-                  "email": {
-                    "type": "string"
-                  },
-                  "password": {
-                    "type": "string"
-                  }
-                },
-                "example": null
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ae"
           }
         }
       }
@@ -203,6 +167,61 @@
           "Users"
         ],
         "summary": "Update user profile",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "description": "status for"
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "home_town": {
+                    "type": "string"
+                  },
+                  "profile_pic": {
+                    "type": "string"
+                  },
+                  "bio": {
+                    "type": "string"
+                  },
+                  "college_id": {
+                    "type": "string"
+                  },
+                  "course_id": {
+                    "type": "string"
+                  },
+                  "start_date": {
+                    "type": "string"
+                  },
+                  "end_date": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "first_name": "keshav",
+                  "last_name": "suman",
+                  "status": true,
+                  "country": "612b233eb24ea86984216b01",
+                  "home_town": "6197a38918241d8c1be6c6e5",
+                  "profile_pic": "https://image.shutterstock.com/image-vector/social-member-vector-icon-person-260nw-1139787308.jpg",
+                  "bio": "My bio",
+                  "gender": "male",
+                  "university_id": "6155a023863c6f2401eb1c46",
+                  "college_id": "6155a0ae863c6f2401eb1c4d",
+                  "course_id": "6155a069863c6f2401eb1c48",
+                  "start_date": null,
+                  "end_date": null
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Updated user profile"
@@ -219,6 +238,32 @@
           "Posts"
         ],
         "summary": "Create a new Post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "description": "status for"
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "home_town": {
+                    "type": "string"
+                  },
+                  "profile_pic": {
+                    "type": "string"
+                  }
+                },
+                "example": null
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Post created Successfully"
@@ -299,6 +344,25 @@
           "College"
         ],
         "summary": "add college of user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "college name"
+                  }
+                },
+                "example": {
+                  "name": "MBA"
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "college added successfully"
@@ -315,6 +379,25 @@
           "College"
         ],
         "summary": "update college of user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "college name"
+                  }
+                },
+                "example": {
+                  "name": "MBA"
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "college updated successfully"
@@ -331,6 +414,25 @@
           "University"
         ],
         "summary": "add university of user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "university name"
+                  }
+                },
+                "example": {
+                  "name": "Delhi University"
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "university added successfully"
@@ -347,6 +449,25 @@
           "University"
         ],
         "summary": "update university of user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "university name"
+                  }
+                },
+                "example": {
+                  "name": "Delhi University"
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "university updated successfully"
@@ -379,6 +500,31 @@
           "Skill"
         ],
         "summary": "create new skill for user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Skills list"
+                  }
+                },
+                "example": {
+                  "name": [
+                    "6155a11c863c6f2401eb1c50",
+                    "6155a127863c6f2401eb1c51"
+                  ]
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": "skill created successfully"
