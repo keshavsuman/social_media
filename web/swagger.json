@@ -581,7 +581,7 @@
         }
       }
     },
-    "/skill/searchSkills/{skillName}": {
+    "/searchSkills/{skillName}": {
       "get": {
         "tags": [
           "Search"
