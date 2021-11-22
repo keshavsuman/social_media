@@ -30,7 +30,7 @@
     }
   ],
   "paths": {
-    "/user/signup": {
+    "/signup": {
       "post": {
         "tags": [
           "Users"
@@ -112,7 +112,7 @@
         }
       }
     },
-    "/user/login": {
+    "/login": {
       "post": {
         "tags": [
           "Users"
@@ -151,7 +151,7 @@
         }
       }
     },
-    "/user/profile/{userId}": {
+    "/profile/{userId}": {
       "get": {
         "tags": [
           "Users"
@@ -175,7 +175,7 @@
         }
       }
     },
-    "/user/updateUser": {
+    "/updateUser": {
       "post": {
         "tags": [
           "Users"
@@ -246,7 +246,7 @@
         }
       }
     },
-    "/user/post/createPost": {
+    "/post/createPost": {
       "post": {
         "tags": [
           "Posts"
@@ -288,7 +288,7 @@
         }
       }
     },
-    "/user/post/getPost/": {
+    "/post/getPost/": {
       "get": {
         "tags": [
           "Posts"
@@ -304,7 +304,7 @@
         }
       }
     },
-    "/user/post/react": {
+    "/post/react": {
       "post": {
         "tags": [
           "Posts"
@@ -320,7 +320,7 @@
         }
       }
     },
-    "/user/post/updatePost": {
+    "/post/updatePost": {
       "post": {
         "tags": [
           "Posts"
@@ -336,7 +336,7 @@
         }
       }
     },
-    "/user/post/deletePost": {
+    "/post/deletePost": {
       "delete": {
         "tags": [
           "Posts"
@@ -352,7 +352,7 @@
         }
       }
     },
-    "/user/college/addCollege": {
+    "/college/addCollege": {
       "post": {
         "tags": [
           "College"
@@ -387,7 +387,7 @@
         }
       }
     },
-    "/user/college/updateCollege": {
+    "/college/updateCollege": {
       "post": {
         "tags": [
           "College"
@@ -422,7 +422,7 @@
         }
       }
     },
-    "/user/university/addUniversity": {
+    "/university/addUniversity": {
       "post": {
         "tags": [
           "University"
@@ -457,7 +457,7 @@
         }
       }
     },
-    "/user/university/updateUniversity": {
+    "/university/updateUniversity": {
       "post": {
         "tags": [
           "University"
@@ -492,7 +492,7 @@
         }
       }
     },
-    "/user/skill/getSkills": {
+    "/skill/getSkills": {
       "post": {
         "tags": [
           "Skill"
@@ -508,7 +508,7 @@
         }
       }
     },
-    "/user/skill/createSkill": {
+    "/skill/createSkill": {
       "post": {
         "tags": [
           "Skill"
@@ -549,7 +549,7 @@
         }
       }
     },
-    "/user/skill/deleteSkill": {
+    "/skill/deleteSkill": {
       "delete": {
         "tags": [
           "Skill"
@@ -581,7 +581,7 @@
         }
       }
     },
-    "/searchSkill/{skillName}": {
+    "/skill/searchSkills/{skillName}": {
       "get": {
         "tags": [
           "Search"
