@@ -11,7 +11,7 @@
   },
   "servers": [
     {
-      "url": "http://younigems.in/api/web/v1/user",
+      "url": "http://younigems.in/api/web/v1/",
       "description": "Production server"
     }
   ],
@@ -30,7 +30,7 @@
     }
   ],
   "paths": {
-    "/signup": {
+    "/user/signup": {
       "post": {
         "tags": [
           "Users"
@@ -112,7 +112,7 @@
         }
       }
     },
-    "/login": {
+    "/user/login": {
       "post": {
         "tags": [
           "Users"
@@ -151,7 +151,7 @@
         }
       }
     },
-    "/profile/{userId}": {
+    "/user/profile/{userId}": {
       "get": {
         "tags": [
           "Users"
@@ -175,7 +175,7 @@
         }
       }
     },
-    "/updateUser": {
+    "/user/updateUser": {
       "post": {
         "tags": [
           "Users"
@@ -246,7 +246,7 @@
         }
       }
     },
-    "/post/createPost": {
+    "/user/post/createPost": {
       "post": {
         "tags": [
           "Posts"
@@ -288,7 +288,7 @@
         }
       }
     },
-    "/post/getPost/": {
+    "/user/post/getPost/": {
       "get": {
         "tags": [
           "Posts"
@@ -304,7 +304,7 @@
         }
       }
     },
-    "/post/react": {
+    "/user/post/react": {
       "post": {
         "tags": [
           "Posts"
@@ -320,7 +320,7 @@
         }
       }
     },
-    "/post/updatePost": {
+    "/user/post/updatePost": {
       "post": {
         "tags": [
           "Posts"
@@ -336,7 +336,7 @@
         }
       }
     },
-    "/post/deletePost": {
+    "/user/post/deletePost": {
       "delete": {
         "tags": [
           "Posts"
@@ -352,7 +352,7 @@
         }
       }
     },
-    "/college/addCollege": {
+    "/user/college/addCollege": {
       "post": {
         "tags": [
           "College"
@@ -387,7 +387,7 @@
         }
       }
     },
-    "/college/updateCollege": {
+    "/user/college/updateCollege": {
       "post": {
         "tags": [
           "College"
@@ -422,7 +422,7 @@
         }
       }
     },
-    "/university/addUniversity": {
+    "/user/university/addUniversity": {
       "post": {
         "tags": [
           "University"
@@ -457,7 +457,7 @@
         }
       }
     },
-    "/university/updateUniversity": {
+    "/user/university/updateUniversity": {
       "post": {
         "tags": [
           "University"
@@ -492,7 +492,7 @@
         }
       }
     },
-    "/skill/getSkills": {
+    "/user/skill/getSkills": {
       "post": {
         "tags": [
           "Skill"
@@ -508,7 +508,7 @@
         }
       }
     },
-    "/skill/createSkill": {
+    "/user/skill/createSkill": {
       "post": {
         "tags": [
           "Skill"
@@ -549,7 +549,7 @@
         }
       }
     },
-    "/skill/deleteSkill": {
+    "/user/skill/deleteSkill": {
       "delete": {
         "tags": [
           "Skill"
