@@ -14,7 +14,7 @@ module.exports.socialLogin = celebrate({
         provider_id: Joi.string().required(),
         // first_name: Joi.string().required(),
         name: Joi.string().required(),
-        profile_pic: Joi.string().required()
+        profile_pic: Joi.string().optional()
     })
 });
 
