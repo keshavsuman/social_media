@@ -566,7 +566,7 @@
       }
     },
     "/interest/getInterest": {
-      "post": {
+      "get": {
         "tags": [
           "Interest"
         ],
@@ -582,7 +582,7 @@
       }
     },
     "/searchSkill/{skillName}": {
-      "post": {
+      "get": {
         "tags": [
           "Search"
         ],
@@ -609,7 +609,7 @@
       }
     },
     "/searchCourse/{courseName}": {
-      "post": {
+      "get": {
         "tags": [
           "Search"
         ],
@@ -636,7 +636,7 @@
       }
     },
     "/searchCollege/{collegeName}": {
-      "post": {
+      "get": {
         "tags": [
           "Search"
         ],
@@ -663,7 +663,7 @@
       }
     },
     "/searchInterests/{interestName}": {
-      "post": {
+      "get": {
         "tags": [
           "Search"
         ],
@@ -690,7 +690,7 @@
       }
     },
     "/searchUniversity/{universityName}": {
-      "post": {
+      "get": {
         "tags": [
           "Search"
         ],
@@ -717,7 +717,7 @@
       }
     },
     "/countries/{countryName}": {
-      "post": {
+      "get": {
         "tags": [
           "Search"
         ],
@@ -744,7 +744,7 @@
       }
     },
     "/{countryId}/states/{state-name}": {
-      "post": {
+      "get": {
         "tags": [
           "Search"
         ],
@@ -780,7 +780,7 @@
       }
     },
     "/cities/{stateId}/{cityName}": {
-      "post": {
+      "get": {
         "tags": [
           "Search"
         ],
