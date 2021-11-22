@@ -272,7 +272,22 @@ async function contents(req,res){
             'from': 'users', 
             'localField': 'user', 
             'foreignField': '_id', 
-            'as': 'user'
+            'as': 'user',
+            'pipeline':[
+                {
+                  $lookup:{
+                      from: 'skills',
+                      localField: 'skills',
+                      foreignField: '_id',
+                      as: 'skills'
+                    },
+                  $lookup:{
+                    from: 'interests',
+                    localField: 'interests',
+                    foreignField: '_id',
+                    as: 'interests'
+                  }  
+                }]
         }
         },
         {
