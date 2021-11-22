@@ -11,7 +11,7 @@
   },
   "servers": [
     {
-      "url": "http://younigems.in/api/web/v1/",
+      "url": "http://younigems.in/api/web/v1/user/",
       "description": "Production server"
     }
   ],
