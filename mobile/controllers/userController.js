@@ -62,15 +62,20 @@ module.exports.socialLogin = async (req, res) => {
             const token = await user.generateJWT();
             // var req_ip = req.connection.remoteAddress.split(":")[3] || '';
             // await UserToken.create({ user_id: user._id, token, req_ip, user_agent: req.headers['user-agent'] });
+            // const user_data = {
+            //     id: user._id,
+            //     first_name: user.first_name,
+            //     last_name: user.last_name,
+            //     email: user.email,
+            //     mobile: user.mobile,
+            //     profile_setup: user.profile_setup,
+            //     token:token
+            // };
             const user_data = {
-                id: user._id,
-                first_name: user.first_name,
-                last_name: user.last_name,
+                _id: user._id,
                 email: user.email,
                 mobile: user.mobile,
-                profile_setup: user.profile_setup,
-                token:token
-            };
+            }
             responseManagement.sendResponse(res, httpStatus.OK, global.logged_in_successful, {"token": user_data.token,user_data});
             
         } else {
@@ -78,7 +83,7 @@ module.exports.socialLogin = async (req, res) => {
             const token = await nuser.generateJWT();
             // var req_ip = req.connection.remoteAddress.split(":")[3] || '';
             // const result = await UserToken.create({ user_id: nuser._id, token, req_ip, user_agent: req.headers['user-agent'] });
-            responseManagement.sendResponse(res, httpStatus.OK, global.logged_in_successful, { token: token, user_data: { first_name, last_name, email, profile_pic } })
+            responseManagement.sendResponse(res, httpStatus.OK, global.logged_in_successful, { token: token, user_data: { _id:nuser._id,email:nuser.email} })
         }
     } catch (error) {
         console.log(error)
