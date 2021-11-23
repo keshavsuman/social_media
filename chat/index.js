@@ -50,8 +50,12 @@ io.on('connection',(socket)=>{
     });
 
     socket.on('message',(chatId,senderId,recieverId,message)=>{
-        chatController.saveMessage(chatId,senderId,recieverId,message).then(()=>{
-            socket.emit('message-ok',message);
+        chatController.saveMessage(chatId,senderId,recieverId,message).then((mes)=>{
+            if(mes!='validation failed'){
+                socket.emit('message-ok',mes);
+            }else{
+                socket.emit('error',mes);
+            }
         }).catch((err)=>{
             socket.emit('error',err);
         });

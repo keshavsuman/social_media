@@ -14,13 +14,14 @@ function authToken(socket,next){
 
 async function saveMessage(chatId,senderId,recieverId,message){
     try {
+        var mes;
         if(recieverId && senderId && message){
             const chat = await chatModel.findById(chatId);
             if(chat){
                 chat.lastMessage = message;
                 chat.lastActive = Date.now();
                 await chat.save();
-                await messageModel.create({
+                mes = await messageModel.create({
                     chatId:chatId,
                     message:message,
                     senderId:senderId,
@@ -31,13 +32,14 @@ async function saveMessage(chatId,senderId,recieverId,message){
                     users:[senderId,recieverId],
                     lastMessage:message,
                 });
-                await messageModel.create({
+                mes = await messageModel.create({
                     chatId:newChat._id,
                     message:message,
                     senderId:senderId,
                     recieverId:recieverId,
                 });
             }
+            return mes;
         }else{
             return 'validation failed';
         }
