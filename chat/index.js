@@ -82,9 +82,19 @@ io.on('connection',(socket)=>{
         }).limit(numberOfChats);
         socket.emit('recentChats',chats); 
     });
+
     socket.on('template_messages',()=>{
         socket.emit('template_messages_ok',['Hello','Hi there','How are you ','Bye!!']);
     });
+
+    socket.on('fetch-user-details',(userId)=>{
+        userModel.findById(userId,{profile_pic:1,first_name:1,last_name:1,}).then((user)=>{
+            socket.emit('fetch-user-details-ok',user);
+        }).catch((err)=>{
+            socket.emit('error',err);
+        });
+    });
+
 });
 
 httpServer.listen(8000,()=>{
