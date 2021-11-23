@@ -56,15 +56,16 @@ module.exports.socialLogin = async (req, res) => {
     try {
         const { email, provider_type, provider_id, name, profile_pic } = req.body;
         const [first_name, last_name] = name.split(" ");
-        const user = await User.findOne({ provider_id, provider_type });
+        const user = await User.findOne({email:email});
         if (user) {
-            await User.updateOne({ _id: user._id }, { first_name, last_name, profile_pic });
+            await User.updateOne({ _id: user._id }, { first_name, last_name, profile_pic,provider_type,provider_id });
             const token = await user.generateJWT();
-            var req_ip = req.connection.remoteAddress.split(":")[3] || '';
-            await UserToken.create({ user_id: user._id, token, req_ip, user_agent: req.headers['user-agent'] });
+            // var req_ip = req.connection.remoteAddress.split(":")[3] || '';
+            // await UserToken.create({ user_id: user._id, token, req_ip, user_agent: req.headers['user-agent'] });
             const user_data = {
                 id: user._id,
-                name: user.first_name + ' ' + user.last_name,
+                first_name: user.first_name,
+                last_name: user.last_name,
                 email: user.email,
                 mobile: user.mobile,
                 profile_setup: user.profile_setup,
@@ -73,11 +74,10 @@ module.exports.socialLogin = async (req, res) => {
             responseManagement.sendResponse(res, httpStatus.OK, global.logged_in_successful, {"token": user_data.token,user_data});
             
         } else {
-            const uuser = await User.findOne({ email });
             const nuser = await User.create({ provider_type, provider_id, first_name, last_name, email, profile_pic });
             const token = await nuser.generateJWT();
-            var req_ip = req.connection.remoteAddress.split(":")[3] || '';
-            const result = await UserToken.create({ user_id: nuser._id, token, req_ip, user_agent: req.headers['user-agent'] });
+            // var req_ip = req.connection.remoteAddress.split(":")[3] || '';
+            // const result = await UserToken.create({ user_id: nuser._id, token, req_ip, user_agent: req.headers['user-agent'] });
             responseManagement.sendResponse(res, httpStatus.OK, global.logged_in_successful, { token: token, user_data: { first_name, last_name, email, profile_pic } })
         }
     } catch (error) {
