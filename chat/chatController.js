@@ -63,7 +63,7 @@ async function fetchMessages(chatId,skip){
         if(chatId){
             const messages = await messageModel.find({
                 chatId:chatId,
-            }).sort({createdAt:-1}).limit(20).skip(skip);
+            }).limit(20).skip(skip);
             return messages;
         }
     } catch (error) {

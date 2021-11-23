@@ -51,7 +51,7 @@ io.on('connection',(socket)=>{
 
     socket.on('message',(chatId,senderId,recieverId,message)=>{
         chatController.saveMessage(chatId,senderId,recieverId,message).then(()=>{
-            socket.emit('message-ok',true);
+            socket.emit('message-ok',message);
         }).catch((err)=>{
             socket.emit('error',err);
         });
@@ -88,9 +88,7 @@ io.on('connection',(socket)=>{
     });
 
     socket.on('fetch-user-details',(userId)=>{
-        console.log(userId);
         userModel.findById(userId,{profile_pic:1,first_name:1,last_name:1,}).then((user)=>{
-            console.log(user);
             socket.emit('fetch-user-details-ok',user);
         }).catch((err)=>{
             socket.emit('error',err);
