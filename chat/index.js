@@ -88,7 +88,9 @@ io.on('connection',(socket)=>{
     });
 
     socket.on('fetch-user-details',(userId)=>{
+        console.log(userId);
         userModel.findById(userId,{profile_pic:1,first_name:1,last_name:1,}).then((user)=>{
+            console.log(user);
             socket.emit('fetch-user-details-ok',user);
         }).catch((err)=>{
             socket.emit('error',err);
