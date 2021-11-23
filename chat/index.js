@@ -82,7 +82,9 @@ io.on('connection',(socket)=>{
         }).limit(numberOfChats);
         socket.emit('recentChats',chats); 
     });
-    
+    socket.on('template_messages',()=>{
+        socket.emit('template_messages_ok',['Hello','Hi there','How are you ','Bye!!']);
+    });
 });
 
 httpServer.listen(8000,()=>{
