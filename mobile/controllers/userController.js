@@ -76,6 +76,7 @@ module.exports.socialLogin = async (req, res) => {
                 first_name: user.first_name,
                 last_name: user.last_name,
                 mobile: user.mobile,
+                profile_setup:user.profile_setup
             }
             responseManagement.sendResponse(res, httpStatus.OK, global.logged_in_successful, {"token": token,user_data});
             
@@ -84,7 +85,7 @@ module.exports.socialLogin = async (req, res) => {
             const token = await nuser.generateJWT();
             // var req_ip = req.connection.remoteAddress.split(":")[3] || '';
             // const result = await UserToken.create({ user_id: nuser._id, token, req_ip, user_agent: req.headers['user-agent'] });
-            responseManagement.sendResponse(res, httpStatus.OK, global.logged_in_successful, { token: token, user_data: { _id:nuser._id,email:nuser.email} })
+            responseManagement.sendResponse(res, httpStatus.OK, global.logged_in_successful, { token: token, user_data: { _id:nuser._id,email:nuser.email,profile_setup:false} })
         }
     } catch (error) {
         console.log(error)
