@@ -4,7 +4,8 @@ const notificationSchema = mongoose.Schema({
     title:{type:String},
     type:{type:String},
     description:{type:String},
-    user:{type:mongoose.Schema.Types.ObjectId,ref:'user',required:true}
+    user:{type:mongoose.Schema.Types.ObjectId,ref:'user',required:true},
+    notificationFrom:{type:mongoose.Schema.Types.ObjectId,ref:'user'}
 },{timestamps:true});
 
 module.exports = mongoose.model('notification',notificationSchema);

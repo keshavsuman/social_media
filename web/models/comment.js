@@ -10,10 +10,11 @@ const replySchema = mongoose.Schema({
 });
 
 const commentsSchema = mongoose.Schema({
-    post_id:{type:mongoose.Schema.Types.ObjectId,ref:'posts',required:true},
+    post_id:{type:mongoose.Schema.Types.ObjectId,ref:'post',required:true},
     comment:{type:String},
     reply:[replySchema],
     user:{type:mongoose.Schema.Types.ObjectId,ref:'user',required:true}
 },{timestamps:true});
 
 module.exports = mongoose.model('comments',commentsSchema);
+// module.exports = replySchema;

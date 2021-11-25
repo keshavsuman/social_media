@@ -5,4 +5,5 @@ const bookmarkSchema = mongoose.Schema({
     user:{type:mongoose.Schema.Types.ObjectId,ref:'user',required:true}
 },{timestamps:true});
 
-module.exports = mongoose.model('bookmarks',bookmarkSchema);
+module.exports = mongoose.model('bookmark',bookmarkSchema);
+ 

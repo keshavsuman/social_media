@@ -157,7 +157,7 @@ async function reactOnPost(req,res){
                     $set:updateBody
                 });
                 await notifications.create({
-                    title:`${userpost.user.first_name} ${userpost.user.last_name} has reacted on your post`,
+                    title:` has reacted on your post`,
                     type:"REACTED",
                     description:"",
                     user:userpost.user._id,
@@ -177,7 +177,7 @@ async function reactOnPost(req,res){
 
 async function getComments(req,res){
     try{
-        var comment = await comments.find({post_id:req.body.post_id},{updatedAt:0,__v:0,reply:0}).populate({path:'user',select:{
+        var comment = await comments.find({post_id:req.body.post_id},{updatedAt:0,__v:0}).populate({path:'user',select:{
             _id:1,
             first_name:1,
             last_name:1,
@@ -218,7 +218,6 @@ async function comment(req,res){
 async function replyOnComment(req,res){
     try{
         
-        var comment = await comments.findById(req.body.id).populate('user');
          var data = await comments.findByIdAndUpdate(req.body.id
         ,{
             $addToSet:{reply:{
@@ -227,7 +226,7 @@ async function replyOnComment(req,res){
             }}
         });
         await notifications.create({
-            title:`${comment.user?.first_name} replied to your comment`,
+            title:`replied to your comment`,
             description:req.body.comment,
             type:'COMMENT_REPLY',
             user:comment.user._id,
@@ -543,8 +542,7 @@ async function getBookmarks(req,res){
         var posts = await bookmark.findOne({
             user:mongoose.Types.ObjectId(req.data._id) 
         }).populate({path:'post_id',populate:{path:'user',select:{hash:0,salt:0},populate:'course'}});
-
-        responseManagement.sendResponse(res,httpStatus.OK,'Bookmarks list',posts.posts);
+        responseManagement.sendResponse(res,httpStatus.OK,'Bookmarks list',posts.post_id);
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
