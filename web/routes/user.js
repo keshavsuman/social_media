@@ -64,6 +64,7 @@ router.post('/followUnfollow',auth,userValidator.followunfollowValidator ,user.f
 router.post('/connectAcceptReject',auth,user.connectAcceptReject);
 router.post('/getConnectionRequests',auth,user.getPendingRequests);
 router.post('/cancelRequest',auth,user.cancelRequest);
+router.get('/getUserRequests',auth,user.getUserRequests);
 router.post('/myconnections',auth,user.myconnections);
 router.post('/removeConnection',auth,user.removeConnection);
 router.post('/peopleYouMayKnow',auth,user.peopleYouMayKnow);

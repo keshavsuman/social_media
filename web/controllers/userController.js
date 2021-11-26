@@ -714,6 +714,18 @@ module.exports.getFollowersList = async (req,res)=>{
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,e.message,{});
     }
 }
+module.exports.getUserRequests = async (req,res)=>{
+    try {
+        var requests = await User.findById(req.data._id,{
+            sentRequests:1
+        }).populate({path:'sentRequests',select:{salt:0,hash:0}});
+        responseManagement.sendResponse(res,httpStatus.OK,'Request canceled',requests.sentRequests??[]);
+
+    } catch (error) {
+        console.log(error.message);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
+    }
+}
 module.exports.getFollowingList = async (req,res)=>{
     try{
         if(!req.body.id){

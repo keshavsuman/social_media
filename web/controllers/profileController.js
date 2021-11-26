@@ -73,7 +73,7 @@ module.exports.setProfile = async (req, res) => {
 module.exports.otherUserProfile = async (req, res) => {
     try {
         let myData = await User.findById(req.data._id,{hash:0,salt:0});
-        let user = await User.findOne({ _id: req.params.id },{salt:0,hash:0}).populate({path:'college'}).populate({path:'course'});
+        let user = await User.findOne({ _id: req.params.id },{salt:0,hash:0}).populate({path:'college'}).populate({path:'course'}).populate({path:'skills'}).populate({path:'interests'}).lean();
         let connections = await connection.find({user:req.params.id});        
         if(!user){
             responseManagement.sendResponse(res, httpStatus.NOT_FOUND, "User doesn't exits",{});
@@ -121,6 +121,10 @@ module.exports.otherUserProfile = async (req, res) => {
             data.isRequested=true;
         }else{
             data.isRequested=false;
+        }if(user.sentRequests?.includes(req.data._id)){
+            data.isRequesting=true;
+        }else{
+            data.isRequesting=false;
         }
         responseManagement.sendResponse(res, httpStatus.OK, "profile data",data);
     } catch (error) {
