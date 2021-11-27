@@ -491,6 +491,10 @@ async function timelineposts(req,res){
                 user:mongoose.Types.ObjectId(req.data._id),
                 post_id:{$in:postIds}
             });
+            var bookmarks = await bookmarks.find({
+                user:mongoose.Types.ObjectId(req.data._id),
+                post_id:{$in:postIds}
+            });
             reaction.forEach(tp=>{
                 if(postIds.some(p=>p._id.equals(tp.post_id))){
                     reactedPost.push({_id:tp.post_id,type:tp.reaction_type});
@@ -500,13 +504,20 @@ async function timelineposts(req,res){
             timelineposts.forEach(tp=>{
                 var isReacted = false;
                 var type;
+                var isBookmarked = false;
+
                 reactedPost.forEach(rp=>{
                     if(rp._id.equals(tp._id)){
                         isReacted = true;
                         type = rp.type;
                     }
-                })
-                timelinepost.push({...tp,isReacted:isReacted,reactionType:type});
+                });
+                bookmarks.forEach(b=>{
+                    if(b.post_id.equals(tp._id)){
+                        isBookmarked = true;
+                    }
+                });
+                timelinepost.push({...tp,isReacted:isReacted,reactionType:type,isBookmarked:isBookmarked});
             });
             responseManagement.sendResponse(res,httpStatus.OK,'',timelinepost);
         }
