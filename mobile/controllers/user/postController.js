@@ -491,7 +491,7 @@ async function timelineposts(req,res){
                 user:mongoose.Types.ObjectId(req.data._id),
                 post_id:{$in:postIds}
             });
-            var bookmarks = await bookmarks.find({
+            var bookmarks = await bookmark.find({
                 user:mongoose.Types.ObjectId(req.data._id),
                 post_id:{$in:postIds}
             });
