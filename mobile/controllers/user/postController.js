@@ -506,7 +506,10 @@ async function timelineposts(req,res){
                 var isReacted = false;
                 var type;
                 var isBookmarked = false;
-
+                var isMyPost = false;
+                if(tp._id==req.data._id){
+                    isMyPost = true;
+                }
                 reactedPost.forEach(rp=>{
                     if(rp._id.equals(tp._id)){
                         isReacted = true;
@@ -518,7 +521,7 @@ async function timelineposts(req,res){
                         isBookmarked = true;
                     }
                 });
-                timelinepost.push({...tp,isReacted:isReacted,reactionType:type,isBookmarked:isBookmarked});
+                timelinepost.push({...tp,isReacted:isReacted,reactionType:type,isBookmarked:isBookmarked,isMyPost});
             });
             responseManagement.sendResponse(res,httpStatus.OK,'',timelinepost);
         }
