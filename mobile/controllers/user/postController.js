@@ -336,6 +336,7 @@ async function contents(req,res){
 }
 async function timelineposts(req,res){
     try {
+        console.log(req.data._id);
         var timelineposts;
         var connectionDocument = await connections.find({user:req.data._id});
         if(connectionDocument.length==0)
@@ -350,8 +351,16 @@ async function timelineposts(req,res){
                             'localField': 'user', 
                             'foreignField': '_id', 
                             'as': 'myuser'
-                        }
-                        }, {
+                        },
+                        },{
+                            '$lookup': {
+                            'from': 'posts', 
+                            'localField': 'sharedPostId', 
+                            'foreignField': '_id', 
+                            'as': 'sharedPost'
+                            }  
+                        },
+                         {
                         '$addFields': {
                             'user':{
                                 $first:'$myuser'

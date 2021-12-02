@@ -798,3 +798,74 @@ module.exports.cancelRequest = async (req,res)=>{
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
     }
 }
+
+module.exports.searchInConnection = (req,res)=>{
+    try{
+        var connection  = await connections.find({user:req.data._id});
+
+        var myconnections = await connections.aggregate([
+            {
+                $match:{
+                    user:mongoose.Types.ObjectId(req.data._id)
+                }
+            },
+            {
+              '$project': {
+                'connections': 1, 
+                '_id': 0
+              }
+            }, {
+              '$lookup': {
+                'from': 'users', 
+                'localField': 'connections', 
+                'foreignField': '_id', 
+                'as': 'connections', 
+                'pipeline': [
+                  {
+                     $match:{
+                        first_name:{ '$regex': req.body.keyword, '$options': 'i' },
+                        last_name:{ '$regex': req.body.keyword, '$options': 'i' }
+                     },
+                    '$project': {
+                      'first_name': 1, 
+                      'last_name': 1, 
+                      'profile_pic': 1
+                    },
+                },
+                {
+                    $addFields:{
+                        isConnected:{$in:['$_id',connection[0].connections]},
+                        isRequested:{$in:['$_id',connection[0].requested]},
+                        isfollowing:{$in:['$_id',connection[0].followings]},
+                        isfollowed:{$in:['$_id',connection[0].followers]},
+                    }
+                }
+            ]
+              }
+            },{
+                $limit:req.body.limit??20
+            },
+            {
+                $skip:req.body.after??0
+            } 
+          ]);
+        responseManagement.sendResponse(res,httpStatus.OK,'Search result',myconnections[0].connections);
+    }catch(e){
+        console.log(e);
+        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,e.message,{});
+    }
+}
+
+module.exports.muteUnmuteNotification = (req,res)=>{
+    try {
+        await User.findByIdAndUpdate(req.data._id,{
+            $set:{
+                notificationIsMute:req.body.isMute
+            }
+        });
+        responseManagement.sendResponse(res, httpStatus.OK, 'Notification Setting updated', {});
+    } catch (error) {
+        console.log(error);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error,{});
+    }
+}

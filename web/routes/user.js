@@ -72,5 +72,7 @@ router.post('/getFollowersList',auth,user.getFollowersList);
 router.post('/getFollowingsList',auth,user.getFollowingList);
 router.post('/notifications',auth,user.getNotifications);
 router.post('/deletenotification',auth,user.deleteNotification);
+router.post('/searchInConnection',user.searchInConnection);
+router.post('/muteUnmuteNotification',user.muteUnmuteNotification);
 
 module.exports = router;

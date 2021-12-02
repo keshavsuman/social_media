@@ -29,6 +29,7 @@ var UserSchema = new mongoose.Schema({
     salt: { type: String},
     status: { type: Boolean, default: true },
     profile_setup: { type: Boolean, default: false },
+    notificationIsMute:{type:Boolean,default:false},
     sentRequests:[{type:mongoose.Schema.Types.ObjectId,ref:'user'}]
 }, { timestamps: true });
 

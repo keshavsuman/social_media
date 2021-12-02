@@ -73,5 +73,7 @@ router.post('/getFollowersList',auth,user.getFollowersList);
 router.post('/getFollowingsList',auth,user.getFollowingList);
 router.post('/deletenotification',auth,user.deleteNotification);
 router.post('/recentChats',user.recentChats);
+router.get('/searchInConnection',user.searchInConnection);
+router.post('/muteUnmuteNotification',user.muteUnmuteNotification);
 // router.post('/createChat',user.createChat);
 module.exports = router;
