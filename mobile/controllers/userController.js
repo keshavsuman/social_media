@@ -884,6 +884,7 @@ module.exports.searchInConnection = async (req,res)=>{
                         first_name:{ '$regex': req.body.keyword, '$options': 'i' },
                         last_name:{ '$regex': req.body.keyword, '$options': 'i' }
                      },
+                },{
                     '$project': {
                       'first_name': 1, 
                       'last_name': 1, 
