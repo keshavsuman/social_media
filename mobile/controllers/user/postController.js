@@ -387,7 +387,7 @@ async function timelineposts(req,res){
                                         'user.hash':0,
                                         'user.salt':0,
                                         'user.__v':0,
-                                        course:0,
+                                        'user.course':0,
                                     }
                                 }
                             ]
