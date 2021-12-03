@@ -881,8 +881,10 @@ module.exports.searchInConnection = async (req,res)=>{
                 'pipeline': [
                   {
                      $match:{
-                        first_name:{ '$regex': req.body.keyword, '$options': 'i' },
-                        last_name:{ '$regex': req.body.keyword, '$options': 'i' }
+                        $or:[
+                            {first_name:{ '$regex': req.body.keyword, '$options': 'i' }},
+                            {last_name:{ '$regex': req.body.keyword, '$options': 'i' }}
+                        ],
                      },
                 },{
                     '$project': {
