@@ -367,6 +367,9 @@ async function timelineposts(req,res){
                             },
                             'totalComments':{
                                 '$size':'$comments'
+                            },
+                            'sharedPost':{
+                                $first:'$sharedPost'
                             }
                         }
                         }, {
