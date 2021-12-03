@@ -357,7 +357,40 @@ async function timelineposts(req,res){
                             'from': 'posts', 
                             'localField': 'sharedPostId', 
                             'foreignField': '_id', 
-                            'as': 'sharedPost'
+                            'as': 'sharedPost',
+                            'pipeline':[{
+                                '$lookup': {
+                                    'from': 'users',
+                                    'localField': 'user',
+                                    'foreignField': '_id',
+                                    'as': 'user',
+                                }},
+                                {
+                                    $lookup: {
+                                        'from': 'courses', 
+                                        'localField': 'user.course', 
+                                        'foreignField': '_id', 
+                                        'as': 'course'
+                                    },
+                                },
+                                {
+                                    '$addFields': {
+                                        'user':{
+                                            $first:'$user'
+                                        },
+                                        'course':{
+                                            $first:'$course'
+                                        }
+                                    }
+                                },{
+                                    $project:{
+                                        'user.hash':0,
+                                        'user.salt':0,
+                                        'user.__v':0,
+                                        course:0,
+                                    }
+                                }
+                            ]
                             }  
                         },
                          {
