@@ -642,11 +642,19 @@ async function likeUnlikeComment(req,res){
         const reaction =  await reactions.findOne({user:req.data._id,comment_id:req.body.comment_id});
         if(reaction){
             await reactions.findByIdAndDelete(reaction._id);
+            const comment = await comments.findById(req.body.comment_id);
+            await comments.findByIdAndUpdate(req.body.comment_id,{
+                like_count:comment.like_count-1
+            });
         }else{
             await reactions.create({
                 user:req.data._id,
                 comment_id:req.body.comment_id,
                 reaction_type:'like'
+            });
+            const comment = await comments.findById(req.body.comment_id);
+            await comments.findByIdAndUpdate(req.body.comment_id,{
+                like_count:comment.like_count+1
             });
         }
         responseManagement.sendResponse(res,httpStatus.OK,'Reaction saved',{});
