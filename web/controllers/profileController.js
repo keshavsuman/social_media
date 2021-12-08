@@ -192,9 +192,8 @@ module.exports.states = async (req, res) => {
     try {
         let states = await States.find({
             country_id:req.params.countryId,
-            name:{'$regex': req.params.state, '$options': 'i'}
+            // name:{'$regex': req.params.state, '$options': 'i'}
         }).lean();
-        console.log(states.length);
         responseManagement.sendResponse(res, httpStatus.OK, "", states);
     } catch (error) {
         console.log(error)
@@ -208,7 +207,7 @@ module.exports.cities = async (req, res) => {
     try {
         let cities = await Cities.find({
             'state_id':req.params.stateId,
-            'name': {'$regex': req.params.city, '$options': 'i'}
+            // 'name': {'$regex': req.params.city, '$options': 'i'}
         });
         responseManagement.sendResponse(res, httpStatus.OK, "",cities);
     } catch (error) {
