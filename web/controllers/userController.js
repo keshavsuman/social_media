@@ -799,7 +799,7 @@ module.exports.cancelRequest = async (req,res)=>{
     }
 }
 
-module.exports.searchInConnection = (req,res)=>{
+module.exports.searchInConnection = async(req,res)=>{
     try{
         var connection  = await connections.find({user:req.data._id});
 
@@ -856,7 +856,7 @@ module.exports.searchInConnection = (req,res)=>{
     }
 }
 
-module.exports.muteUnmuteNotification = (req,res)=>{
+module.exports.muteUnmuteNotification = async (req,res)=>{
     try {
         await User.findByIdAndUpdate(req.data._id,{
             $set:{
