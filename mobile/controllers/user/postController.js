@@ -637,6 +637,25 @@ async function shareList(req,res){
     }
 }
 
+async function likeUnlikeComment(req,res){
+    try {
+        const reaction =  await reactions.findOne({user:req.data._id,comment_id:req.body.comment_id});
+        if(reaction){
+            await reactions.findByIdAndDelete(reaction._id);
+        }else{
+            await reactions.create({
+                user:req.data._id,
+                comment_id:req.body.comment_id,
+                reaction_type:'like'
+            });
+        }
+        responseManagement.sendResponse(res,httpStatus.OK,'Reaction saved',{});
+    } catch (error) {
+        console.log(error.message);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
+    }
+}
+
 module.exports = {
     getPosts,
     createPost,
@@ -654,5 +673,6 @@ module.exports = {
     getBookmarks,
     removebookmark,
     post_details,
-    shareList
+    shareList,
+    likeUnlikeComment
 }

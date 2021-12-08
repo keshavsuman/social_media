@@ -10,7 +10,7 @@ const College = require('../models/college');
 const Interest = require('../models/interest');
 const Skill = require('../models/skill');
 const connection = require('../models/connections');
-const chats = require('../models/chats');
+const chats = require('../models/chatModel');
 
 /**** setup user profile ****/
 module.exports.setProfile = async (req, res) => {

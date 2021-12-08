@@ -27,6 +27,7 @@ router.put('/generateMediaUploadUrl',upload.single('file'),postController.upload
 router.post('/react',postController.reactOnPost);
 router.post('/comment',postController.comment);
 router.post('/getComments',postController.getComments);
+router.post('/likeUnlikeComment',postController.likeUnlikeComment);
 router.post('/replyOnComment',postController.replyOnComment);
 router.post('/getCommentsReply',postController.getCommentsReply);
 router.post('/timelinepost',postController.timelineposts);

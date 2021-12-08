@@ -6,7 +6,9 @@ const replySchema = mongoose.Schema({
                 type:mongoose.Schema.Types.ObjectId,
                 ref:'user',
             },
-        time:{type:Date,default:Date.now()}
+        time:{type:Date,default:Date.now()},
+        like_count:{type:Number,default:0},
+        
 });
 
 const commentsSchema = mongoose.Schema({

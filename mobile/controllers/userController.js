@@ -15,6 +15,7 @@ const notification =  require('../models/notifications');
 const userToken = require('../models/user_token');
 const mongoose = require('mongoose');
 const bookmarks = require('../models/bookmarks');
+const chatModel = require('../models/chatModel');
 
 /****** Login ****/
 module.exports.login = async (req, res) => {
@@ -928,5 +929,30 @@ module.exports.muteUnmuteNotification = async (req,res)=>{
     } catch (error) {
         console.log(error);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error,{});
+    }
+}
+
+module.exports.sendPrivately = async (req,res)=>{
+    try {
+        var users = req.body.users.map((e)=>{
+            return [mongoose.Types.ObjectId(req.data._id),mongoose.Types.ObjectId(e)];
+        });
+        var chats = await chatModel.find({
+            user:{$in:users},
+        });
+
+        for(var i=0;i<chats.length;i++){
+            var messages = await messageModel.findByIdAndUpdate({
+                chatId:chats[i]._id
+            },{
+                senderId:req.data._id,
+                recieverId:chats[i].users.filter((f)=>{f!=req.data._id})[0],
+                message:req.body.message,    
+            });
+        }
+        responseManagement.sendResponse(res, httpStatus.OK, 'Messages sent Privately', {});
+    } catch (error) {
+        console.log(error);
+        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,global.internal_server_error,{});
     }
 }
