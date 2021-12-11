@@ -181,27 +181,21 @@ async function reactOnPost(req,res){
 
 async function getComments(req,res){
     try{
-        // const comments = await comments.aggregate([
-        //     {
-        //         $match:{
-        //             post_id:req.body.post_id
-        //         }
-        //     },
-        //     {
-        //         $addFields:{
-
-        //         }
-        //     },
-
-        // ]);
         var comment = await comments.find({post_id:req.body.post_id},{updatedAt:0,__v:0,reply:0})
         .populate({path:'user',select:{
             _id:1,
             first_name:1,
             last_name:1,
             profile_pic:1
-        }})
-        responseManagement.sendResponse(res,httpStatus.OK,'',comment);
+        }}).limit(req.body.limit??10).skip(req.body.skip??0);
+        const commentIds = comment.map(comment => comment._id);
+        var reaction = await reactions.find({comment_id:{$in:commentIds},user:req.data._id});
+        co = comment.map(c=>{
+            var reac = reaction.find(r => r.comment_id.equals(c._id));
+            isCommentLiked = reac?true:false;
+            return {...c.toObject(),isCommentLiked:isCommentLiked,reaction:reac};
+        });
+        responseManagement.sendResponse(res,httpStatus.OK,'',co);
     }catch(error){
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
@@ -594,8 +588,19 @@ async function timelineposts(req,res){
 async function getCommentsReply(req,res){   
     try {
         var replies = await comments.findById(req.body.commentId,{reply:1,_id:0})
-        .populate({path:'reply',populate:{path:'user',select:'first_name last_name profile_pic'}});   
-        responseManagement.sendResponse(res,httpStatus.OK,'',replies.reply);
+        .populate({path:'reply',populate:{path:'user',select:'first_name last_name profile_pic'}});
+        if(!replies){
+            responseManagement.sendResponse(res,httpStatus.SERVICE_UNAVAILABLE,'Comment Doesn\'t Exits ',null);
+        }else{
+            var commentIds = replies.reply.map(r=>r._id);
+            var reaction = await reactions.find({comment_id:{$in:commentIds},user:req.data._id});
+            co = replies.reply.map(c=>{
+                    var reac = reaction.find(r => r.comment_id.equals(c._id));
+                    isCommentLiked = reac?true:false;
+                    return {...c.toObject(),isCommentLiked:isCommentLiked,reaction:reac};
+                });
+            responseManagement.sendResponse(res,httpStatus.OK,'',co);
+        }
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
