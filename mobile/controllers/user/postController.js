@@ -181,12 +181,26 @@ async function reactOnPost(req,res){
 
 async function getComments(req,res){
     try{
-        var comment = await comments.find({post_id:req.body.post_id},{updatedAt:0,__v:0}).populate({path:'user',select:{
+        // const comments = await comments.aggregate([
+        //     {
+        //         $match:{
+        //             post_id:req.body.post_id
+        //         }
+        //     },
+        //     {
+        //         $addFields:{
+
+        //         }
+        //     },
+
+        // ]);
+        var comment = await comments.find({post_id:req.body.post_id},{updatedAt:0,__v:0,reply:0})
+        .populate({path:'user',select:{
             _id:1,
             first_name:1,
             last_name:1,
             profile_pic:1
-        }});
+        }})
         responseManagement.sendResponse(res,httpStatus.OK,'',comment);
     }catch(error){
         console.log(error);
@@ -222,19 +236,20 @@ async function comment(req,res){
 
 async function replyOnComment(req,res){
     try{
-        var comment = await comments.findById(req.body.id).populate('user');
+        var rep = await comments.create({
+            comment_id:req.body.comment_id,
+            comment:req.body.reply,
+            user:req.data._id
+        });
         var data = await comments.findByIdAndUpdate(req.body.id
             ,{
-                $addToSet:{reply:{
-                    reply:req.body.reply,
-                    user:req.data._id
-                }}
+                $addToSet:{reply:rep._id}
             });
         await notifications.create({
-            title:`${comment.user?.first_name} replied to your comment`,
+            title:`replied to your comment`,
             description:req.body.comment,
             type:'COMMENT_REPLY',
-            user:comment.user._id,
+            user:data.user._id,
             notificationFrom:req.data._id
         })
         responseManagement.sendResponse(res,httpStatus.OK,'Reply added',{});
@@ -578,7 +593,8 @@ async function timelineposts(req,res){
 
 async function getCommentsReply(req,res){   
     try {
-        var replies = await comments.findById(req.body.commentId,{reply:1,_id:0}).populate({path:'reply.user',select:{first_name:1,last_name:1,profile_pic:1}});
+        var replies = await comments.findById(req.body.commentId,{reply:1,_id:0})
+        .populate({path:'reply',populate:{path:'user',select:'first_name last_name profile_pic'}});   
         responseManagement.sendResponse(res,httpStatus.OK,'',replies.reply);
     } catch (error) {
         console.log(error.message);

@@ -23,7 +23,6 @@ router.post('/createPost',postController.createPost);
 router.post('/updatePost',postController.updatePost);
 router.post('/deletePost',postValidator.deletePost,postController.deletePost);
 router.put('/generateMediaUploadUrl',upload.single('file'),postController.uploadMedia);
-// router.get('/userSpecificPost',postController.getUserSpecificPost);
 router.post('/react',postController.reactOnPost);
 router.post('/comment',postController.comment);
 router.post('/getComments',postController.getComments);
