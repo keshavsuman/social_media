@@ -16,6 +16,7 @@ const userToken = require('../models/user_token');
 const mongoose = require('mongoose');
 const bookmarks = require('../models/bookmarks');
 const chatModel = require('../models/chatModel');
+const messageModel = require('../models/messageModel'); 
 
 /****** Login ****/
 module.exports.login = async (req, res) => {
@@ -935,19 +936,25 @@ module.exports.muteUnmuteNotification = async (req,res)=>{
 module.exports.sendPrivately = async (req,res)=>{
     try {
         var users = req.body.users.map((e)=>{
-            return [mongoose.Types.ObjectId(req.data._id),mongoose.Types.ObjectId(e._id)];
+            return [req.data._id,e._id];
         });
         var chats = await chatModel.find({
-            user:{$in:users},
+            users: {$in:users},
         });
-
         for(var i=0;i<chats.length;i++){
-            var messages = await messageModel.findByIdAndUpdate({
-                chatId:chats[i]._id
-            },{
+            // var messages = await messageModel.findByIdAndUpdate(
+            //     chats[i]._id,
+            // {
+            //     senderId:req.data._id,
+            //     recieverId:chats[i].users.filter((f)=>{f!=req.data._id})[0],
+            //     message:req.body.message,    
+            // });
+            var message = await messageModel.create({
+                chatId:chats[i]._id,
                 senderId:req.data._id,
                 recieverId:chats[i].users.filter((f)=>{f!=req.data._id})[0],
                 message:req.body.message,    
+            
             });
         }
         responseManagement.sendResponse(res, httpStatus.OK, 'Messages sent Privately', {});
