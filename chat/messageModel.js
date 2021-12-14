@@ -1,7 +1,7 @@
 const mongoose  = require('mongoose');
 
 const messageSchema = mongoose.Schema({
-    message:String,
+    message:mongoos.Schema.Types.Mixed,
     chatId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Chat'
