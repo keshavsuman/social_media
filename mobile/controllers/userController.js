@@ -942,20 +942,17 @@ module.exports.sendPrivately = async (req,res)=>{
             users: {$in:users},
         });
         for(var i=0;i<chats.length;i++){
-            // var messages = await messageModel.findByIdAndUpdate(
-            //     chats[i]._id,
-            // {
-            //     senderId:req.data._id,
-            //     recieverId:chats[i].users.filter((f)=>{f!=req.data._id})[0],
-            //     message:req.body.message,    
-            // });
+            
+            await chatModel.findByIdAndUpdate(chats[i]._id,{
+                lastMessage:req.body.message, 
+            });
             var message = await messageModel.create({
                 chatId:chats[i]._id,
                 senderId:req.data._id,
                 recieverId:chats[i].users.filter((f)=>{f!=req.data._id})[0],
                 message:req.body.message,    
-            
             });
+            console.log(message);
         }
         responseManagement.sendResponse(res, httpStatus.OK, 'Messages sent Privately', {});
     } catch (error) {

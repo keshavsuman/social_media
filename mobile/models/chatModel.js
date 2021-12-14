@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const chatSchema = mongoose.Schema({
     users:[{type:mongoose.Schema.Types.ObjectId, ref:'user'}],
-    lastMessage:{type:String, default:''},
+    lastMessage:{type:mongoose.Schema.Types.Mixed, default:''},
     lastActive:{
         type:Date,
     },
