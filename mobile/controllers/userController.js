@@ -935,7 +935,7 @@ module.exports.muteUnmuteNotification = async (req,res)=>{
 module.exports.sendPrivately = async (req,res)=>{
     try {
         var users = req.body.users.map((e)=>{
-            return [mongoose.Types.ObjectId(req.data._id),mongoose.Types.ObjectId(e)];
+            return [mongoose.Types.ObjectId(req.data._id),mongoose.Types.ObjectId(e._id)];
         });
         var chats = await chatModel.find({
             user:{$in:users},

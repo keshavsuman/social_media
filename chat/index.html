@@ -17,7 +17,7 @@
         autoConnect: false,
         transports: ['websocket'],
         auth:{
-            token:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTczYWI1ZTRmY2VkNDk1YTQyZTVlZGIiLCJjb2xsZWdlIjoiNjE1NWEwYWU4NjNjNmYyNDAxZWIxYzRkIiwiaWF0IjoxNjM0OTg5MzEyfQ.SU_7gWZfVb7sOlLUCyVCa33KIWZVaHyIQ61WoDs4LBU'
+            token:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTlmM2NkZGM0Y2U5ZmRkNmM4YjRmOWQiLCJjb2xsZWdlIjoiNjE1NWEwYWU4NjNjNmYyNDAxZWIxYzRkIiwiaWF0IjoxNjM5MzkxODMyfQ.TbMkd8xqPbdbvE3wG6VZDJi4ySPRywj9ooU8goITGZs'
         },
     });
     socket.connect();
@@ -31,6 +31,10 @@
     socket.on('recentChats',(msg)=>{
         console.log(msg);
     });
+    socket.on('fetch-messages-ok',(msg)=>{
+        console.log(msg);
+    });
+    socket.emit('fetchMessages','61af15b819318f7736941a0e',0);
     socket.on('connect_error',(err)=>{
         console.log('error connecting to server',err);
     })

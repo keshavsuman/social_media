@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const chatModel = require('./chatModel');
 const messageModel = require('./messageModel');
-
+const moment = require('moment');
 function authToken(socket,next){
     try {
         const token  = socket.handshake.auth.token;
@@ -66,7 +66,12 @@ async function fetchMessages(chatId,skip){
             const messages = await messageModel.find({
                 chatId:chatId,
             }).limit(20).skip(skip);
-            return messages;
+            const newMessages = messages.map((m)=>{
+                // m.time = moment(m.createdAt).format('MMM Do YYYY h:mm A');
+                m.time = moment(m.createdAt).calendar();
+                return {...m.toObject(),time:m.time};
+            });
+            return newMessages??[];
         }
     } catch (error) {
         console.log(error);
