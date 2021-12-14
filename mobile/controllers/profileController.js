@@ -80,7 +80,7 @@ module.exports.otherUserProfile = async (req, res) => {
             responseManagement.sendResponse(res, httpStatus.NOT_FOUND, "User doesn't exits",{});
         }
         var chats = await chatModel.find({
-            users: {$in:[req.data._id,req.params.id]},
+            users: {$all:[req.data._id,req.params.id]},
         });
         var data = {
             _id:user._id,
