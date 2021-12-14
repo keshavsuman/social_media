@@ -79,8 +79,8 @@ module.exports.otherUserProfile = async (req, res) => {
         if(!user){
             responseManagement.sendResponse(res, httpStatus.NOT_FOUND, "User doesn't exits",{});
         }
-        const chatId = await chats.findOne({
-            users: {$in: [req.data._id,req.params.id]}
+        var chats = await chatModel.find({
+            users: {$in:[req.data._id,req.params.id]},
         });
         var data = {
             _id:user._id,
@@ -102,6 +102,7 @@ module.exports.otherUserProfile = async (req, res) => {
             mobile:user.mobile,
             college:user.college,
             course:user.course,
+            chatId:chats[0]._id,
             myData:myData
         };
         data.connection_count = connections[0].connections.length;
