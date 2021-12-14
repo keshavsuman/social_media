@@ -102,7 +102,7 @@ module.exports.otherUserProfile = async (req, res) => {
             mobile:user.mobile,
             college:user.college,
             course:user.course,
-            chatId:chats[0]._id,
+            chatId:chats[0]?._id,
             myData:myData
         };
         data.connection_count = connections[0].connections.length;
