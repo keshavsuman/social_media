@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const chatModel = require('./chatModel');
 const chatController = require('./chatController');
 const userModel = require('./userModel');
+const moment = require('moment');
 
 const httpServer = http.createServer();  
 const io  = new socketio.Server(httpServer,{
