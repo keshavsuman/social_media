@@ -28,16 +28,32 @@ async function saveMessage(chatId,senderId,recieverId,message){
                     recieverId:recieverId,
                 });
             }else{
-                const newChat = await chatModel.create({
-                    users:[senderId,recieverId],
-                    lastMessage:message,
+                const chat = await chatModel.find({
+                    users:{$all:[senderId,recieverId]}
                 });
-                mes = await messageModel.create({
-                    chatId:newChat._id,
-                    message:message,
-                    senderId:senderId,
-                    recieverId:recieverId,
-                });
+                if(chat.length>0){
+                    chat[0].lastMessage = message;
+                    chat[0].lastActive = Date.now();
+                    await chat[0].save();
+                    mes = await messageModel.create({
+                        chatId:chat[0]._id,
+                        message:message,
+                        senderId:senderId,
+                        recieverId:recieverId,
+                    });
+                }else{
+
+                    const newChat = await chatModel.create({
+                        users:[senderId,recieverId],
+                        lastMessage:message,
+                    });
+                    mes = await messageModel.create({
+                        chatId:newChat._id,
+                        message:message,
+                        senderId:senderId,
+                        recieverId:recieverId,
+                    });
+                }
             }
             return mes;
         }else{

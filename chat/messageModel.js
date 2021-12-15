@@ -1,7 +1,9 @@
 const mongoose  = require('mongoose');
 
 const messageSchema = mongoose.Schema({
-    message:mongoose.Schema.Types.Mixed,
+    message:{
+        type:Object
+    },
     chatId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Chat'

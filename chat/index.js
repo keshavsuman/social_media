@@ -51,7 +51,8 @@ io.on('connection',(socket)=>{
     socket.on('message',(chatId,senderId,recieverId,message)=>{
         chatController.saveMessage(chatId,senderId,recieverId,message).then((mes)=>{
             if(mes!='validation failed'){
-                socket.emit('message-ok',mes);
+                var time = moment(mes.createdAt).calendar();
+                socket.emit('message-ok',{...mes,time:time});
             }else{
                 socket.emit('error',mes);
             }
