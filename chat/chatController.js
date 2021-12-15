@@ -18,7 +18,7 @@ async function saveMessage(chatId,senderId,recieverId,message){
         if(recieverId && senderId && message){
             if(chatId){
                 const chat = await chatModel.findByIdAndUpdate(chatId,{
-                    lastMessage = message,
+                    lastMessage: message,
                 });
                 mes = await messageModel.create({
                     chatId:chatId,
