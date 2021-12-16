@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const Narad = require('./narad');
 const chatModel = require('../Models/chatModel');
 const messageModel = require('../Models/messageModel');
+const mongoose = require('mongoose');
 
 class User{
 
