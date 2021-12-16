@@ -1,11 +1,10 @@
 const http = require('http');
 const socketio = require('socket.io');
 const mongoose = require('mongoose');
-const chatModel = require('./chatModel');
-const chatController = require('./chatController');
-const userModel = require('./userModel');
-const moment = require('moment');
-
+const jwt = require('jsonwebtoken');
+const userModel = require('./Models/userModel');
+const User = require('./Classes/user');
+const Narad = require('./Classes/narad');
 const httpServer = http.createServer();  
 const io  = new socketio.Server(httpServer,{
         cors: {
@@ -28,72 +27,28 @@ mongoose.connect(uri, {
   
 mongoose.connection.on('error', (err) => console.log(err))
 mongoose.connection.on('open', async () =>{
-    console.log("database Connected")
-        // var model = await chatModel.findById('6180dbb71bcaddff7e5c9c5b');
-        // console.log(model);
+    // console.log("database Connected")
 });
 
-io.use(chatController.authToken);
+io.use(auth);
 
 io.on('connection',(socket)=>{
+    const user = new User(socket);
+    Narad.add(user);
 
-    socket.on('connect',()=>{
-        console.log('user connected');
-    });
-
-    socket.on('isOnline',(data)=>{
-
-    });
+    socket.on('isOnline',(userId)=>user.isOnline(userId)); 
     
-    socket.on('typing',(senderId,recieverId)=>{
-        
-    });
+    socket.on('typing',(senderId,recieverId)=>{});
 
-    socket.on('message',(chatId,senderId,recieverId,message)=>{
-        chatController.saveMessage(chatId,senderId,recieverId,message).then((mes)=>{
-            if(mes=='validation failed'){
-                console.log(mes);
-                socket.emit('error',mes);
-            }else{
-                var time = moment(mes.createdAt).calendar();
-                console.log({...mes.toObject(),time:time});
-                socket.emit('message-ok',{...mes.toObject(),time:time});
-            }
-        }).catch((err)=>{
-            console.log(err);
-            socket.emit('error',err);
-        });
-    });
+    socket.on('message',(chatId,senderId,recieverId,message)=>{user.sendMessage(chatId,senderId,recieverId,message);});
+   
+    socket.on('delete',(messageId)=>{user.deleteMessage(messageId);});
 
-    socket.on('delete',(messageId)=>{
-        chatController.deleteMessage(messageId).then(()=>{
-            socket.emit('delete-ok');
-        }).catch((err)=>{
-            socket.emit('error',err);
-        });
-    });
+    socket.on('fetchMessages',(chatId,skip)=>{user.getMessages(chatId,skip);});
 
-    socket.on('fetchMessages',async (chatId,skip)=>{
-        try{
-            const messages = await chatController.fetchMessages(chatId,skip);
-            socket.emit('fetch-messages-ok',messages);
-        }catch(err){
-            socket.emit('error',err);
-        }
-    });
+    socket.on('recentChats',(numberOfChats)=>{user.getRecentChats(numberOfChats);});
 
-    socket.on('recentChats',async (userId,numberOfChats)=>{
-        var chats = await chatModel.find({
-            users:{$in:[new mongoose.Types.ObjectId(userId) ]},
-        }).populate({path:'users',select:{first_name:1,last_name:1,profile_pic:1}}).sort({
-            lastActive:-1
-        }).limit(numberOfChats);
-        socket.emit('recentChats',chats); 
-    });
-
-    socket.on('template_messages',()=>{
-        socket.emit('template_messages_ok',['Hello','Hi there','How are you ','Bye!!']);
-    });
+    socket.on('template_messages',()=>{user.getTemplateMessages();});
 
     socket.on('fetch-user-details',(userId)=>{
         userModel.findById(userId,{profile_pic:1,first_name:1,last_name:1,}).then((user)=>{
@@ -103,8 +58,22 @@ io.on('connection',(socket)=>{
         });
     });
 
+    socket.on('disconnect',()=>{
+        Narad.remove(user);
+        console.log('user disconnected');
+    });
 });
 
 httpServer.listen(8000,()=>{
     console.log("server is running on 8000");
 });
+
+function auth(socket,next){
+    try {
+        const token  = socket.handshake.auth.token;
+        jwt.verify(token, 'SXYUASDSDETLVFRPDSEA');
+        next();
+    } catch (error) {
+        console.log(error);
+    }
+}
