@@ -328,6 +328,7 @@ async function contents(req,res){
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
     }
 }
+
 async function timelineposts(req,res){
     try {
         var timelineposts;
@@ -344,14 +345,58 @@ async function timelineposts(req,res){
                             'localField': 'user', 
                             'foreignField': '_id', 
                             'as': 'myuser'
-                        }
-                        }, {
+                        },
+                        },{
+                            '$lookup': {
+                            'from': 'posts', 
+                            'localField': 'sharedPostId', 
+                            'foreignField': '_id', 
+                            'as': 'sharedPost',
+                            'pipeline':[{
+                                '$lookup': {
+                                    'from': 'users',
+                                    'localField': 'user',
+                                    'foreignField': '_id',
+                                    'as': 'user',
+                                }},
+                                {
+                                    $lookup: {
+                                        'from': 'courses', 
+                                        'localField': 'user.course', 
+                                        'foreignField': '_id', 
+                                        'as': 'course'
+                                    },
+                                },
+                                {
+                                    '$addFields': {
+                                        'user':{
+                                            $first:'$user'
+                                        },
+                                        'course':{
+                                            $first:'$course'
+                                        }
+                                    }
+                                },{
+                                    $project:{
+                                        'user.hash':0,
+                                        'user.salt':0,
+                                        'user.__v':0,
+                                        'user.course':0,
+                                    }
+                                }
+                            ]
+                            }  
+                        },
+                         {
                         '$addFields': {
                             'user':{
                                 $first:'$myuser'
                             },
                             'totalComments':{
                                 '$size':'$comments'
+                            },
+                            'sharedPost':{
+                                $first:'$sharedPost'
                             }
                         }
                         }, {
@@ -366,6 +411,7 @@ async function timelineposts(req,res){
                                         '$in':connectionDocument[0].followings
                                     }
                                 },
+                                
                                 {
                                     'user._id':mongoose.Types.ObjectId(req.data._id)
                                 }
@@ -382,12 +428,12 @@ async function timelineposts(req,res){
                             },
                         },
                         {
-                        '$addFields': {
-                            'course':{
-                                    $first:'$course'
-                                },
-                            }
-                        },
+                            '$addFields': {
+                                'course':{
+                                        $first:'$course'
+                                    },
+                                }
+                            },
                         {
                             $sort:{
                                 createdAt: -1
@@ -453,19 +499,16 @@ async function timelineposts(req,res){
                         },
                     },
                     {
-                    '$addFields': {
-                        'course':{
-                                $first:'$course'
-                            },
-                        }
-                    },
+                        '$addFields': {
+                            'course':{
+                                    $first:'$course'
+                                },
+                            }
+                        },
                     {
                         $sort:{
                             createdAt: -1
                         }
-                    },
-                    {
-                        $limit:50
                     },
                     {
                         $project:{
@@ -479,13 +522,16 @@ async function timelineposts(req,res){
                     }
             ]);
             }
-
             var postIds = []; 
             var reactedPost = [];
             timelineposts.forEach(t=>{
                 postIds.push(t._id);
             });
             var reaction = await reactions.find({
+                user:mongoose.Types.ObjectId(req.data._id),
+                post_id:{$in:postIds}
+            });
+            var bookmarks = await bookmark.find({
                 user:mongoose.Types.ObjectId(req.data._id),
                 post_id:{$in:postIds}
             });
@@ -498,22 +544,31 @@ async function timelineposts(req,res){
             timelineposts.forEach(tp=>{
                 var isReacted = false;
                 var type;
+                var isBookmarked = false;
+                var isMyPost = false;
+                if(tp._id==req.data._id){
+                    isMyPost = true;
+                }
                 reactedPost.forEach(rp=>{
                     if(rp._id.equals(tp._id)){
                         isReacted = true;
                         type = rp.type;
                     }
-                })
-                timelinepost.push({...tp,isReacted:isReacted,reactionType:type});
+                });
+                bookmarks.forEach(b=>{
+                    if(b.post_id.includes(tp._id)){
+                        isBookmarked = true;
+                    }
+                });
+                timelinepost.push({...tp,isReacted:isReacted,reactionType:type,isBookmarked:isBookmarked,isMyPost});
             });
             responseManagement.sendResponse(res,httpStatus.OK,'',timelinepost);
         }
     } catch (error) {
-        console.log(error.message);
+        console.log(error);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
     }
 }
-
 async function getCommentsReply(req,res){
     try {
         var replies = await comments.findById(req.body.commentId,{reply:1,_id:0}).populate({path:'reply.user',select:{first_name:1,last_name:1,profile_pic:1}});

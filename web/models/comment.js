@@ -1,20 +1,15 @@
 const mongoose = require('mongoose');
 
-const replySchema = mongoose.Schema({
-        reply:{type:String},
-        user:{  
-                type:mongoose.Schema.Types.ObjectId,
-                ref:'user',
-            },
-        time:{type:Date,default:Date.now()}
-});
 
-const commentsSchema = mongoose.Schema({
-    post_id:{type:mongoose.Schema.Types.ObjectId,ref:'post',required:true},
+const commentsSchema = mongoose.Schema({ 
+    post_id:{type:mongoose.Schema.Types.ObjectId,ref:'post'},
+    comment_id:{type:mongoose.Schema.Types.ObjectId,ref:'comment'},
     comment:{type:String},
-    reply:[replySchema],
+    reply:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'comment'
+    }],
     user:{type:mongoose.Schema.Types.ObjectId,ref:'user',required:true}
 },{timestamps:true});
 
-module.exports = mongoose.model('comments',commentsSchema);
-// module.exports = replySchema;
+module.exports = mongoose.model('comment',commentsSchema);

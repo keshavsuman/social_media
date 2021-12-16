@@ -16,7 +16,7 @@ var Schema = new mongoose.Schema({
     ANGRY:{type:Number,default:0},
     reaction_count:{type:Number,default:0},
     share_count:{type:Number,default:0},
-
+    sharedPostId:{type:mongoose.Schema.Types.ObjectId,ref:'posts'}
 }, { timestamps: true });
 
 
