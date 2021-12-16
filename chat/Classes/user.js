@@ -50,7 +50,7 @@ class User{
                         });
                         var time = moment(mes.createdAt).calendar();
                         this.socket.emit('message-ok',{...mes.toObject(),time:time});
-                        Narad.getUser(recieverId)?.socket.emit('newMessage',{...mes.toObject(),time:time});
+                        Narad.getUser(recieverId)?.socket.emit('newMessages',{...mes.toObject(),time:time});
                     }else{
                         const newChat = await chatModel.create({
                             users:[senderId,recieverId],
@@ -64,7 +64,7 @@ class User{
                         });
                         var time = moment(mes.createdAt).calendar();
                         this.socket.emit('message-ok',{...mes.toObject(),time:time});
-                        Narad.getUser(recieverId)?.socket.emit('newMessage',{...mes.toObject(),time:time});
+                        Narad.getUser(recieverId)?.socket.emit('newMessages',{...mes.toObject(),time:time});
 
                     }
                 }
