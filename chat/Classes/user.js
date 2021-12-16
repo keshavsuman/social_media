@@ -81,7 +81,7 @@ class User{
         try{
             const messages = await messageModel.find({
                 chatId:chatId,
-            }).limit(20).skip(skip);
+            }).sort({createdAt:-1}).limit(20).skip(skip);
             const newMessages = messages.map((m)=>{
                 m.time = moment(m.createdAt).calendar();
                 return {...m.toObject(),time:m.time};
