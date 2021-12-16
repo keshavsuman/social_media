@@ -106,7 +106,7 @@ class User{
     async getRecentChats(numberOfChats){
         try{
             var chats = await chatModel.find({
-                users:{$in:[new mongoose.Types.ObjectId(userId) ]},
+                users:{$in:[new mongoose.Types.ObjectId(this.userId) ]},
             }).populate({path:'users',select:{first_name:1,last_name:1,profile_pic:1}}).sort({
                 updatedAt:-1
             }).limit(numberOfChats);
