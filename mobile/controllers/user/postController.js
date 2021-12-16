@@ -607,12 +607,16 @@ async function getCommentsReply(req,res){
 }
 async function bookmarkPost(req,res){
     try {
-        await bookmark.findOneAndUpdate({
-            user:mongoose.Types.ObjectId(req.data._id)
-        },{
-            $addToSet:{post_id:req.body.id}
-        });
-        responseManagement.sendResponse(res,httpStatus.OK,'Bookmark saved',{});
+        if(req.body.id){
+            await bookmark.findOneAndUpdate({
+                user:mongoose.Types.ObjectId(req.data._id)
+            },{
+                $addToSet:{post_id:req.body.id}
+            });
+            responseManagement.sendResponse(res,httpStatus.OK,'Bookmark saved',{});
+        }else{
+            responseManagement.sendResponse(res,httpStatus.BAD_REQUEST,'Bookmark not saved',{});
+        }
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});

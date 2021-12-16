@@ -580,12 +580,16 @@ async function getCommentsReply(req,res){
 }
 async function bookmarkPost(req,res){
     try {
-        await bookmark.findOneAndUpdate({
-            user:mongoose.Types.ObjectId(req.data._id)
-        },{
-            $addToSet:{posts:mongoose.Types.ObjectId(req.body.id)}
-        });
-        responseManagement.sendResponse(res,httpStatus.OK,'Bookmark saved',{});
+        if(req.body.post_id){
+            await bookmark.findOneAndUpdate({
+                user:mongoose.Types.ObjectId(req.data._id)
+            },{
+                $addToSet:{post_id:mongoose.Types.ObjectId(req.body.post_id)}
+            });
+            responseManagement.sendResponse(res,httpStatus.OK,'Bookmark saved',{});
+        }else{
+            responseManagement.sendResponse(res,httpStatus.BAD_REQUEST,'Post Id indefined',{});
+        }
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
@@ -606,12 +610,17 @@ async function getBookmarks(req,res){
 
 async function removebookmark(req,res){
     try {
-        await bookmark.findOneAndUpdate({
-            user:mongoose.Types.ObjectId(req.data._id)
-        },{
-            $pull:{post_id:mongoose.Types.ObjectId(req.body.post_id)}
-        });
-        responseManagement.sendResponse(res,httpStatus.OK,'Bookmark removed',{});
+        if(req.body.post_id){
+            await bookmark.findOneAndUpdate({
+                user:mongoose.Types.ObjectId(req.data._id)
+            },{
+                $pull:{post_id:mongoose.Types.ObjectId(req.body.post_id)}
+            });
+            responseManagement.sendResponse(res,httpStatus.OK,'Bookmark removed',{});
+        }else{
+            responseManagement.sendResponse(res,httpStatus.BAD_REQUEST,'Bookmark Not removed',{});
+
+        }
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});

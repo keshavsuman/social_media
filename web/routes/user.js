@@ -24,6 +24,7 @@ router.use('/interest',interestRoutes);
 router.use('/post',postRoutes);
 router.use('/college',collegeRoutes); //Add college or update college
 // add university and update university
+
 router.use('/batch',batchRoutes);
 
 router.post('/search',auth,user.search); 
