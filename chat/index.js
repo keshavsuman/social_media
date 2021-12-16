@@ -75,5 +75,6 @@ function auth(socket,next){
         next();
     } catch (error) {
         console.log(error);
+        socket.emit('error',error);
     }
 }
