@@ -23,7 +23,9 @@ class User{
 
     async sendMessage(chatId,senderId,recieverId,message){
         try{
+            console.log(chatId,senderId,recieverId,message);
             if(recieverId && senderId && message){
+                console.log('message sent');
                 if(chatId){
                     await chatModel.findByIdAndUpdate(chatId,{
                         lastMessage: message,
