@@ -86,7 +86,7 @@ class User{
                 m.time = moment(m.createdAt).calendar();
                 return {...m.toObject(),time:m.time};
             });
-            this.socket.emit('fetch-messages-ok',newMessages??[]);
+            this.socket.emit('fetch-messages-ok',newMessages.reverse()??[]);
         }catch(err){
             console.log(err);
             this.socket.emit('error',err);
