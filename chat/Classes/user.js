@@ -34,7 +34,7 @@ class User{
                         senderId:senderId,
                         recieverId:recieverId,
                     });
-                    var time = moment(mes.createdAt).calendar();
+                    var time =  moment(mes.createdAt).tz('Asia/Kolkata').calendar();
                     this.socket.emit('message-ok',{...mes.toObject(),time:time});
                     Narad.getUser(recieverId)?.socket.emit('newMessages',{...mes.toObject(),time:time});
                 }else{
@@ -51,7 +51,7 @@ class User{
                             senderId:senderId,
                             recieverId:recieverId,
                         });
-                        var time = moment(mes.createdAt).calendar();
+                        var time = moment(mes.createdAt).tz('Asia/Kolkata').calendar();
                         this.socket.emit('message-ok',{...mes.toObject(),time:time});
                         Narad.getUser(recieverId)?.socket.emit('newMessages',{...mes.toObject(),time:time});
                     }else{
@@ -65,7 +65,7 @@ class User{
                             senderId:senderId,
                             recieverId:recieverId,
                         });
-                        var time = moment(mes.createdAt).calendar();
+                        var time = moment(mes.createdAt).tz('Asia/Kolkata').calendar();
                         this.socket.emit('message-ok',{...mes.toObject(),time:time});
                         Narad.getUser(recieverId)?.socket.emit('newMessages',{...mes.toObject(),time:time});
                     }
@@ -86,7 +86,7 @@ class User{
                 chatId:chatId,
             }).sort({createdAt:-1}).limit(20).skip(skip);
             const newMessages = messages.map((m)=>{
-                m.time = moment(m.createdAt).calendar();
+                m.time = moment(mes.createdAt).tz('Asia/Kolkata').calendar();
                 return {...m.toObject(),time:m.time};
             });
             this.socket.emit('fetch-messages-ok',newMessages.reverse()??[]);

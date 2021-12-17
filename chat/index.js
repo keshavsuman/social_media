@@ -6,6 +6,9 @@ const userModel = require('./Models/userModel');
 const User = require('./Classes/user');
 const Narad = require('./Classes/narad');
 const httpServer = http.createServer();  
+
+
+
 const io  = new socketio.Server(httpServer,{
         cors: {
         origin: "*",
@@ -14,7 +17,6 @@ const io  = new socketio.Server(httpServer,{
         // credentials:true,
       }
 });
-
 const uri = 'mongodb://younity:younity123@13.127.217.154:27017/social-media?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false';
 
 mongoose.connect(uri, {
