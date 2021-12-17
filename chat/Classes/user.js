@@ -86,7 +86,7 @@ class User{
                 chatId:chatId,
             }).sort({createdAt:-1}).limit(20).skip(skip);
             const newMessages = messages.map((m)=>{
-                m.time = moment(mes.createdAt).tz('Asia/Kolkata').calendar();
+                m.time = moment(m.createdAt).tz('Asia/Kolkata').calendar();
                 return {...m.toObject(),time:m.time};
             });
             this.socket.emit('fetch-messages-ok',newMessages.reverse()??[]);
