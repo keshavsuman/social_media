@@ -218,7 +218,7 @@ async function comment(req,res){
                 user:postToUpdate.user._id,
                 notificationFrom:req.data._id
             });
-            responseManagement.sendResponse(res,httpStatus.OK,'Comment added',{});
+            responseManagement.sendResponse(res,httpStatus.OK,'Comment added',comment);
         }else{
             responseManagement.sendResponse(res,httpStatus.NOT_FOUND,'post not found',{});
         }
@@ -246,7 +246,7 @@ async function replyOnComment(req,res){
             user:data.user._id,
             notificationFrom:req.data._id
         })
-        responseManagement.sendResponse(res,httpStatus.OK,'Reply added',{});
+        responseManagement.sendResponse(res,httpStatus.OK,'Reply added',rep);
     }catch(error){
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
@@ -395,7 +395,6 @@ async function timelineposts(req,res){
                                         'user.hash':0,
                                         'user.salt':0,
                                         'user.__v':0,
-                                        'user.course':0,
                                     }
                                 }
                             ]
