@@ -205,7 +205,7 @@ async function comment(req,res){
                 description:req.body.comment,
                 user:postToUpdate.user._id
             });
-            responseManagement.sendResponse(res,httpStatus.OK,'Comment added',{});
+            responseManagement.sendResponse(res,httpStatus.OK,'Comment added',comment);
         }else{
             responseManagement.sendResponse(res,httpStatus.OK,'post not found',{});
         }
@@ -381,7 +381,7 @@ async function timelineposts(req,res){
                                         'user.hash':0,
                                         'user.salt':0,
                                         'user.__v':0,
-                                        'user.course':0,
+                                        // 'user.course':0,
                                     }
                                 }
                             ]
