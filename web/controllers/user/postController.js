@@ -214,25 +214,26 @@ async function comment(req,res){
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,error);
     }
 }
-
+ 
 async function replyOnComment(req,res){
     try{
-        
-         var data = await comments.findByIdAndUpdate(req.body.id
-        ,{
-            $addToSet:{reply:{
-                reply:req.body.reply,
-                user:req.data._id
-            }}
+        var rep = await comments.create({
+            comment_id:req.body.comment_id,
+            comment:req.body.reply,
+            user:req.data._id
         });
+        var data = await comments.findByIdAndUpdate(req.body.id
+            ,{
+                $addToSet:{reply:rep._id}
+            });
         await notifications.create({
             title:`replied to your comment`,
             description:req.body.comment,
             type:'COMMENT_REPLY',
-            user:comment.user._id,
+            user:data.user._id,
             notificationFrom:req.data._id
-        });
-        responseManagement.sendResponse(res,httpStatus.OK,'Reply added',{});
+        })
+        responseManagement.sendResponse(res,httpStatus.OK,'Reply added',rep);
     }catch(error){
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
