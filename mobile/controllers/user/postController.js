@@ -218,7 +218,8 @@ async function comment(req,res){
                 user:postToUpdate.user._id,
                 notificationFrom:req.data._id
             });
-            responseManagement.sendResponse(res,httpStatus.OK,'Comment added',comment);
+            const comm = await comments.findById(comment._id).populate({path:'user','select':{first_name:1,last_name:1,profile_pic:1}});
+            responseManagement.sendResponse(res,httpStatus.OK,'Comment added',comm);
         }else{
             responseManagement.sendResponse(res,httpStatus.NOT_FOUND,'post not found',{});
         }
