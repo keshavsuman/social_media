@@ -246,8 +246,9 @@ async function replyOnComment(req,res){
             type:'COMMENT_REPLY',
             user:data.user._id,
             notificationFrom:req.data._id
-        })
-        responseManagement.sendResponse(res,httpStatus.OK,'Reply added',rep);
+        });
+        var reply = await comments.findById(rep._id).populate({path:'user','select':{first_name:1,last_name:1,profile_pic:1}});
+        responseManagement.sendResponse(res,httpStatus.OK,'Reply added',reply);
     }catch(error){
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
