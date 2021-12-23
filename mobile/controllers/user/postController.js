@@ -455,6 +455,9 @@ async function timelineposts(req,res){
                             }
                         },
                         {
+                            $skip:req.body.skip??0
+                        },
+                        {
                             $project:{
                                 myuser:0,
                                 comments:0,
@@ -524,6 +527,9 @@ async function timelineposts(req,res){
                         $sort:{
                             createdAt: -1
                         }
+                    },
+                    {
+                        $skip:req.body.skip??0
                     },
                     {
                         $project:{
