@@ -458,6 +458,9 @@ async function timelineposts(req,res){
                             $skip:req.body.skip??0
                         },
                         {
+                            $limit:req.body.limit??5
+                        },
+                        {
                             $project:{
                                 myuser:0,
                                 comments:0,
@@ -530,6 +533,9 @@ async function timelineposts(req,res){
                     },
                     {
                         $skip:req.body.skip??0
+                    },
+                    {
+                        $limit:req.body.limit??5
                     },
                     {
                         $project:{
