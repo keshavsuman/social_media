@@ -241,7 +241,7 @@ module.exports.searchusers = async (req, res) => {
                 {first_name:{ '$regex': req.body.searchValue, '$options': 'i' }},
                 {last_name:{ '$regex': req.body.searchValue, '$options': 'i' }}
             ]
-        },{hash:0,salt:0}).skip(req.body.after).limit(limit);
+        },{hash:0,salt:0}).skip(req.body.skip??0).limit(limit);
         var totalUsers = await User.countDocuments();
         responseManagement.sendResponse(res,httpStatus.OK,'',{users:users,totalUsers:totalUsers});
     } catch (error) {
@@ -580,7 +580,7 @@ module.exports.myconnections = async (req,res)=>{
                 $limit:req.body.limit??20
             },
             {
-                $skip:req.body.after??0
+                $skip:req.body.skip??0
             } 
           ]);
   
@@ -597,7 +597,7 @@ module.exports.myconnections = async (req,res)=>{
 
 module.exports.getNotifications = async (req,res)=>{
     try {
-        var notifications = await notification.find({user:req.data._id}).sort({createdAt:-1}).limit(20).populate('notificationFrom',{hash:0,salt:0});
+        var notifications = await notification.find({user:req.data._id}).sort({createdAt:-1}).limit(20).skip(req.body.skip??0).populate('notificationFrom',{hash:0,salt:0});
         responseManagement.sendResponse(res,httpStatus.OK,'User notification',notifications);
     } catch (error) {
         console.log(error.message);
@@ -746,7 +746,7 @@ module.exports.getFollowersList = async (req,res)=>{
                 $limit:req.body.limit??20
             },
             {
-                $skip:req.body.after??0
+                $skip:req.body.skip??0
             } 
           ]);
         responseManagement.sendResponse(res,httpStatus.OK,'Followers list',followers[0].followers);
@@ -909,7 +909,7 @@ module.exports.searchInConnection = async (req,res)=>{
                 $limit:req.body.limit??20
             },
             {
-                $skip:req.body.after??0
+                $skip:req.body.skip??0
             } 
           ]);
         responseManagement.sendResponse(res,httpStatus.OK,'Search result',myconnections[0].connections);

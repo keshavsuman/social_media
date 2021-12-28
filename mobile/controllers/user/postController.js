@@ -589,6 +589,7 @@ async function timelineposts(req,res){
                 });
                 timelinepost.push({...tp,isReacted:isReacted,reactionType:type,isBookmarked:isBookmarked,isMyPost});
             });
+            console.log(timelinepost.length);
             responseManagement.sendResponse(res,httpStatus.OK,'',timelinepost);
         }
     } catch (error) {

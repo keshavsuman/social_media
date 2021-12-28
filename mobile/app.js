@@ -9,7 +9,6 @@ const { errors } = require('celebrate');
 const cors = require('cors')
 
 const config = require('./config/config');
-const db = require('./config/database.json');
 const mongoose = require('mongoose');
 const mongoSanitize = require('express-mongo-sanitize');
 
