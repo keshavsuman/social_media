@@ -474,7 +474,6 @@ module.exports.connectAcceptReject = async (req,res)=>{
                 $addToSet:{followers:req.body.id},
                 $addToSet:{connections:req.body.id},
             });
-            
             await connections.findOneAndUpdate({user:req.body.id},{
                 $addToSet:{followings:req.data._id},
                 $addToSet:{followers:req.data._id},
