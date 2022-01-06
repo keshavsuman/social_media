@@ -116,7 +116,7 @@ class User{
                 var lastActive = moment(c.lastActive).tz('Asia/Kolkata').calendar();
                 return {...c.toObject(),lastActive:lastActive};
             });
-            this.socket.emit('recentChats',chats); 
+            this.socket.emit('recentChats',chat); 
         }catch(err){
             console.log(err);
             this.socket.emit('error',err);
