@@ -112,6 +112,10 @@ class User{
             }).populate({path:'users',select:{first_name:1,last_name:1,profile_pic:1}}).sort({
                 updatedAt:-1
             }).limit(numberOfChats);
+            const chat = chats.map((c)=>{
+                var lastActive = moment(c.lastActive).tz('Asia/Kolkata').calendar();
+                return {...c.toObject(),lastActive:lastActive};
+            });
             this.socket.emit('recentChats',chats); 
         }catch(err){
             console.log(err);
