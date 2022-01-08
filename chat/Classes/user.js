@@ -55,8 +55,15 @@ class User{
                         this.socket.emit('message-ok',{...mes.toObject(),time:time});
                         Narad.getUser(recieverId)?.socket.emit('newMessages',{...mes.toObject(),time:time});
                     }else{
+                        var users;
+                        if(this.userId==senderId){
+                            users = [senderId,recieverId];
+                        }else{
+                            users = [recieverId,senderId];
+                        }
+
                         const newChat = await chatModel.create({
-                            users:[senderId,recieverId],
+                            users:users,
                             lastMessage:message,
                         });
                         const mes = await messageModel.create({
