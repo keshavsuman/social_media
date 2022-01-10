@@ -15,6 +15,8 @@ const notification =  require('../models/notifications');
 const userToken = require('../models/user_token');
 const mongoose = require('mongoose');
 const bookmarks = require('../models/bookmarks');
+const chatModel = require('../models/chatModel');
+const messageModel = require('../models/messageModel'); 
 
 /****** Login ****/
 module.exports.login = async (req, res) => {
@@ -56,29 +58,36 @@ module.exports.socialLogin = async (req, res) => {
     try {
         const { email, provider_type, provider_id, name, profile_pic } = req.body;
         const [first_name, last_name] = name.split(" ");
-        const user = await User.findOne({ provider_id, provider_type });
-        if (user) {
-            await User.updateOne({ _id: user._id }, { first_name, last_name, profile_pic });
+        if (email) {
+            const user = await User.findOne({email:email});
+            await User.updateOne({ _id: user._id }, { first_name, last_name, profile_pic,provider_type,provider_id });
             const token = await user.generateJWT();
-            var req_ip = req.connection.remoteAddress.split(":")[3] || '';
-            await UserToken.create({ user_id: user._id, token, req_ip, user_agent: req.headers['user-agent'] });
+            // var req_ip = req.connection.remoteAddress.split(":")[3] || '';
+            // await UserToken.create({ user_id: user._id, token, req_ip, user_agent: req.headers['user-agent'] });
+            // const user_data = {
+            //     id: user._id,
+                
+            //     email: user.email,
+            //     mobile: user.mobile,
+            //     profile_setup: user.profile_setup,
+            //     token:token
+            // };
             const user_data = {
-                id: user._id,
-                name: user.first_name + ' ' + user.last_name,
+                _id: user._id,
                 email: user.email,
+                first_name: user.first_name,
+                last_name: user.last_name,
                 mobile: user.mobile,
-                profile_setup: user.profile_setup,
-                token:token
-            };
-            responseManagement.sendResponse(res, httpStatus.OK, global.logged_in_successful, {"token": user_data.token,user_data});
+                profile_setup:user.profile_setup
+            }
+            responseManagement.sendResponse(res, httpStatus.OK, global.logged_in_successful, {"token": token,user_data});
             
         } else {
-            const uuser = await User.findOne({ email });
             const nuser = await User.create({ provider_type, provider_id, first_name, last_name, email, profile_pic });
             const token = await nuser.generateJWT();
-            var req_ip = req.connection.remoteAddress.split(":")[3] || '';
-            const result = await UserToken.create({ user_id: nuser._id, token, req_ip, user_agent: req.headers['user-agent'] });
-            responseManagement.sendResponse(res, httpStatus.OK, global.logged_in_successful, { token: token, user_data: { first_name, last_name, email, profile_pic } })
+            // var req_ip = req.connection.remoteAddress.split(":")[3] || '';
+            // const result = await UserToken.create({ user_id: nuser._id, token, req_ip, user_agent: req.headers['user-agent'] });
+            responseManagement.sendResponse(res, httpStatus.OK, global.logged_in_successful, { token: token, user_data: { _id:nuser._id,email:nuser.email,profile_setup:false} })
         }
     } catch (error) {
         console.log(error)
@@ -188,12 +197,51 @@ module.exports.resetPassword = async (req, res) => {
 module.exports.searchusers = async (req, res) => {
     try {
         var limit  = req.body.limit || 50;
+        // const { start, length, columns, order, search, draw, start_date, end_date, state } = req.body;
+        // const sortColumn = columns[order[0].column].data;
+        // const sortOrder = order[0].dir;
+        // const searchValue = search.value;
+        // var search_query = [];
+        // let filter1 = {};
+        // let filter2 = {};
+        // let filter3 = {};
+        // if (start_date) {
+        //     filter1 = { "createdAt": { $gte: new Date(start_date) } }
+        // }
+        // if (end_date) {
+        //     filter2 = { "createdAt": { $lte: new Date(end_date) } }
+        // }
+        // if (state) {
+        //     filter3 = { "state": state }
+        // }
+
+        // for (var i = 0; i < columns.length; i++) {
+        //     if (columns[i].searchable) {
+        //         var key = columns[i]['name']
+        //         search_query.push({
+        //             [key]: { '$regex': searchValue, '$options': 'i' }
+        //         });
+        //     }
+        // }
+        // var sort_q = {
+        //     [sortColumn]: sortOrder
+        // }
+        // var query1;
+        // if (searchValue) {
+        //     query1 = { $or: search_query };
+        // } else {
+        //     query1 = {};
+        // }
+        // const users = await User.find({ $and: [query1, filter1, filter2, filter3] }, {}, { sort: sort_q, skip: start, limit: length });
+        // const total = await User.countDocuments();
+        // const stotal = await User.countDocuments({ $and: [query1, filter1, filter2, filter3] });
+        // res.send({ status: httpStatus.OK, users: users, draw: draw, recordsTotal: total, recordsFiltered: stotal })
         var users  = await User.find({
             $or:[
                 {first_name:{ '$regex': req.body.searchValue, '$options': 'i' }},
                 {last_name:{ '$regex': req.body.searchValue, '$options': 'i' }}
             ]
-        },{hash:0,salt:0}).skip(req.body.after).limit(limit);
+        },{hash:0,salt:0}).skip(req.body.skip??0).limit(limit);
         var totalUsers = await User.countDocuments();
         responseManagement.sendResponse(res,httpStatus.OK,'',{users:users,totalUsers:totalUsers});
     } catch (error) {
@@ -240,7 +288,6 @@ module.exports.editUser = async (req, res) => {
 module.exports.updateUser = async (req, res) => {
     try {
         const user = await User.findOne({ _id: req.data._id });
-        console.log(user);
         if (user) {
             const result = await User.findByIdAndUpdate(req.data._id, req.body);
             if(result['college'] && result['course'] && result['start_date'] && result['end_date']){
@@ -357,7 +404,6 @@ module.exports.search = async (req,res) =>{
           ]);
         responseManagement.sendResponse(res,httpStatus.OK,'',searchResults);
     }
-
         } catch (error) {
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
@@ -368,13 +414,9 @@ module.exports.followunfollow = async  (req,res)=>{
     try {
         if(req.body.operation=='follow')
         {   
+            
             await connections.updateOne({user:mongoose.Types.ObjectId(req.body.id)},{
                 $addToSet:{followers:req.data._id}
-            },{
-                new:true
-            });
-            await connections.updateOne({user:mongoose.Types.ObjectId(req.data._id)},{
-                $addToSet:{followings:req.body.id}
             },{
                 new:true
             });
@@ -382,7 +424,13 @@ module.exports.followunfollow = async  (req,res)=>{
                 title:`started following you`,
                 description:'',
                 type:'FOLLOWED',
-                user:req.body.id
+                user:req.body.id,
+                notificationFrom:req.data._id
+            });
+            await connections.updateOne({user:mongoose.Types.ObjectId(req.data._id)},{
+                $addToSet:{followings:req.body.id}
+            },{
+                new:true
             });
             responseManagement.sendResponse(res,httpStatus.OK,'followed',{});
         }else if(req.body.operation=='unfollow')
@@ -408,11 +456,10 @@ module.exports.followunfollow = async  (req,res)=>{
     }
 }
 
-
 module.exports.connectAcceptReject = async (req,res)=>{
     try {
         if(req.body.operation==='reject'){
-            await connections.findOneAndUpdate({user:mongoose.Types.ObjectId(req.data._id)},{
+            await connections.findOneAndUpdate({user:req.data._id},{
                 $pullAll:{requested:[req.body.id]}
             });
             await User.findByIdAndUpdate(req.body.id,{
@@ -421,13 +468,13 @@ module.exports.connectAcceptReject = async (req,res)=>{
             responseManagement.sendResponse(res,httpStatus.OK,'rejected',{});
         }
         else if(req.body.operation==='accept'){
-            await connections.findOneAndUpdate({user:mongoose.Types.ObjectId(req.data._id)},{
+            await connections.findOneAndUpdate({user:req.data._id},{
                 $pullAll:{requested:[req.body.id]},
                 $addToSet:{followings:req.body.id},
                 $addToSet:{followers:req.body.id},
                 $addToSet:{connections:req.body.id},
             });
-            await connections.findOneAndUpdate({user:mongoose.Types.ObjectId(req.body.id)},{
+            await connections.findOneAndUpdate({user:req.body.id},{
                 $addToSet:{followings:req.data._id},
                 $addToSet:{followers:req.data._id},
                 $addToSet:{connections:req.data._id},
@@ -436,10 +483,11 @@ module.exports.connectAcceptReject = async (req,res)=>{
                 $pullAll:{sentRequests:[req.data._id]}
             });
             await notification.create({
-                title:`connection accepted`,
+                title:`has requested to connect`,
                 type:"CONNECTION_ACCEPTED",
                 description:"",
-                user:req.body.id
+                user:req.body.id,
+                notificationFrom:req.data._id
             });
             responseManagement.sendResponse(res,httpStatus.OK,'accepted',{});
         }
@@ -450,7 +498,6 @@ module.exports.connectAcceptReject = async (req,res)=>{
             await User.findByIdAndUpdate(req.data._id,{
                 $push:{sentRequests:req.body.id}
             });
-            
             await notification.create({
                 title:`has requested you for connection`,
                 type:"CONNECTION_REQUEST",
@@ -492,7 +539,7 @@ module.exports.getPendingRequests = async (req,res)=>{
 module.exports.myconnections = async (req,res)=>{
     try {
         var connection  = await connections.find({user:req.data._id});
-        
+
         var myconnections = await connections.aggregate([
             {
                 $match:{
@@ -532,12 +579,12 @@ module.exports.myconnections = async (req,res)=>{
                 $limit:req.body.limit??20
             },
             {
-                $skip:req.body.after??0
+                $skip:req.body.skip??0
             } 
           ]);
   
         if(myconnections.length>0){
-            responseManagement.sendResponse(res, httpStatus.OK,'',myconnections[0].connections);
+            responseManagement.sendResponse(res, httpStatus.OK,'My Connections',myconnections[0].connections);
         }else{
             responseManagement.sendResponse(res, httpStatus.OK,'Connections not found in the database',{});
         }
@@ -556,15 +603,6 @@ module.exports.getNotifications = async (req,res)=>{
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
     }
 }
-module.exports.deleteNotification = async (req,res)=>{
-    try{
-        await notification.findByIdAndDelete(req.body.id);
-        responseManagement.sendResponse(res,httpStatus.OK,'User notification deleted');
-    }catch(error){
-        console.log(error.message);
-        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
-    }
-}
 
 module.exports.removeConnection = async (req,res)=>{
     try {
@@ -575,11 +613,13 @@ module.exports.removeConnection = async (req,res)=>{
             $pullAll:{connections:[mongoose.Types.ObjectId(req.data._id)]}
         });
         responseManagement.sendResponse(res,httpStatus.OK,'disconnected',{});
+
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
     }
 }
+
 module.exports.peopleYouMayKnow = async (req,res)=>{
     try {
         var connects = await connections.find({user:req.data._id});
@@ -599,8 +639,8 @@ module.exports.peopleYouMayKnow = async (req,res)=>{
                     {college:user.college},
                     {home_town:user.home_town}
                 ],
-            }},
-            {
+            }
+            },{
                 '$lookup': {
                   'from': 'connections', 
                   'localField': '_id', 
@@ -651,13 +691,13 @@ module.exports.peopleYouMayKnow = async (req,res)=>{
                 }
             }
         ]);
-
         responseManagement.sendResponse(res,httpStatus.OK,'people you may know list',users);
     } catch (error) {
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
     }
 }
+
 
 module.exports.getFollowersList = async (req,res)=>{
     try{
@@ -705,25 +745,13 @@ module.exports.getFollowersList = async (req,res)=>{
                 $limit:req.body.limit??20
             },
             {
-                $skip:req.body.after??0
+                $skip:req.body.skip??0
             } 
           ]);
         responseManagement.sendResponse(res,httpStatus.OK,'Followers list',followers[0].followers);
     }catch(e){
         console.log(e);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,e.message,{});
-    }
-}
-module.exports.getUserRequests = async (req,res)=>{
-    try {
-        var requests = await User.findById(req.data._id,{
-            sentRequests:1
-        }).populate({path:'sentRequests',select:{salt:0,hash:0}});
-        responseManagement.sendResponse(res,httpStatus.OK,'User Requests',requests.sentRequests??[]);
-
-    } catch (error) {
-        console.log(error.message);
-        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
     }
 }
 module.exports.getFollowingList = async (req,res)=>{
@@ -771,17 +799,26 @@ module.exports.getFollowingList = async (req,res)=>{
             },
             {
                 $limit:req.body.limit??20
-            },{
+            }
+            ,{
                 $skip:req.body.skip??0
             } 
           ]);
         responseManagement.sendResponse(res,httpStatus.OK,'Followings list',followings[0].followings);
     }catch(e){
-        console.log(error);
-        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
+        console.log(e);
+        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,e.message,{});
     }
 }
-
+module.exports.deleteNotification = async (req,res)=>{
+    try{
+        await notification.findByIdAndDelete(req.body.id);
+        responseManagement.sendResponse(res,httpStatus.OK,'User notification deleted');
+    }catch(error){
+        console.log(error.message);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
+    }
+}
 
 module.exports.cancelRequest = async (req,res)=>{
     try {
@@ -798,8 +835,30 @@ module.exports.cancelRequest = async (req,res)=>{
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
     }
 }
+module.exports.getUserRequests = async (req,res)=>{
+    try {
+        var requests = await User.findById(req.data._id,{
+            sentRequests:1
+        }).populate({path:'sentRequests',select:{salt:0,hash:0}});
+        responseManagement.sendResponse(res,httpStatus.OK,'Request canceled',requests.sentRequests??[]);
 
-module.exports.searchInConnection = async(req,res)=>{
+    } catch (error) {
+        console.log(error.message);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
+    }
+}
+
+module.exports.recentChats = async (req, res) => {
+    try {
+        const chats = await chatModel.find({ user:{$in:[req.data._id]}}).sort({createdAt:-1}).limit(15).populate({path:'user',select:{salt:0,hash:0}});
+        responseManagement.sendResponse(res, httpStatus.OK, 'Recents chats',chats);
+    } catch (error) {
+        console.log(error);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
+    }
+};
+
+module.exports.searchInConnection = async (req,res)=>{
     try{
         var connection  = await connections.find({user:req.data._id});
 
@@ -823,9 +882,12 @@ module.exports.searchInConnection = async(req,res)=>{
                 'pipeline': [
                   {
                      $match:{
-                        first_name:{ '$regex': req.body.keyword, '$options': 'i' },
-                        last_name:{ '$regex': req.body.keyword, '$options': 'i' }
+                        $or:[
+                            {first_name:{ '$regex': req.body.keyword, '$options': 'i' }},
+                            {last_name:{ '$regex': req.body.keyword, '$options': 'i' }}
+                        ],
                      },
+                },{
                     '$project': {
                       'first_name': 1, 
                       'last_name': 1, 
@@ -846,7 +908,7 @@ module.exports.searchInConnection = async(req,res)=>{
                 $limit:req.body.limit??20
             },
             {
-                $skip:req.body.after??0
+                $skip:req.body.skip??0
             } 
           ]);
         responseManagement.sendResponse(res,httpStatus.OK,'Search result',myconnections[0].connections);
@@ -867,5 +929,33 @@ module.exports.muteUnmuteNotification = async (req,res)=>{
     } catch (error) {
         console.log(error);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error,{});
+    }
+}
+
+module.exports.sendPrivately = async (req,res)=>{
+    try {
+        var users = req.body.users.map((e)=>{
+            return [req.data._id,e._id];
+        });
+        var chats = await chatModel.find({
+            users: {$in:users},
+        });
+        for(var i=0;i<chats.length;i++){
+            
+            await chatModel.findByIdAndUpdate(chats[i]._id,{
+                lastMessage:req.body.message, 
+            });
+            var message = await messageModel.create({
+                chatId:chats[i]._id,
+                senderId:req.data._id,
+                recieverId:chats[i].users.filter((f)=>{f!=req.data._id})[0],
+                message:req.body.message,    
+            });
+            console.log(message);
+        }
+        responseManagement.sendResponse(res, httpStatus.OK, 'Messages sent Privately', {});
+    } catch (error) {
+        console.log(error);
+        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,global.internal_server_error,{});
     }
 }
