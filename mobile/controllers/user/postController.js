@@ -17,7 +17,7 @@ async function createPost(req,res){
             return;
         }
         if(req.body.mode==='create'){
-            await post.create({
+            const mypost = await post.create({
                 user:req.data._id,
                 content:req.body.content,
                 media_type:req.body.media_type.toLowerCase(),
@@ -25,11 +25,23 @@ async function createPost(req,res){
                 media_url:req.body.media_url,
                 mode:req.body.mode,
             });
+            const connections = await connections.findOne({user:req.data._id});
+            const connectionIds = [...connections.follower,...connections.connections];
+            connectionIds.forEach(async (follower) => {
+                await notifications.create({
+                    title:`has made a post`,
+                    type:"NEW_POST",
+                    description:"",
+                    user:follower,
+                    post:mypost._id,
+                    notificationFrom:req.data._id
+                });
+            });
             responseManagement.sendResponse(res,httpStatus.CREATED,"Post successfully created",{});
             return;
         }else if(req.body.mode==='share'){
             const mypost = await post.findById(req.body.post_id);
-            await post.create({
+            const sharedPost = await post.create({
                 user:req.data._id,
                 content:req.body.content,
                 media_type:mypost.media_type,
@@ -38,6 +50,18 @@ async function createPost(req,res){
                 mode:req.body.mode,
                 shareFrom:mypost.mode=='share'?mypost.shareFrom:mypost.user,
                 sharedPostId:req.body.post_id
+            });
+            const connections = await connections.findOne({user:req.data._id});
+            const connectionIds3 = [...connections.follower,...connections.connections];
+            connectionIds3.forEach(async (follower) => {
+                await notifications.create({
+                    title:`has shared a post`,
+                    type:"NEW_POST",
+                    description:"",
+                    post:sharedPost._id,
+                    user:follower,
+                    notificationFrom:req.data._id
+                });
             });
             responseManagement.sendResponse(res,httpStatus.CREATED,"Post successfully shared",{});
         }

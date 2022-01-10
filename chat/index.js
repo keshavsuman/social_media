@@ -41,7 +41,7 @@ io.on('connection',(socket)=>{
     socket.on('isOnline',(userId)=>user.isOnline(userId)); 
     
     socket.on('typing',(senderId,recieverId)=>{});
-
+    
     socket.on('message',(chatId,senderId,recieverId,message)=>{user.sendMessage(chatId,senderId,recieverId,message);});
    
     socket.on('delete',(messageId)=>{user.deleteMessage(messageId);});
