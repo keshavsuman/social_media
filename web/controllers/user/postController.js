@@ -683,7 +683,10 @@ async function getBookmarks(req,res){
         var posts = await bookmark.findOne({
             user:mongoose.Types.ObjectId(req.data._id) 
         }).populate({path:'post_id',populate:{path:'user',select:{hash:0,salt:0},populate:'course'}});
-        responseManagement.sendResponse(res,httpStatus.OK,'Bookmarks list',posts.post_id);
+        var bookmarks = posts.post_id.map(p=>{
+            return {...p.toObject(),course:p.user.course,isMyPost:p.user._id.equals(req.data._id)};
+        });
+        responseManagement.sendResponse(res,httpStatus.OK,'Bookmarks list',bookmarks);
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
