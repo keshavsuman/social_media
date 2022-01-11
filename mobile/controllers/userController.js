@@ -678,6 +678,14 @@ module.exports.peopleYouMayKnow = async (req,res)=>{
                   }
                 }
               },
+              {
+                  $lookup:{
+                      from:'courses',
+                      localField:'course',
+                      foreignField:'_id',
+                      as:'course'
+                  }
+              },
             {
                 '$project': {
                     'first_name': 1, 
