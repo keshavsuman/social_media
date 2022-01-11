@@ -26,10 +26,10 @@ async function createPost(req,res){
                 mode:req.body.mode,
             });
             const myconnections = await connections.findOne({user:req.data._id});
-            const connectionIds = [...myconnections.follower,...myconnections.connections];
+            const connectionIds = [...myconnections.followers,...myconnections.connections];
             connectionIds.forEach(async (follower) => {
                 await notifications.create({
-                    title:`has made a post`,
+                    title:`has created a post`,
                     type:"NEW_POST",
                     description:"",
                     user:follower,
@@ -52,7 +52,7 @@ async function createPost(req,res){
                 sharedPostId:req.body.post_id
             });
             const myconnections = await connections.findOne({user:req.data._id});
-            const connectionIds3 = [...myconnections.follower,...myconnections.connections];
+            const connectionIds3 = [...myconnections.followers,...myconnections.connections];
             connectionIds3.forEach(async (follower) => {
                 await notifications.create({
                     title:`has shared a post`,
