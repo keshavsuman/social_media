@@ -708,11 +708,68 @@ async function bookmarkPost(req,res){
 
 async function getBookmarks(req,res){
     try {
-        var posts = await bookmark.findOne({
-            user:mongoose.Types.ObjectId(req.data._id) 
-        }).populate({path:'post_id',populate:{path:'user',select:{hash:0,salt:0},populate:'course'}});
-        var bookmarks = posts.post_id.map(p=>{
-            return {...p.toObject(),course:p.user.course,isMyPost:p.user._id.equals(req.data._id)};
+        var posts = await bookmark.aggregate([
+            {
+              '$match': {
+                'user': mongoose.Types.ObjectId(req.data._id)
+              }
+            }, {
+              '$project': {
+                'post_id': 1, 
+                '_id': 0
+              }
+            }, {
+              '$lookup': {
+                'from': 'posts', 
+                'localField': 'post_id', 
+                'foreignField': '_id', 
+                'as': 'post', 
+                'pipeline': [
+                  {
+                    '$lookup': {
+                      'from': 'users', 
+                      'localField': 'user', 
+                      'foreignField': '_id', 
+                      'as': 'user', 
+                      'pipeline': [
+                        {
+                          '$lookup': {
+                            'from': 'courses', 
+                            'localField': 'course', 
+                            'foreignField': '_id', 
+                            'as': 'course'
+                          }
+                        }, {
+                          '$addFields': {
+                            'course': {
+                              '$first': '$course'
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }, {
+                    '$addFields': {
+                      'user': {
+                        '$first': '$user'
+                      }, 
+                      'totalComments': {
+                        '$size': '$comments'
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+                '$project': {
+                  'post_id':0, 
+                }
+              },
+          ]);
+
+        var bookmarks = posts[0].post.map(p=>{
+            return {...p,course:p.user.course,isMyPost:p.user._id.equals(req.data._id)};
         });
         responseManagement.sendResponse(res,httpStatus.OK,'Bookmarks list',bookmarks);
     } catch (error) {
