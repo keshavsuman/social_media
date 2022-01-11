@@ -831,6 +831,45 @@ async function likeUnlikeComment(req,res){
     }
 }
 
+async function getReactedUser(req,res){
+    try {
+        var users = await reactions.aggregate([
+            {
+                $match:{
+                    post_id:mongoose.Types.ObjectId(req.body.post_id),
+                    reaction_type:req.body.reaction_type
+                }
+            },
+            {
+                $lookup:{
+                    'from': 'users', 
+                    'localField': 'user', 
+                    'foreignField': '_id', 
+                    'as': 'user',
+                    'pipeline':[{
+                        $project:{
+                            'first_name':1,
+                            'last_name':1,
+                            'email':1,
+                            'profile_pic':1
+                        }
+                    }]
+                }
+            },
+            {
+                $project:{
+                    _id:0,
+                    post_id:0
+                }
+            }
+        ]);
+        responseManagement.sendResponse(res,httpStatus.OK,'Reacted Users',users[0].user);
+    } catch (error) {
+        console.log(error);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
+    }
+}
+
 module.exports = {
     getPosts,
     createPost,
@@ -849,5 +888,6 @@ module.exports = {
     removebookmark,
     post_details,
     shareList,
-    likeUnlikeComment
+    likeUnlikeComment,
+    getReactedUser
 }

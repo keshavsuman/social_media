@@ -34,4 +34,5 @@ router.post('/bookmark',postController.bookmarkPost);
 router.get('/getbookmarks',postController.getBookmarks);
 router.get('/shareList',postController.shareList);
 router.post('/removebookmark',postController.removebookmark);
+router.post('/getReactedUsers',postController.getReactedUser);
 module.exports = router;
