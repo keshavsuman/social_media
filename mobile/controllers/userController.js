@@ -403,7 +403,8 @@ module.exports.search = async (req,res) =>{
                 'course': 1,
                 'isConnected': 1, 
                 'isFollowing': 1, 
-                'isRequested': 1
+                'isRequested': 1,
+                'isFollowed':1
               }
             }
           ]);

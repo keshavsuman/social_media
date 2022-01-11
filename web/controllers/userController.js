@@ -377,6 +377,11 @@ module.exports.search = async (req,res) =>{
                     new ObjectId(req.data._id), '$connections.followings'
                   ]
                 }, 
+                'isFollowed': {
+                    '$in': [
+                      new ObjectId(req.data._id), '$connections.followers'
+                    ]
+                  }, 
                 'isRequested': {
                   '$in': [
                     new ObjectId(req.data._id), '$connections.requested'
@@ -398,7 +403,8 @@ module.exports.search = async (req,res) =>{
                 'course': 1,
                 'isConnected': 1, 
                 'isFollowing': 1, 
-                'isRequested': 1
+                'isRequested': 1,
+                'isFollowed':1
               }
             }
           ]);
