@@ -377,6 +377,11 @@ module.exports.search = async (req,res) =>{
                     new ObjectId(req.data._id), '$connections.followings'
                   ]
                 }, 
+                'isFollowed': {
+                    '$in': [
+                      new ObjectId(req.data._id), '$connections.followers'
+                    ]
+                  }, 
                 'isRequested': {
                   '$in': [
                     new ObjectId(req.data._id), '$connections.requested'
