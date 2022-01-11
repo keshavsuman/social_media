@@ -25,8 +25,8 @@ async function createPost(req,res){
                 media_url:req.body.media_url,
                 mode:req.body.mode,
             });
-            const connections = await connections.findOne({user:req.data._id});
-            const connectionIds = [...connections.follower,...connections.connections];
+            const myconnections = await connections.findOne({user:req.data._id});
+            const connectionIds = [...myconnections.follower,...myconnections.connections];
             connectionIds.forEach(async (follower) => {
                 await notifications.create({
                     title:`has made a post`,
@@ -51,8 +51,8 @@ async function createPost(req,res){
                 shareFrom:mypost.mode=='share'?mypost.shareFrom:mypost.user,
                 sharedPostId:req.body.post_id
             });
-            const connections = await connections.findOne({user:req.data._id});
-            const connectionIds3 = [...connections.follower,...connections.connections];
+            const myconnections = await connections.findOne({user:req.data._id});
+            const connectionIds3 = [...myconnections.follower,...myconnections.connections];
             connectionIds3.forEach(async (follower) => {
                 await notifications.create({
                     title:`has shared a post`,
