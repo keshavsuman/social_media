@@ -25,8 +25,8 @@ async function createPost(req,res){
                 media_url:req.body.media_url,
                 mode:req.body.mode,
             });
-            const myconnections = await connections.findOne({user:req.data._id});
-            const connectionIds = [...myconnections.followers,...myconnections.connections];
+            const connections = await connections.findOne({user:req.data._id});
+            const connectionIds = [...connections.follower,...connections.connections];
             connectionIds.forEach(async (follower) => {
                 await notifications.create({
                     title:`has made a post`,
@@ -48,17 +48,18 @@ async function createPost(req,res){
                 visibility:mypost.visibility,
                 media_url:mypost.media_url,
                 mode:req.body.mode,
-                shareFrom:mypost.user
+                shareFrom:mypost.mode=='share'?mypost.shareFrom:mypost.user,
+                sharedPostId:req.body.post_id
             });
             const connections = await connections.findOne({user:req.data._id});
-            const connectionIds = [...connections.follower,...connections.connections];
-            connectionIds.forEach(async (follower) => {
+            const connectionIds3 = [...connections.follower,...connections.connections];
+            connectionIds3.forEach(async (follower) => {
                 await notifications.create({
                     title:`has shared a post`,
                     type:"NEW_POST",
                     description:"",
-                    user:follower,
                     post:sharedPost._id,
+                    user:follower,
                     notificationFrom:req.data._id
                 });
             });
@@ -67,7 +68,9 @@ async function createPost(req,res){
     } catch (error) {
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
-    }}
+    }
+}
+
 async function post_details(req,res){
     try {
         var post_details = await post.findById(req.body.post_id).populate({path:'user',select:{hash:0,salt:0}});
@@ -77,6 +80,7 @@ async function post_details(req,res){
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
     }
 }
+
 async function deletePost(req,res){
     try {
         await post.findByIdAndDelete(req.body.postId);
@@ -116,7 +120,6 @@ async function getPosts(req,res){
 
 async function uploadMedia(req,res){
     try {
-        console.log(req.file);
         req.file.path = req.protocol+'://younigems.in/uploads/'+req.file.filename;
         responseManagement.sendResponse(res,httpStatus.OK,'File uploaded successfully',req.file);
     } catch (error) {
@@ -140,7 +143,7 @@ async function reactOnPost(req,res){
                     $set:updateBody
                 });
                 responseManagement.sendResponse(res,httpStatus.OK,'Reaction removed',{
-                    reaction_count:userpost['reaction_count']-1,
+                    reactionCount:userpost['reaction_count']-1,
                     reactionType:'NONE'
                 });
                 return;
@@ -181,14 +184,15 @@ async function reactOnPost(req,res){
                     $set:updateBody
                 });
                 await notifications.create({
-                    title:` has reacted on your post`,
+                    title:`${userpost.user.first_name} ${userpost.user.last_name} has reacted on your post`,
                     type:"REACTED",
                     description:"",
                     user:userpost.user._id,
                     notificationFrom:req.data._id
                 });
                 responseManagement.sendResponse(res,httpStatus.OK,'reaction successfull',{
-                    reactionCount:updateBody['reaction_count']
+                    reactionCount:updateBody['reaction_count'],
+                    type:req.body.type
                 });
             }
         }else{
@@ -201,13 +205,21 @@ async function reactOnPost(req,res){
 
 async function getComments(req,res){
     try{
-        var comment = await comments.find({post_id:req.body.post_id},{updatedAt:0,__v:0}).populate({path:'user',select:{
+        var comment = await comments.find({post_id:req.body.post_id},{updatedAt:0,__v:0,reply:0})
+        .populate({path:'user',select:{
             _id:1,
             first_name:1,
             last_name:1,
             profile_pic:1
-        }});
-        responseManagement.sendResponse(res,httpStatus.OK,'',comment);
+        }}).limit(req.body.limit??10).skip(req.body.skip??0);
+        const commentIds = comment.map(comment => comment._id);
+        var reaction = await reactions.find({comment_id:{$in:commentIds},user:req.data._id});
+        co = comment.map(c=>{
+            var reac = reaction.find(r => r.comment_id.equals(c._id));
+            isCommentLiked = reac?true:false;
+            return {...c.toObject(),isCommentLiked:isCommentLiked,reaction:reac};
+        });
+        responseManagement.sendResponse(res,httpStatus.OK,'',co);
     }catch(error){
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
@@ -224,21 +236,23 @@ async function comment(req,res){
             });
             await post.updateOne({_id:req.body.post_id},{$addToSet:{comments:comment._id}});
             await notifications.create({
-                title:`comment on your post`,
+                title:`commented on your post`,
                 type:"COMMENTED",
                 description:req.body.comment,
-                user:postToUpdate.user._id
+                user:postToUpdate.user._id,
+                notificationFrom:req.data._id
             });
-            responseManagement.sendResponse(res,httpStatus.OK,'Comment added',comment);
+            const comm = await comments.findById(comment._id).populate({path:'user','select':{first_name:1,last_name:1,profile_pic:1}});
+            responseManagement.sendResponse(res,httpStatus.OK,'Comment added',comm);
         }else{
-            responseManagement.sendResponse(res,httpStatus.OK,'post not found',{});
+            responseManagement.sendResponse(res,httpStatus.NOT_FOUND,'post not found',{});
         }
     } catch (error) {
         console.log(error);
-        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,error);
+        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,comment);
     }
 }
- 
+
 async function replyOnComment(req,res){
     try{
         var rep = await comments.create({
@@ -256,8 +270,9 @@ async function replyOnComment(req,res){
             type:'COMMENT_REPLY',
             user:data.user._id,
             notificationFrom:req.data._id
-        })
-        responseManagement.sendResponse(res,httpStatus.OK,'Reply added',rep);
+        });
+        var reply = await comments.findById(rep._id).populate({path:'user','select':{first_name:1,last_name:1,profile_pic:1}});
+        responseManagement.sendResponse(res,httpStatus.OK,'Reply added',reply);
     }catch(error){
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,error.message,{});
@@ -329,6 +344,7 @@ async function contents(req,res){
                 },
                 'course':{$first:'$course'},
                 'user':{$first:'$user'}
+
             }
         },
         {
@@ -342,18 +358,17 @@ async function contents(req,res){
             }
         },{
             $limit:req.body.limit??20
-        },
-        {
+        },{
             $skip:req.body.skip??0
         }
     ]); 
-        responseManagement.sendResponse(res,httpStatus.OK,message,posts);
+
+    responseManagement.sendResponse(res,httpStatus.OK,message,posts);
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
     }
 }
-
 async function timelineposts(req,res){
     try {
         var timelineposts;
@@ -406,7 +421,6 @@ async function timelineposts(req,res){
                                         'user.hash':0,
                                         'user.salt':0,
                                         'user.__v':0,
-                                        // 'user.course':0,
                                     }
                                 }
                             ]
@@ -644,6 +658,7 @@ async function timelineposts(req,res){
                 });
                 timelinepost.push({...tp,isReacted:isReacted,reactionType:type,isBookmarked:isBookmarked,isMyPost});
             });
+            console.log(timelinepost.length);
             responseManagement.sendResponse(res,httpStatus.OK,'',timelinepost);
         }
     } catch (error) {
@@ -651,10 +666,23 @@ async function timelineposts(req,res){
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
     }
 }
-async function getCommentsReply(req,res){
+
+async function getCommentsReply(req,res){   
     try {
-        var replies = await comments.findById(req.body.commentId,{reply:1,_id:0}).populate({path:'reply.user',select:{first_name:1,last_name:1,profile_pic:1}});
-        responseManagement.sendResponse(res,httpStatus.OK,'',replies.reply);
+        var replies = await comments.findById(req.body.commentId,{reply:1,_id:0})
+        .populate({path:'reply',populate:{path:'user',select:'first_name last_name profile_pic'}});
+        if(!replies){
+            responseManagement.sendResponse(res,httpStatus.SERVICE_UNAVAILABLE,'Comment Doesn\'t Exits ',null);
+        }else{
+            var commentIds = replies.reply.map(r=>r._id);
+            var reaction = await reactions.find({comment_id:{$in:commentIds},user:req.data._id});
+            co = replies.reply.map(c=>{
+                    var reac = reaction.find(r => r.comment_id.equals(c._id));
+                    isCommentLiked = reac?true:false;
+                    return {...c.toObject(),isCommentLiked:isCommentLiked,reaction:reac};
+                });
+            responseManagement.sendResponse(res,httpStatus.OK,'',co);
+        }
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
@@ -662,15 +690,15 @@ async function getCommentsReply(req,res){
 }
 async function bookmarkPost(req,res){
     try {
-        if(req.body.post_id){
+        if(req.body.id){
             await bookmark.findOneAndUpdate({
                 user:mongoose.Types.ObjectId(req.data._id)
             },{
-                $addToSet:{post_id:mongoose.Types.ObjectId(req.body.post_id)}
+                $addToSet:{post_id:req.body.id}
             });
             responseManagement.sendResponse(res,httpStatus.OK,'Bookmark saved',{});
         }else{
-            responseManagement.sendResponse(res,httpStatus.BAD_REQUEST,'Post Id indefined',{});
+            responseManagement.sendResponse(res,httpStatus.BAD_REQUEST,'Bookmark not saved',{});
         }
     } catch (error) {
         console.log(error.message);
@@ -695,30 +723,51 @@ async function getBookmarks(req,res){
 
 async function removebookmark(req,res){
     try {
-        if(req.body.post_id){
-            await bookmark.findOneAndUpdate({
-                user:mongoose.Types.ObjectId(req.data._id)
-            },{
-                $pull:{post_id:mongoose.Types.ObjectId(req.body.post_id)}
-            });
-            responseManagement.sendResponse(res,httpStatus.OK,'Bookmark removed',{});
-        }else{
-            responseManagement.sendResponse(res,httpStatus.BAD_REQUEST,'Bookmark Not removed',{});
-
-        }
+        await bookmark.findOneAndUpdate({
+            user:mongoose.Types.ObjectId(req.data._id)
+        },{
+            $pull:{post_id:mongoose.Types.ObjectId(req.body.post_id)}
+        });
+        responseManagement.sendResponse(res,httpStatus.OK,'Bookmark removed',{});
+    } catch (error) {
+        console.log(error.message);
+        responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
+    }
+}
+async function shareList(req,res){
+    try {
+        var posts = await post.find({
+            user:mongoose.Types.ObjectId(req.data._id),
+            mode:'share',
+        }).populate({path:'user',select:{hash:0,salt:0},populate:'course'}).populate({path:'shareFrom',select:{hash:0,salt:0}});
+        responseManagement.sendResponse(res,httpStatus.OK,'Shared list',posts);
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
     }
 }
 
-async function shareList(req,res){
+async function likeUnlikeComment(req,res){
     try {
-        var posts = await post.find({
-            user:mongoose.Types.ObjectId(req.data._id),
-            mode:'share',
-        });
-        responseManagement.sendResponse(res,httpStatus.OK,'Shared list',posts);
+        const reaction =  await reactions.findOne({user:req.data._id,comment_id:req.body.comment_id});
+        if(reaction){
+            await reactions.findByIdAndDelete(reaction._id);
+            const comment = await comments.findById(req.body.comment_id);
+            await comments.findByIdAndUpdate(req.body.comment_id,{
+                like_count:comment.like_count-1
+            });
+        }else{
+            await reactions.create({
+                user:req.data._id,
+                comment_id:req.body.comment_id,
+                reaction_type:'like'
+            });
+            const comment = await comments.findById(req.body.comment_id);
+            await comments.findByIdAndUpdate(req.body.comment_id,{
+                like_count:comment.like_count+1
+            });
+        }
+        responseManagement.sendResponse(res,httpStatus.OK,'Reaction saved',{});
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
@@ -734,14 +783,14 @@ module.exports = {
     reactOnPost,
     comment,
     replyOnComment,
-    getComments,
     getCommentsReply,
+    getComments,
     contents,
     timelineposts,
     bookmarkPost,
     getBookmarks,
     removebookmark,
     post_details,
-    shareList
-
+    shareList,
+    likeUnlikeComment
 }
