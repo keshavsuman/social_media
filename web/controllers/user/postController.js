@@ -217,7 +217,7 @@ async function getComments(req,res){
         var co = comment.map(c=>{
             var reac = reaction.find(r => r.comment_id.equals(c._id));
             isCommentLiked = reac?true:false;
-            return {...c.toObject(),isCommentLiked:isCommentLiked,reaction:reac,replyCount:reply.length};
+            return {...c.toObject(),isCommentLiked:isCommentLiked,reaction:reac,replyCount:c.reply.length};
         });
         responseManagement.sendResponse(res,httpStatus.OK,'',co);
     }catch(error){
