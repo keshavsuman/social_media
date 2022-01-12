@@ -205,19 +205,19 @@ async function reactOnPost(req,res){
 
 async function getComments(req,res){
     try{
-        var comment = await comments.find({post_id:req.body.post_id},{updatedAt:0,__v:0,reply:0})
+        var comment = await comments.find({post_id:req.body.post_id},{updatedAt:0,__v:0})
         .populate({path:'user',select:{
             _id:1,
             first_name:1,
-            last_name:1,
+            last_name:1, 
             profile_pic:1
         }}).limit(req.body.limit??10).skip(req.body.skip??0);
         const commentIds = comment.map(comment => comment._id);
         var reaction = await reactions.find({comment_id:{$in:commentIds},user:req.data._id});
-        co = comment.map(c=>{
+        var co = comment.map(c=>{
             var reac = reaction.find(r => r.comment_id.equals(c._id));
             isCommentLiked = reac?true:false;
-            return {...c.toObject(),isCommentLiked:isCommentLiked,reaction:reac};
+            return {...c.toObject(),isCommentLiked:isCommentLiked,reaction:reac,replyCount:reply.length};
         });
         responseManagement.sendResponse(res,httpStatus.OK,'',co);
     }catch(error){
