@@ -94,6 +94,7 @@ module.exports.otherUserProfile = async (req, res) => {
             last_name:user.last_name,
             email:user.email,
             dob:user.dob,
+            bio:user.bio,
             start_date:user.start_date,
             end_date:user.end_date,
             status:user.status,
