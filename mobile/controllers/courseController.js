@@ -123,7 +123,12 @@ module.exports.getCoursesList = async (req, res) => {
 			_id:req.params.collegeId,
 			name: { $regex: req.params.courseName, $options: 'i' }
 		},{course_id:1,_id:0}).populate({path:'course_id',select:{status:0,__v:0}});
-		responseManagement.sendResponse(res, httpStatus.OK, 'Courses list', courses[0].course_id);
+		if(courses.length>0){
+			responseManagement.sendResponse(res, httpStatus.OK, 'Courses list', courses[0].course_id);
+		}else{
+			responseManagement.sendResponse(res, httpStatus.NO_CONTENT, 'Courses not found in the college', []);
+		}
+
 	} catch (error) {
 		console.log(error);
 		responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, global.internal_server_error);
