@@ -24,6 +24,7 @@ async function createPost(req,res){
                 visibility:req.body.visibility.toLowerCase(),
                 media_url:req.body.media_url,
                 mode:req.body.mode,
+                meta:req.body.meta
             });
             const myconnections = await connections.findOne({user:req.data._id});
             const connectionIds = [...myconnections.followers,...myconnections.connections];
@@ -49,7 +50,8 @@ async function createPost(req,res){
                 media_url:mypost.media_url,
                 mode:req.body.mode,
                 shareFrom:mypost.mode=='share'?mypost.shareFrom:mypost.user,
-                sharedPostId:req.body.post_id
+                sharedPostId:req.body.post_id,
+                meta:mypost.meta
             });
             const myconnections = await connections.findOne({user:req.data._id});
             const connectionIds3 = [...myconnections.followers,...myconnections.connections];
