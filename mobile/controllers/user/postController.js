@@ -865,7 +865,11 @@ async function getReactedUser(req,res){
                 }
             }
         ]);
-        responseManagement.sendResponse(res,httpStatus.OK,'Reacted Users',users[0].user);
+        if(users.length>0){
+            responseManagement.sendResponse(res,httpStatus.OK,'Reacted Users',users[0].user);
+        }else{
+            responseManagement.sendResponse(res,httpStatus.OK,'No users found',[]);
+        }
     } catch (error) {
         console.log(error);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
