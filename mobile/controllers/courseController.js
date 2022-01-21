@@ -121,7 +121,7 @@ module.exports.getCoursesList = async (req, res) => {
 	try {
 		let courses = await College.find({
 			_id:req.params.collegeId,
-			name: { $regex: req.params.courseName, $options: 'i' }
+			name: { $regex: req.params.courseName??'', $options: 'i' }
 		},{course_id:1,_id:0}).populate({path:'course_id',select:{status:0,__v:0}});
 		if(courses.length>0){
 			responseManagement.sendResponse(res, httpStatus.OK, 'Courses list', courses[0].course_id);

@@ -179,7 +179,7 @@ module.exports.getUniversitiesListAdmin = async (req, res) => {
 
 module.exports.searchUniversities = async (req,res)=>{
 	try {
-		var universities  = await University.find({'name': {'$regex': req.params.university, '$options': 'i'}},{status:0,__v:0});
+		var universities  = await University.find({'name': {'$regex': req.params.university??'', '$options': 'i'}},{status:0,__v:0});
 		responseManagement.sendResponse(res,httpStatus.OK,"",universities);
 	} catch (error) {
 		console.log(error);

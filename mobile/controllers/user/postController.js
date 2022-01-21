@@ -771,6 +771,7 @@ async function getBookmarks(req,res){
           ]);
 
         var bookmarks = posts[0].post.map(p=>{
+            console.log(p);
             return {...p,course:p.user.course,isMyPost:p.user._id.equals(req.data._id)};
         });
         responseManagement.sendResponse(res,httpStatus.OK,'Bookmarks list',bookmarks);

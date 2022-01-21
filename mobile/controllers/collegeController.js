@@ -151,7 +151,7 @@ module.exports.updateCollegeStatus = async (req, res) => {
 
 module.exports.searchCollege = async (req,res)=>{
     try {
-		var colleges  = await College.find({'name': {'$regex': req.params.college, '$options': 'i'}},{course_id:0,status:0,__v:0});  
+		var colleges  = await College.find({'name': {'$regex': req.params.college??'', '$options': 'i'}},{course_id:0,status:0,__v:0});  
 		responseManagement.sendResponse(res,httpStatus.OK,"",colleges);
 	} catch (error) {
 		console.log(error);
