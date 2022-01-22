@@ -1,6 +1,5 @@
-import college from "../models/college";
-import university from "../models/university";
-
+const university = require("../models/university");
+const college = require("../models/college");
 const httpStatus = require("http-status-codes");
 const User = require('../models/user');
 const UserToken = require('../models/user_token');
@@ -977,7 +976,7 @@ module.exports.sendPrivately = async (req,res)=>{
     }
 }
 
-export const add = async (res,res)=>{
+module.exports.add = async (req,res)=>{
     try{
         if(req.params.type=='course'){
             await college.create({
