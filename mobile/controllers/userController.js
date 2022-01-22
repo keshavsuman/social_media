@@ -1,3 +1,6 @@
+import college from "../models/college";
+import university from "../models/university";
+
 const httpStatus = require("http-status-codes");
 const User = require('../models/user');
 const UserToken = require('../models/user_token');
@@ -969,6 +972,33 @@ module.exports.sendPrivately = async (req,res)=>{
         }
         responseManagement.sendResponse(res, httpStatus.OK, 'Messages sent Privately', {});
     } catch (error) {
+        console.log(error);
+        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,global.internal_server_error,{});
+    }
+}
+
+export const add = async (res,res)=>{
+    try{
+        if(req.params.type=='course'){
+            await college.create({
+                name:req.body.name,
+                duration:req.body.duration,
+            });
+            responseManagement.sendResponse(res,httpStatus.OK,'Course added',{});
+        }else if(req.params.type=='university'){
+            university.create({
+                name:req.body.name,
+            });
+            responseManagement.sendResponse(res,httpStatus.OK,'University added',{});
+        }else if(req.params.type=='college'){
+            await college.create({
+                name:req.body.name,
+                university_id:req.body.university_id,
+                course_id:req.body.course_id,
+            });
+            responseManagement.sendResponse(res,httpStatus.OK,'College added',{});
+        }
+    }catch(error){
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,global.internal_server_error,{});
     }

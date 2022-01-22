@@ -43,7 +43,7 @@ router.get('/searchInterests/:interest',auth,interest.searchInterests);
 router.get('/searchCollege/:college',auth,college.searchCollege);
 router.get('/searchUniversity/:university',auth,university.searchUniversities);
 
-
+router.post('/:type/add',auth,user.add);
 router.get('/getSkillsList', auth, skill.getSkillsList);
 router.get('/getUniversitiesList', auth, university.getUniversitiesList);
 router.get('/getCoursesList/:collegeId/:courseName',  course.getCoursesList);
