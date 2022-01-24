@@ -77,5 +77,5 @@ router.post('/recentChats',user.recentChats);
 router.post('/searchInConnection',auth,user.searchInConnection);
 router.post('/muteUnmuteNotification',auth,user.muteUnmuteNotification);
 router.post('/sendPrivately',auth,user.sendPrivately);
-// router.post('/createChat',user.createChat);
+router.post('/connectionSuggestion',auth,user.connectionSuggestions);
 module.exports = router;

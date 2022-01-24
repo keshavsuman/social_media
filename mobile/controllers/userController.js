@@ -20,6 +20,86 @@ const bookmarks = require('../models/bookmarks');
 const chatModel = require('../models/chatModel');
 const messageModel = require('../models/messageModel'); 
 
+
+async function peopleYouMayKnow(connects,user,limit,skip){
+    var users = await User.aggregate([{
+        $match:{
+            '_id':{$nin:connects[0].connections},
+            '_id':{$nin:connects[0].followings},
+            '_id':{$ne:mongoose.Types.ObjectId(user._id)},
+            $or:[
+                {course:user.course},
+                {college:user.college},
+                {home_town:user.home_town}
+            ],
+        }
+        },{
+            '$lookup': {
+              'from': 'connections', 
+              'localField': '_id', 
+              'foreignField': 'user', 
+              'as': 'connections'
+            }
+          }, {
+            '$addFields': {
+              'connections': {
+                '$first': '$connections'
+              }
+            }
+          }, {
+            '$addFields': {
+              'isConnected': {
+                '$in': [
+                  new ObjectId(user._id), '$connections.connections'
+                ]
+              }, 
+              'isFollowed': {
+                '$in': [
+                  new ObjectId(user._id), '$connections.followers'
+                ]
+              }, 
+              'isRequested': {
+                '$in': [
+                  new ObjectId(user._id), '$connections.requested'
+                ]
+              }
+            }
+          },
+          {
+              $lookup:{
+                  from:'courses',
+                  localField:'course',
+                  foreignField:'_id',
+                  as:'course'
+              }
+          },
+        {
+            '$project': {
+                'first_name': 1, 
+                'last_name': 1, 
+                'profile_pic': 1, 
+                'home_town': 1, 
+                'skills': 1, 
+                'interests': 1, 
+                'email': 1, 
+                'start_date': 1, 
+                'end_date': 1, 
+                'college': 1, 
+                'course': 1,
+                'isConnected': 1, 
+                'isFollowed': 1, 
+                'isRequested': 1
+            }
+        },
+        {
+            $skip:skip??0
+        },{
+            $limit:limit??20
+        }
+    ]);
+    return users;
+}
+
 /****** Login ****/
 module.exports.login = async (req, res) => {
     try {
@@ -635,78 +715,9 @@ module.exports.peopleYouMayKnow = async (req,res)=>{
             course:1,
             college:1,
             home_town:1,
-            _id:0
+            _id:1
         });
-        var users = await User.aggregate([{
-            $match:{
-                '_id':{$nin:connects[0].connections},
-                '_id':{$nin:connects[0].followings},
-                '_id':{$ne:mongoose.Types.ObjectId(req.data._id)},
-                $or:[
-                    {course:user.course},
-                    {college:user.college},
-                    {home_town:user.home_town}
-                ],
-            }
-            },{
-                '$lookup': {
-                  'from': 'connections', 
-                  'localField': '_id', 
-                  'foreignField': 'user', 
-                  'as': 'connections'
-                }
-              }, {
-                '$addFields': {
-                  'connections': {
-                    '$first': '$connections'
-                  }
-                }
-              }, {
-                '$addFields': {
-                  'isConnected': {
-                    '$in': [
-                      new ObjectId(req.data._id), '$connections.connections'
-                    ]
-                  }, 
-                  'isFollowed': {
-                    '$in': [
-                      new ObjectId(req.data._id), '$connections.followers'
-                    ]
-                  }, 
-                  'isRequested': {
-                    '$in': [
-                      new ObjectId(req.data._id), '$connections.requested'
-                    ]
-                  }
-                }
-              },
-              {
-                  $lookup:{
-                      from:'courses',
-                      localField:'course',
-                      foreignField:'_id',
-                      as:'course'
-                  }
-              },
-            {
-                '$project': {
-                    'first_name': 1, 
-                    'last_name': 1, 
-                    'profile_pic': 1, 
-                    'home_town': 1, 
-                    'skills': 1, 
-                    'interests': 1, 
-                    'email': 1, 
-                    'start_date': 1, 
-                    'end_date': 1, 
-                    'college': 1, 
-                    'course': 1,
-                    'isConnected': 1, 
-                    'isFollowed': 1, 
-                    'isRequested': 1
-                }
-            }
-        ]);
+        var users = await peopleYouMayKnow(connects,user,req.body.limit,req.body.skip);
         responseManagement.sendResponse(res,httpStatus.OK,'people you may know list',users);
     } catch (error) {
         console.log(error);
@@ -1002,3 +1013,22 @@ module.exports.add = async (req,res)=>{
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,global.internal_server_error,{});
     }
 }
+
+module.exports.connectionSuggestions = async (req,res) =>{
+    try {
+        var connects  = await connections.find({user:req.data._id});
+        var user = await User.findById(req.data._id,{
+            course:1,
+            college:1,
+            home_town:1,
+            _id:1
+        });
+        const pymk = await peopleYouMayKnow(connects,user,req.body.limit,req.body.skip);
+        const pny = await peopleYouMayKnow(connects,user,req.body.limit,req.body.skip);
+        responseManagement.sendResponse(res, httpStatus.OK, 'People you may know', {peopleYouMayKnow:pymk,peopleNearYou:pny});
+    } catch (error) {
+        console.log(error);
+        responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,global.internal_server_error,{});
+    }
+}
+
