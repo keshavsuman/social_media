@@ -1025,7 +1025,18 @@ module.exports.connectionSuggestions = async (req,res) =>{
         });
         const pymk = await peopleYouMayKnow(connects,user,req.body.limit,req.body.skip);
         const pny = await peopleYouMayKnow(connects,user,req.body.limit,req.body.skip);
-        responseManagement.sendResponse(res, httpStatus.OK, 'People you may know', {peopleYouMayKnow:pymk,peopleNearYou:pny});
+        responseManagement.sendResponse(res, httpStatus.OK, 'People you may know', {
+            suggestions:[
+                {
+                    "name":"People you may know",
+                    data:pymk
+                },
+                {
+                    "name":"People near you",
+                    data:pny
+                }    
+            ]
+        });
     } catch (error) {
         console.log(error);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,global.internal_server_error,{});
