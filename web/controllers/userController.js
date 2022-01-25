@@ -836,10 +836,10 @@ module.exports.deleteNotification = async (req,res)=>{
 
 module.exports.cancelRequest = async (req,res)=>{
     try {
-        await connections.findOneAndUpdate({user:mongoose.Types.ObjectId(req.data._id)},{
+         await connections.findOneAndUpdate({user:mongoose.Types.ObjectId(req.data._id)},{
             $pullAll:{requested:[mongoose.Types.ObjectId(req.body.id)]}
         });
-        await User.findByIdAndUpdate(req.data._id,{
+         await User.findByIdAndUpdate(req.data._id,{
             $pullAll:{sentRequests:[mongoose.Types.ObjectId(req.body.id)]}
         });
         responseManagement.sendResponse(res,httpStatus.OK,'Request canceled',{});
@@ -853,7 +853,7 @@ module.exports.getUserRequests = async (req,res)=>{
     try {
         var requests = await User.findById(req.data._id,{
             sentRequests:1
-        }).populate({path:'sentRequests',select:{salt:0,hash:0}});
+        }).skip(req.body.skip??0).limit(req.body.limit??20).populate({path:'sentRequests',select:{salt:0,hash:0}});
         responseManagement.sendResponse(res,httpStatus.OK,'Request canceled',requests.sentRequests??[]);
 
     } catch (error) {

@@ -452,7 +452,6 @@ async function timelineposts(req,res){
                                         '$in':connectionDocument[0].followings
                                     }
                                 },
-                                
                                 {
                                     'user._id':mongoose.Types.ObjectId(req.data._id)
                                 }
