@@ -1,5 +1,6 @@
 const university = require("../models/university");
 const college = require("../models/college");
+const course = require('../models/course');
 const httpStatus = require("http-status-codes");
 const User = require('../models/user');
 const UserToken = require('../models/user_token');
@@ -990,23 +991,23 @@ module.exports.sendPrivately = async (req,res)=>{
 module.exports.add = async (req,res)=>{
     try{
         if(req.params.type=='course'){
-            await college.create({
+            const newCourse = await course.create({
                 name:req.body.name,
                 duration:req.body.duration,
             });
-            responseManagement.sendResponse(res,httpStatus.OK,'Course added',{});
+            responseManagement.sendResponse(res,httpStatus.OK,'Course added',newCourse);
         }else if(req.params.type=='university'){
-            university.create({
+            const newUniversity  = await university.create({
                 name:req.body.name,
             });
-            responseManagement.sendResponse(res,httpStatus.OK,'University added',{});
+            responseManagement.sendResponse(res,httpStatus.OK,'University added',newUniversity);
         }else if(req.params.type=='college'){
-            await college.create({
+            const newCollege = await college.create({
                 name:req.body.name,
                 university_id:req.body.university_id,
                 course_id:req.body.course_id,
             });
-            responseManagement.sendResponse(res,httpStatus.OK,'College added',{});
+            responseManagement.sendResponse(res,httpStatus.OK,'College added',newCollege);
         }
     }catch(error){
         console.log(error);
