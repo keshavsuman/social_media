@@ -62,6 +62,7 @@ io.on('connection',(socket)=>{
 
     socket.on('disconnect',()=>{
         Narad.remove(user);
+        console.log(user);
         console.log('user disconnected');
     });
 });
