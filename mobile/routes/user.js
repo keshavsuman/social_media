@@ -16,13 +16,13 @@ const university = require('../controllers/universityController');
 const skillRoutes = require('./userRoutes/skillRoutes');
 const interestRoutes = require('../routes/userRoutes/interestRoutes');
 const postRoutes = require('./userRoutes/postRoutes');
-const collegeRoutes = require('./userRoutes/collegeRoutes');
+// const collegeRoutes = require('./userRoutes/collegeRoutes');
 const batchRoutes = require('./userRoutes/batchRoutes');
 
 router.use('/skill',skillRoutes);
 router.use('/interest',interestRoutes);
 router.use('/post',postRoutes);
-router.use('/college',collegeRoutes); //Add college or update college
+// router.use('/college',collegeRoutes); //Add college or update college
 // add university and update university
 router.use('/batch',batchRoutes);
 
