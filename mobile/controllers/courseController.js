@@ -126,7 +126,7 @@ module.exports.getCoursesList = async (req, res) => {
 		if(courses.length>0){
 			responseManagement.sendResponse(res, httpStatus.OK, 'Courses list', courses[0].course_id);
 		}else{
-			responseManagement.sendResponse(res, httpStatus.NO_CONTENT, 'Courses not found in the college', []);
+			responseManagement.sendResponse(res, httpStatus.OK, 'Courses not found in the college', []);
 		}
 
 	} catch (error) {
