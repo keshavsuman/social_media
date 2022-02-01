@@ -767,12 +767,21 @@ async function getBookmarks(req,res){
                   'post_id':0, 
                 }
               },
+              {
+                  $skip:req.body.skip??0
+              },
+                {   $limit:req.body.limit??20
+                }
           ]);
 
-        var bookmarks = posts[0].post.map(p=>{
-            return {...p,course:p.user.course,isMyPost:p.user._id.equals(req.data._id),isBookmarked:true};
-        });
-        responseManagement.sendResponse(res,httpStatus.OK,'Bookmarks list',bookmarks);
+          if(posts.length>0){
+              var bookmarks = posts[0].post.map(p=>{
+                  return {...p,course:p.user.course,isMyPost:p.user._id.equals(req.data._id),isBookmarked:true};
+                });
+                responseManagement.sendResponse(res,httpStatus.OK,'Bookmarks list',bookmarks);
+          }else{
+            responseManagement.sendResponse(res,httpStatus.OK,'Bookmarks list',[]);
+          }
     } catch (error) {
         console.log(error.message);
         responseManagement.sendResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message,{});
