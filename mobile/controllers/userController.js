@@ -876,7 +876,7 @@ module.exports.getUserRequests = async (req,res)=>{
         var requests = await User.findById(req.data._id,{
             sentRequests:1
         }).skip(req.body.skip??0).limit(req.body.limit??20).populate({path:'sentRequests',select:{salt:0,hash:0}});
-        responseManagement.sendResponse(res,httpStatus.OK,'Request canceled',requests?.sentRequests??[]);
+        responseManagement.sendResponse(res,httpStatus.OK,'User requests',requests?.sentRequests??[]);
 
     } catch (error) {
         console.log(error.message);
