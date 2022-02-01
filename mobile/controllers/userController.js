@@ -675,7 +675,7 @@ module.exports.myconnections = async (req,res)=>{
         if(myconnections.length>0){
             responseManagement.sendResponse(res, httpStatus.OK,'My Connections',myconnections[0].connections);
         }else{
-            responseManagement.sendResponse(res, httpStatus.OK,'Connections not found in the database',{});
+            responseManagement.sendResponse(res, httpStatus.OK,'Connections not found in the database',[]);
         }
     } catch (error) {
         console.log(error.message);
