@@ -776,7 +776,11 @@ module.exports.getFollowersList = async (req,res)=>{
                 $skip:req.body.skip??0
             } 
           ]);
-        responseManagement.sendResponse(res,httpStatus.OK,'Followers list',followers[0].followers);
+          if(followers.length>0){
+              responseManagement.sendResponse(res,httpStatus.OK,'Followers list',followers[0].followers);
+          }else{
+              responseManagement.sendResponse(res,httpStatus.OK,'Followers list',[]);
+          }
     }catch(e){
         console.log(e);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,e.message,{});
@@ -832,7 +836,11 @@ module.exports.getFollowingList = async (req,res)=>{
                 $skip:req.body.skip??0
             } 
           ]);
-        responseManagement.sendResponse(res,httpStatus.OK,'Followings list',followings[0].followings);
+          if(followings.length>0){
+            responseManagement.sendResponse(res,httpStatus.OK,'Followings list',followings[0].followings);
+          }else{
+            responseManagement.sendResponse(res,httpStatus.OK,'Followings list',[]);
+          }
     }catch(e){
         console.log(e);
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,e.message,{});
