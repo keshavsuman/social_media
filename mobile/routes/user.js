@@ -78,4 +78,8 @@ router.post('/searchInConnection',auth,user.searchInConnection);
 router.post('/muteUnmuteNotification',auth,user.muteUnmuteNotification);
 router.post('/sendPrivately',auth,user.sendPrivately);
 router.post('/connectionSuggestion',auth,user.connectionSuggestions);
+router.post('/userConnection',auth,user.connectionSuggestions);
+router.post('/userFollowers',auth,user.connectionSuggestions);
+router.post('/userFollowings',auth,user.connectionSuggestions);
+
 module.exports = router;

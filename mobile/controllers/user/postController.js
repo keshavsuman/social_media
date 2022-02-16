@@ -670,8 +670,9 @@ async function timelineposts(req,res){
 
 async function getCommentsReply(req,res){   
     try {
+        const {skip,limit} =  req.body;
         var replies = await comments.findById(req.body.commentId,{reply:1,_id:0})
-        .populate({path:'reply',populate:{path:'user',select:'first_name last_name profile_pic'}});
+        .populate({path:'reply',populate:{path:'user',select:'first_name last_name profile_pic'}}).skip(skip??0).limit(limit??20);
         if(!replies){
             responseManagement.sendResponse(res,httpStatus.SERVICE_UNAVAILABLE,'Comment Doesn\'t Exits ',null);
         }else{

@@ -632,7 +632,8 @@ module.exports.myconnections = async (req,res)=>{
         var myconnections = await connections.aggregate([
             {
                 $match:{
-                    user:mongoose.Types.ObjectId(req.data._id)
+                    user:mongoose.Types.ObjectId(req.data._id),
+                    
                 }
             },
             {
@@ -1051,4 +1052,3 @@ module.exports.connectionSuggestions = async (req,res) =>{
         responseManagement.sendResponse(res,httpStatus.INTERNAL_SERVER_ERROR,global.internal_server_error,{});
     }
 }
-
