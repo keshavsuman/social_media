@@ -52,7 +52,7 @@ router.get('/getInterestsList', auth, interest.getInterestsList);
 router.get('/getCollegesList', auth, college.getCollegesList);
 
 router.get('/countries/:country', profile.countries);
-router.get('/states/:countryId/:state', profile.states);
+router.get('/states/:countryId', profile.states);
 router.get('/cities/:stateId/:city', profile.cities);
 router.get('/addCities',profile.addCities);
 

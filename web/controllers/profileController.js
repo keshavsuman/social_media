@@ -193,7 +193,6 @@ module.exports.states = async (req, res) => {
     try {
         let states = await States.find({
             country_id:req.params.countryId,
-            // name:{'$regex': req.params.state, '$options': 'i'}
         }).lean();
         responseManagement.sendResponse(res, httpStatus.OK, "", states);
     } catch (error) {
