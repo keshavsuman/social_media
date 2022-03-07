@@ -151,7 +151,7 @@ module.exports.userProfile = async (req, res) => {
 module.exports.myProfile = async (req, res) => {
     try {
         let user = await User.findOne({ _id: req.data._id })
-            .select(['-hash', '-salt'])
+            .select(['-hash', '-salt','-sentRequests'])
             .populate({ path: 'interests', model: 'interest',select:{_id:1,name:1} })
             .populate({ path: 'skills', model: 'skill',select:{_id:1,name:1} })
             .populate({ path: 'course', model:'course',select:{_id:1,name:1}})
